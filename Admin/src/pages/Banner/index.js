@@ -1,18 +1,19 @@
-import { Box, Typography } from "@mui/material";
 import PageLayout from "layouts/PageLayout";
-import underConstruction from 'assets/images/under_construction.png'
+import Button from "components/Button";
+import tableData from "./tableData";
+import Table from "examples/Tables/Table";
+import { Link } from "react-router-dom";
+
 function Banner() {
+  const { columns, rows } = tableData;
   return (
     <PageLayout
       title={'Banners'}
+      action={
+        <Button component={Link} to={`/banners/addBanner`}>Add Banner</Button>
+      }
     >
-      <Box sx={{ flexGrow: 1 }} height={'100%'} display={'flex'} justifyContent={'center'} alignItems={'center'} py={10}>
-        <img width={80} src={underConstruction} alt="image" />
-        <Typography fontSize={'small'} px={2}>
-          Page is temporarily under maintenance.<br />
-          please check again later
-        </Typography>
-      </Box>
+      <Table columns={columns} rows={rows} />
     </PageLayout>
   );
 }

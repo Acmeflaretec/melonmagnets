@@ -25,6 +25,7 @@ import "assets/css/nucleo-svg.css";
 import "assets/css/style.css";
 import AddCategory from "pages/Category/AddCategory";
 import AddProduct from "pages/Products/AddProduct";
+import EditProduct from "pages/Products/EditProduct";
 
 export default function App() {
   const [controller, dispatch] = useController();
@@ -131,6 +132,7 @@ export default function App() {
             {getRoutes(routes)}
             <Route path="/category/addCategory" element={<AddCategory />} />
           <Route path="/products/addProducts" element={<AddProduct />} />
+          <Route path="/products/editProduct/:id" element={<EditProduct />} />
           <Route path="/orders/addOrders" element={<Outlet />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
@@ -157,6 +159,7 @@ export default function App() {
           {getRoutes(routes)}
           <Route path="/category/addCategory" element={<AddCategory />} />
           <Route path="/products/addProducts" element={<AddProduct />} />
+          <Route path="/products/editProduct/:id" element={<EditProduct />} />
           <Route path="/orders/addOrders" element={<Outlet />} />
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>

@@ -1,1 +1,1 @@
-export const ServerURL = "http://localhost:5000"
+export const ServerURL = import.meta.env.VITE_APP_API_URL

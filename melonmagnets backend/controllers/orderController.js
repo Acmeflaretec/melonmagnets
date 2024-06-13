@@ -1,4 +1,5 @@
-const Order = require('../models/Order')
+const Order = require('../models/order')
+const Address = require('../models/address')
 
 const getOrders = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ const getOrders = async (req, res) => {
 const getUserOrders = async (req, res) => {
   try {
     const { _id } = req?.decoded
-    const data = await Order.find({ userId:_id })
+    const data = await Order.find({ userId: _id })
     res.status(200).json({ data })
   } catch (error) {
     console.log(error);
@@ -22,10 +23,16 @@ const getUserOrders = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const { userId, payment_mode, amount, address, products, status, offer } = req?.body
+  const { email, phone, payment_mode, amount, products, status, offer, firstname, lastname, country, address_line_1, address_line_2, city, state, zip, mobile, primary } = req?.body
   try {
-    const data = await Order.create({ userId, payment_mode, amount, address, products, status, offer })
-    res.status(201).json({ data, message: 'Order placed successfully' });
+    const address = await Address.create({
+      firstname, lastname, country, address_line_1, address_line_2, city, state, zip, mobile, primary
+    })
+    if (req?.files?.length != 0) {
+    const data = await Order.create({ email, phone, payment_mode, amount, address: address._id, products, status, offer, image: req.files.map((x) => x.filename) })
+    return res.status(201).json({ data, message: 'Order placed successfully' });
+    }
+    return res.status(400).json({ message: "Something went wrong !" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
@@ -36,7 +43,7 @@ const updateOrder = async (req, res) => {
   const { _id, status } = req?.body
   try {
     const data = await Order.updateOne({ _id },
-      { $set: { status }})
+      { $set: { status } })
     res.status(201).json({ data, message: 'Order updated successfully' });
   } catch (error) {
     console.log(error);
@@ -45,8 +52,8 @@ const updateOrder = async (req, res) => {
 }
 
 module.exports = {
-    getOrders,
-    getUserOrders,
-    createOrder,
-    updateOrder,
-  }
+  getOrders,
+  getUserOrders,
+  createOrder,
+  updateOrder,
+}

@@ -13,7 +13,7 @@ const getProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const data = await Product.findOne({ _id: req.params.id })
+    const data = await Product.findOne({ _id: req.params.id }).populate('category')
     res.status(200).json({ data, message: 'product found successfully' });
   } catch (error) {
     console.log(error.message);

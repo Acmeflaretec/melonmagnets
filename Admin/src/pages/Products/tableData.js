@@ -6,6 +6,8 @@ import Badge from "components/Badge";
 import toast from 'react-hot-toast';
 import Table from "examples/Tables/Table";
 import { useGetProducts } from "queries/ProductQuery";
+import { Link } from "react-router-dom";
+import { Icon } from "@mui/material";
 
 const notify = () => toast.success('category deleted successfully.');
 function Author({ image, name, desc }) {
@@ -52,28 +54,11 @@ const TableData = () => {
       </Typography>
     ),
     action: (
-      <>
-        <Typography
-          component="a"
-          href="#"
-          onClick={notify}
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Edit
-        </Typography>
-        <Typography
-          component="a"
-          href="#"
-          onClick={notify}
-          variant="caption"
-          color="secondary"
-          fontWeight="medium"
-        >
-          Delete
-        </Typography>
-      </>
+      <Link to={`/products/editProduct/${item?._id}`}>
+        <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small">
+          more_vert
+        </Icon>
+      </Link>
     ),
   }))
   return isLoading ? <>loading...</> : <Table columns={columns} rows={rows} />

@@ -29,6 +29,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    variations:{
+        type:Array,
+
+    },
     stock: {
         type: Number,
         required: true

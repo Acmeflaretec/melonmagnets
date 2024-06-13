@@ -12,7 +12,7 @@ import toast from 'react-hot-toast'
 const AddProduct = () => {
   const [details, setDetails] = useState({})
   const { data, isLoading } = useGetCategory({ pageNo: 1, pageCount: 100 });
-  const { mutateAsync: AddProduct, isLoading: loading } = useAddProduct(details)
+  const { mutateAsync: AddProduct, isLoading: loading } = useAddProduct()
   const [error,setError] = useState({})
   const [images,setImage] = useState([])
   const handleChange = (e) => {
@@ -76,7 +76,6 @@ const AddProduct = () => {
           <Grid item xs={12} sm={6}>
             <Input
               placeholder="Brand name"
-              error={true}
               name="brand"
               value={details?.brand || ''}
               onChange={handleChange}
@@ -108,7 +107,7 @@ const AddProduct = () => {
                   <img
                     loading="lazy"
                     width="20"
-                    src={`http://localhost:5000/uploads/${option?.image}`}
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${option?.image}`}
                   />
                   <Typography color="inherit" variant="caption">
                     {option?.name} <br />

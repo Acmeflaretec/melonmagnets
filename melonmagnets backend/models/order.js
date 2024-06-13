@@ -1,9 +1,12 @@
 const mongoose = require('mongoose')
 
 const orderSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
+    phone: {
+        type:Number,
+        required: true
+    },
+    email: {
+        type: String,
         required: true
     },
     payment_mode: {
@@ -38,6 +41,10 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
+    },
+    image:{
+        type:Array,
+        required:true,
     },
     status: {
         type: String,
