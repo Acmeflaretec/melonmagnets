@@ -1,0 +1,16 @@
+/* PinBadges.css */
+.container {
+    max-width: 1000px;
+  }
+.card-img-container {
+    overflow: hidden;
+    background-color: #f9e7d2;
+}
+
+.card-img-top {
+    transition: transform 0.5s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.1);
+}

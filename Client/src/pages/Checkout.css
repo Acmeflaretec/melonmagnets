@@ -1,0 +1,34 @@
+.container {
+    max-width: 960px;
+  }
+  
+  h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  h5 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-title {
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-text {
+    margin-bottom: 0.25rem;
+  }
+  
+  .card h5 {
+    margin-bottom: 0;
+  }
+  
+  .form-check-label {
+    margin-left: 0.5rem;
+  }
+  
+  .form-check-input {
+    margin-right: 0.5rem;
+  }
+  

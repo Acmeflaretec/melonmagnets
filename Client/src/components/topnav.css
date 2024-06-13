@@ -1,0 +1,83 @@
+/* src/CustomNavBar.css */
+.custom-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fef1e0; /* Light peach background color */
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+.nav-arrow {
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+  padding: 0 15px;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.nav-text {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  min-width: 100%;
+  justify-content: center;
+}
+
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .custom-nav-bar {
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+
+  .nav-arrow {
+    font-size: 16px;
+    padding: 0 10px;
+  }
+
+  .nav-text {
+    font-size: 14px;
+  }
+
+  .phone-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-nav-bar {
+    padding: 6px 12px;
+    border-radius: 15px;
+  }
+
+  .nav-arrow {
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  .nav-text {
+    font-size: 12px;
+  }
+
+  .phone-icon {
+    font-size: 14px;
+  }
+}

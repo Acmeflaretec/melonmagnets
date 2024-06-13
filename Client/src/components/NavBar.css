@@ -1,0 +1,174 @@
+/* src/assets/css/NavBar.css */
+.navbar-brand img {
+    max-height: 100px;
+  }
+  
+  .nav-link {
+    margin-left: 1rem;
+    position: relative;
+    padding-bottom: 5px;
+  }
+  
+  .navbar-nav .nav-link Link h5 {
+    color: #333;
+    transition: color 0.2s;
+  }
+  
+  .nav-link:hover {
+    color: orange;
+  }
+
+  /* NavBar.css */
+
+.active-link {
+  font-weight: bold;
+}
+
+.active-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px; /* Thickness of the underline */
+  background-color: #000; /* Color of the underline */
+}
+
+  
+  .navbar-toggler {
+    border: none;
+  }
+  
+  .navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 100;
+  }
+  
+  .dropdown-toggle {
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1;
+    left: 0;
+    top: 100%;
+    display: none;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  
+  .active h5 {
+    color: #f3ad0a; /* Adjust the color as per your design */
+  }
+
+  .shopall{
+    margin-top: 2px;
+  }
+  
+  /* NavBar.css */
+
+/* Styles for dropdown on large screens */
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+/* Styles for off-canvas menu on mobile view */
+@media (max-width: 991.98px) {
+  .offcanvas-nav .nav-link {
+    font-size: 1.25rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .offcanvas-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid #eaeaea;
+  }
+
+  .offcanvas-footer .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .offcanvas-footer .social-icons a {
+    color: #333;
+    font-size: 1.25rem;
+  }
+
+  .offcanvas-footer .currency-selector {
+    font-size: 1rem;
+  }
+
+  .dropdown-toggle::after {
+    display: none;
+  }
+
+  .dropdown-menu.show {
+    display: block;
+    position: relative;
+    background-color: white;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .offcanvas-body .nav {
+    margin-top: 2rem;
+  }
+
+  .offcanvas-body .nav h5 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .offcanvas-footer {
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid #eaeaea;
+  }
+
+  .offcanvas-footer .currency-selector {
+    margin-bottom: 1rem;
+  }
+
+  .offcanvas-footer .social-icons a {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+}
