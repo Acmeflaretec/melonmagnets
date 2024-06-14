@@ -15,3 +15,18 @@ export const addToCartApi = async (reqBody ,reqHeader) => {
   export const getallproductsByIdapi = async(id)=>{
     return await commonApi('GET',`${ServerURL}/api/v1/products/${id}`);
 }
+
+  export const addOrderApi = async(reqBody )=>{
+   return await commonApi('POST',`${ServerURL}/api/v1/orders`,reqBody)
+}
+
+export const getCartItemApi = async (id)=>{
+    return await commonApi('GET', `${ServerURL}/api/v1/cart?${id}`)
+}
+export const updateCartItemApi = async (id , quantity)=>{
+    return await commonApi('PATCH', `${ServerURL}/api/v1/cart/${id}?qty=${quantity}`)
+}
+
+export const removeCartItemApi = async (id)=>{
+    return await commonApi('DELETE',`${ServerURL}/api/v1/cart/${id}`)
+}

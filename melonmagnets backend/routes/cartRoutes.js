@@ -6,7 +6,7 @@ const { upload } = require('../middlewares/multer');
 
 router.get('/', getCartItems);
 router.post('/', upload.array('images', 10), addToCart);
-router.put('/:itemId', updateCartItem);
-router.delete('/:itemId', removeFromCart);
+router.patch('/:id', updateCartItem);
+router.delete('/:id', removeFromCart);
 
 module.exports = router;

@@ -1,61 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ServerURL } from '../services/baseUrl';
+import { getCartItemApi, removeCartItemApi, updateCartItemApi } from '../services/allApi';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState(() => {
-    // Initialize state from local storage
-    const storedCartItems = JSON.parse(localStorage.getItem('cartData')) || [];
-    return storedCartItems;
-  });
+  const [cartItems, setCartItems] = useState([])
+  const [quantity,setquantity] = useState({})
 
-  useEffect(() => {
-    // Store cart items in local storage whenever they are updated
-    if (cartItems.length > 0) {
-      localStorage.setItem('cartData', JSON.stringify(cartItems));
-    } else {
-      localStorage.removeItem('cartData');
+
+  const getCartItems = async()=>{
+    const ids = JSON.parse(localStorage.getItem('cartData')) || [];
+    const params = new URLSearchParams();
+    ids.forEach(id => params.append('id', id));
+     const result = await getCartItemApi(params.toString())
+     setCartItems(result?.data)
+     const q = result?.data?.reduce((acc, x) => {
+      acc[x._id] = x.quantity;
+      return acc;
+    }, {});
+         setquantity(q)
+     }
+
+  const handleQuantityChange = async(id,operation) => {
+     if(operation==='increment'){
+       setquantity(prev=>({...prev,[id]:prev[id]+1}))
+      const result = await updateCartItemApi(id,quantity[id]+1)
+      console.log(result);
+     }else{
+      setquantity(prev=>({...prev,[id]:prev[id]-1}))
+      const result = await updateCartItemApi(id,quantity[id]-1)
+     }
+  };
+  
+
+  const handleRemoveItem = async(id) => {
+    const result = await removeCartItemApi(id)
+    if(result.status==200){
+      const ids = JSON.parse(localStorage.getItem('cartData')) || [];
+      const cartData = ids.filter(x=>x!=id)
+      const array = cartItems.filter(x=>x._id!=id)
+      console.log(array);
+      setCartItems([...array])
+      localStorage.setItem('cartData', JSON.stringify(cartData))
     }
-  }, [cartItems]);
-
-  const handleQuantityChange = (productName, operation) => {
-    setCartItems(prevCartItems =>
-      prevCartItems.map(item =>
-        item.productDetails.name === productName
-          ? {
-              ...item,
-              quantity:
-                operation === 'increment'
-                  ? item.quantity + 1
-                  : Math.max(item.quantity - 1, 1),
-              totalPrice:
-                operation === 'increment'
-                  ? (item.quantity + 1) * item.productDetails.price
-                  : Math.max(item.quantity - 1, 1) * item.productDetails.price,
-            }
-          : item
-      )
-    );
   };
   
+  useEffect(()=>{
+    getCartItems()
+    console.log(cartItems);
+  },[])
+  useEffect(()=>{
+    console.log(cartItems);
+  },[cartItems])
 
-  const handleRemoveItem = (productName) => {
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item.productDetails.name !== productName)
-    );
-  };
-  
+   let subtotal = 0;
+    cartItems?.map(x=>{
+     subtotal+= x.productId.price*quantity[x._id]
+    })
+ 
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.totalPrice,
-    0
-  );
-
-  const discount = 300;
+  const discount = 0;
   const deliveryCharges = 300;
 
   const totalBeforeDiscount = subtotal;
-  const totalAfterDiscount = totalBeforeDiscount - discount - deliveryCharges;
+  const totalAfterDiscount = totalBeforeDiscount - discount + deliveryCharges;
 
   return (
     <div className="my-5">
@@ -71,35 +79,35 @@ const Cart = () => {
       ) : (
         <div className="row">
           <div className="col-md-12">
-            {cartItems.map(item => (
-              <div key={item.productDetails.name} className="card mb-3 border-dark p-3 shadow">
+            {cartItems?.map((item , index) => (
+              <div key={item.productId._id} className="card mb-3 border-dark p-3 shadow">
                 <div className="row g-0">
                   <div className="col-md-4 col-5 d-flex align-items-center">
                     <img
-                      src={item?.productDetails?.image && item?.productDetails?.image.length > 0 ? `${ServerURL}/uploads/${item?.productDetails?.image[0]}` : 'placeholder.jpg'}
+                      src={item?.productId?.image && item?.productId?.image.length > 0 ? `${ServerURL}/uploads/${item?.productId?.image[0]}` : 'placeholder.jpg'}
                       className="img-fluid rounded"
-                      alt={item?.productDetails?.name}
+                      alt={item?.productId?.name}
                     />
                   </div>
                   <div className="col-md-8 col-7">
                     <div className="card-body">
-                      <h5 className="card-title text-dark fw-bold">{item?.productDetails?.name}</h5>
-                      <p className="card-text fw-bold ">₹{item?.totalPrice}</p>
+                      <h5 className="card-title text-dark fw-bold">{item?.productId?.name}</h5>
+                      <p className="card-text fw-bold ">₹{item?.productId?.price}</p>
                       <span className='m-1 text-muted text-decoration-line-through'>₹999</span>
                       <span className='text-success fw-bold bg-success-subtle p-1'>70% off</span>
                       <div className="d-flex align-items-center justify-content-between mt-3">
                         <div className="d-flex justify-content-center align-items-center ">
                         <button
                             className="btn btn-outline-success rounded-circle"
-                            onClick={() => handleQuantityChange(item.productDetails.name, 'decrement')}
-                            disabled={item.quantity === 1}
+                            onClick={() => handleQuantityChange(item._id, 'decrement')}
+                            disabled={quantity[item._id] === 1}
                           >
                             <i className="fas fa-minus"></i>
                           </button>
-                          <span className="mx-3 fw-bold">{item.quantity}</span>
+                          <span className="mx-3 fw-bold">{quantity[item._id]}</span>
                           <button
                             className="btn btn-outline-success rounded-circle"
-                            onClick={() => handleQuantityChange(item.productDetails.name, 'increment')}
+                            onClick={() => handleQuantityChange(item._id, 'increment')}
                           >
                             <i className="fas fa-plus"></i>
                           </button>
@@ -107,7 +115,7 @@ const Cart = () => {
                         <div>
                         <button
                           className="btn btn-outline-danger rounded-pill ms-2"
-                          onClick={() => handleRemoveItem(item.productDetails.name)}
+                          onClick={() => handleRemoveItem(item._id)}
                         >
                           <i className="fas fa-trash"></i>
                         </button>
@@ -144,7 +152,7 @@ const Cart = () => {
                 <button className='btn btn-warning rounded-pill w-100'>Checkout</button>
               </Link>
             </div>
-          </div>
+          </div> 
         </div>
       )}
     </div>

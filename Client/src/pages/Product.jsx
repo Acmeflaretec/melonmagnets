@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Image, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import uploadimg from '../assets/img/upload.png';
-import { getAllCategoryApi } from '../services/allApi';
+import { addToCartApi, getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
 import Swal from 'sweetalert2';
@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 const Product = () => {
   const { id } = useParams();
   const defaultCategory = id ? id : "fridgemagnets";
-  console.log('Category Name:', defaultCategory);
   const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
@@ -32,9 +31,10 @@ const Product = () => {
     const selectedFiles = uploadedFiles.slice(0, maxPhotos);
 
     setUploadedPhotos((prevPhotos) => [...prevPhotos, ...selectedFiles]);
-    setSelectedImageFilenames(selectedFiles.map((file) => file.file.name));
-    setImage((prev) => ({ ...prev, images: files }));
+    setSelectedImageFilenames(selectedFiles.map((file) => file.file));
+    setImage(files);
   };
+
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
@@ -65,7 +65,7 @@ const Product = () => {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async() => {
     const requiredPhotos = getMaxPhotos();
     if (uploadedPhotos.length !== requiredPhotos) {
       setAlertMessage(`Please upload exactly ${requiredPhotos} images.`);
@@ -75,25 +75,53 @@ const Product = () => {
     setAlertMessage('');
     setShowAlert(false);
 
-    const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-    const existingItemIndex = cartData.findIndex(item => item.productDetails.name === productDetails.name);
+    const reqBody = new FormData()
+    reqBody.append('productId',productDetails._id)
+    reqBody.append('quantity',1)
+    reqBody.append('price',productDetails.price)
+    // reqBody.append('image', image, image.name);
 
-    if (existingItemIndex !== -1) {
-      // Item already exists, update the quantity and total price
-      cartData[existingItemIndex].quantity += 1;
-      cartData[existingItemIndex].totalPrice = cartData[existingItemIndex].quantity * cartData[existingItemIndex].productDetails.price;
-    } else {
-      // Add the new cart item to the existing cart data
-      const newCartItem = {
-        selectedImageFilenames: selectedImageFilenames,
-        productDetails: productDetails,
-        quantity: 1,
-        totalPrice: productDetails.price
-      };
-      cartData.push(newCartItem);
+    // uploadedPhotos.file?.map((item) => {
+    //   console.log(item);
+    //   reqBody.append('images', item, item.name);
+    // });
+
+    Array.from(image).forEach((file) => {
+      reqBody.append('images', file);
+    });
+
+    const reqHeader ={
+      "Content-Type":"multipart/form-data"
     }
 
-    localStorage.setItem('cartData', JSON.stringify(cartData));
+    const result = await addToCartApi(reqBody,reqHeader)
+    console.log(result);
+    const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+
+    cartData.push(result?.data?._id);
+
+    localStorage.setItem('cartData', JSON.stringify(cartData))
+
+     
+    // const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+    // const existingItemIndex = cartData.findIndex(item => item.productDetails.name === productDetails.name);
+
+    // if (existingItemIndex !== -1) {
+    //   // Item already exists, update the quantity and total price
+    //   cartData[existingItemIndex].quantity += 1;
+    //   cartData[existingItemIndex].totalPrice = cartData[existingItemIndex].quantity * cartData[existingItemIndex].productDetails.price;
+    // } else {
+    //   // Add the new cart item to the existing cart data
+    //   const newCartItem = {
+    //     selectedImageFilenames: image,
+    //     productDetails: productDetails,
+    //     quantity: 1,
+    //     totalPrice: productDetails.price
+    //   };
+    //   cartData.push(newCartItem);
+    // }
+
+    // localStorage.setItem('cartData', JSON.stringify(cartData));
     Swal.fire({
       title: "Done",
       text: "Item added to cart",
