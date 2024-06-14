@@ -50,7 +50,7 @@ const NavBar = () => {
           <Navbar.Collapse id="navbar-nav">
             <Nav className="ms-auto">
               <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')}>Fridge Magnets</Link>
-              <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')}>PinBadges</Link>
+              <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')}>Pin Badges</Link>
               <Link to={'/thinmagnets'} className={getLinkClass('/thinmagnets')}>Thin Magnets</Link>
               <div 
                 className="dropdown" 
@@ -61,7 +61,7 @@ const NavBar = () => {
                 {showDropdown && (
                   <div className="dropdown-menu show">
                     <Link to={'/fridgemagnets'} className="dropdown-item">Fridge Magnets</Link>
-                    <Link to={'/pinbagesmain'} className="dropdown-item">PinBadges</Link>
+                    <Link to={'/pinbagesmain'} className="dropdown-item">Pin Badges</Link>
                     <Link to={'/thinmagnets'} className="dropdown-item">Thin Magnets</Link>
                     {/* <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link> */}
                   </div>
@@ -112,7 +112,7 @@ const NavBar = () => {
             <Offcanvas.Body className="offcanvas-nav">
               <Nav className="flex-column">
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
-                <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>PinBadges</Link>
+                <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
                 <Link to={'/thinmagnets'} className={getLinkClass('/thinmagnets')} onClick={handleCloseOffcanvas}>Thin Magnets</Link>
                 {/* <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link> */}
               </Nav>

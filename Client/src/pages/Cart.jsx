@@ -55,19 +55,19 @@ const Cart = () => {
 
    let subtotal = 0;
     cartItems?.map(x=>{
-     subtotal+= x.productId.price*quantity[x._id]
+     subtotal+= x?.price*quantity[x._id]
     })
  
 
   const discount = 0;
-  const deliveryCharges = 300;
+  const deliveryCharges = 0;
 
   const totalBeforeDiscount = subtotal;
   const totalAfterDiscount = totalBeforeDiscount - discount + deliveryCharges;
 
   return (
     <div className="my-5">
-      {cartItems.length === 0 ? (
+      {cartItems?.length === 0 ? (
         <div className="text-center">
           <p className="text-muted">No items in the cart</p>
           <Link to={'/'}>
@@ -92,7 +92,7 @@ const Cart = () => {
                   <div className="col-md-8 col-7">
                     <div className="card-body">
                       <h5 className="card-title text-dark fw-bold">{item?.productId?.name}</h5>
-                      <p className="card-text fw-bold ">₹{item?.productId?.price}</p>
+                      <p className="card-text fw-bold ">₹{item?.price}</p>
                       <span className='m-1 text-muted text-decoration-line-through'>₹999</span>
                       <span className='text-success fw-bold bg-success-subtle p-1'>70% off</span>
                       <div className="d-flex align-items-center justify-content-between mt-3">

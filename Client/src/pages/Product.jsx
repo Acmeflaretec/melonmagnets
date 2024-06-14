@@ -78,7 +78,7 @@ const Product = () => {
     const reqBody = new FormData()
     reqBody.append('productId',productDetails._id)
     reqBody.append('quantity',1)
-    reqBody.append('price',productDetails.price)
+    reqBody.append('price',getMaxPhotos(saveTheDateSize)===9?productDetails.type3:getMaxPhotos(saveTheDateSize)===6?productDetails.type2:productDetails.type1)
     // reqBody.append('image', image, image.name);
 
     // uploadedPhotos.file?.map((item) => {
@@ -199,7 +199,8 @@ const Product = () => {
           </Col>
           <Col md={6}>
             <h2 className="fw-bold">{productDetails.name}</h2>
-            <h4 className="text-danger">₹{productDetails.price}</h4>
+            <h4 className="text-danger">₹{getMaxPhotos(saveTheDateSize)===9?productDetails.type3:getMaxPhotos(saveTheDateSize)===6?productDetails.type2:productDetails.type1}</h4>
+
             <h5>Select Size:</h5>
             <div className="d-flex mb-3">
               {['9 Images', '6 Images', '4 Images'].map((size) => (
