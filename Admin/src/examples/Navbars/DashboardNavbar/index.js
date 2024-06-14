@@ -32,6 +32,7 @@ import {
 // Images
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
+import { setAuth } from "context";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -134,7 +135,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </Box>
         {isMini ? null : (
           <Box sx={(theme) => navbarRow(theme, { isMini })}>
-            <Box pr={1}>
+            {/* <Box pr={1}>
               <Input
                 placeholder="Type here..."
                 startAdornment={
@@ -143,10 +144,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   </Icon>
                 }
               />
-            </Box>
+            </Box> */}
             <Box color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small">
+                <IconButton sx={navbarIconButton} size="small" onClick={()=>setAuth(dispatch, false)}>
                   <Icon
                     sx={({ palette: { dark, white } }) => ({
                       color: light && transparentNavbar ? white.main : dark.main,
@@ -159,10 +159,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     fontWeight="medium"
                     color={light && transparentNavbar ? "white" : "dark"}
                   >
-                    Sign in
+                    Logout
                   </Typography>
                 </IconButton>
-              </Link>
               <IconButton
                 size="small"
                 color={light && transparentNavbar ? "white" : "dark"}
@@ -171,7 +170,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon>{miniSidenav ? "menu_open" : "menu"}</Icon>
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="small"
                 color={light && transparentNavbar ? "white" : "dark"}
                 sx={navbarIconButton}
@@ -189,7 +188,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <Icon>notifications</Icon>
-              </IconButton>
+              </IconButton> */}
               {renderMenu()}
             </Box>
           </Box>

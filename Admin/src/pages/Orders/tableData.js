@@ -31,7 +31,7 @@ const TableData = () => {
     { name: "Blogs", align: "left" },
     { name: "amount", align: "center" },
     { name: "status", align: "center" },
-    { name: "createdon", align: "center" },
+    { name: "ordered", align: "center" },
     { name: "Lastupdated", align: "center" },
     { name: "action", align: "center" },
   ]
@@ -46,7 +46,7 @@ const TableData = () => {
     status: (
       <Badge variant="gradient" badgeContent={item?.status} color={item?.status ? "success" : 'secondary'} size="xs" container />
     ),
-    createdon: (
+    ordered: (
       <Typography variant="caption" color="secondary" fontWeight="medium">
         {new Date(item?.createdAt).toDateString()}
       </Typography>
@@ -64,7 +64,7 @@ const TableData = () => {
       </Link>
     ),
   }))
-  return isLoading ? <Typography fontSize={14} sx={{paddingX:5}}>loading...</Typography> : <Table columns={columns} rows={rows} />
+  return isLoading ? <Typography fontSize={14} sx={{ paddingX: 5 }}>loading...</Typography> : <Table columns={columns} rows={rows} />
 };
 
 export default TableData;
