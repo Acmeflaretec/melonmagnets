@@ -26,6 +26,8 @@
     "chart.js": "3.9.1",
     "chroma-js": "2.4.2",
     "dropzone": "^6.0.0-beta.2",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "prop-types": "15.8.1",
     "react": ">=16.8.0",
     "react-chartjs-2": "3.0.4",

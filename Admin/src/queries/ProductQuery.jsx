@@ -2,9 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   addCategory,
   addProduct,
+  deleteProduct,
   getCategory,
   getProductById,
   getProducts,
+  updateProduct,
 } from "./productUrls";
 
 const useGetCategory = (data) => {
@@ -59,6 +61,32 @@ const useAddProduct = () => {
     },
   });
 };
+const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => updateProduct(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_products");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
+const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => deleteProduct(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_products");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
 
 export {
   useGetCategory,
@@ -66,4 +94,6 @@ export {
   useGetProductById,
   useAddCategory,
   useAddProduct,
+  useUpdateProduct,
+  useDeleteProduct
 };

@@ -1,10 +1,8 @@
-// controllers/cartController.js
 const CartItem = require('../models/cartItem');
 
 // Get all cart items for a specific session
 exports.getCartItems = async (req, res) => {
-  const { id } = req.query; // Assuming session ID is passed as a query parameter
-  console.log(id);
+  const { id } = req.query;
   try {
     const cartItems = await CartItem.find({ _id: { $in: id } }).populate('productId');
     res.status(200).json(cartItems);
@@ -16,11 +14,9 @@ exports.getCartItems = async (req, res) => {
 // Add a new item to the cart
 exports.addToCart = async (req, res) => {
   const { productId, quantity, price} = req.body;
-  console.log( productId, quantity, price);
   const image =  req?.files?.map((x) => x.filename)??[]
   try {
     const cartItem = new CartItem({
-
       productId,
       quantity,
       price,

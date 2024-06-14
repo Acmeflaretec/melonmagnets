@@ -13,7 +13,6 @@ const AddProduct = () => {
   const [details, setDetails] = useState({})
   const { data, isLoading } = useGetCategory({ pageNo: 1, pageCount: 100 });
   const { mutateAsync: AddProduct, isLoading: loading } = useAddProduct()
-  const [error,setError] = useState({})
   const [images,setImage] = useState([])
   const handleChange = (e) => {
     setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));

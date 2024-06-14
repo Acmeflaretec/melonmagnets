@@ -8,6 +8,6 @@ router.post('/', upload.array('images', 10), addProduct);
 router.get('/', getProducts);
 router.delete('/:id', authorization, deleteProduct);
 router.get('/:id', getProductById);
-router.patch('/:id',authorization, updateProduct);
+router.patch('/',authorization,upload.array('images', 10), updateProduct);
 
 module.exports = router;
