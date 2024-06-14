@@ -102,26 +102,7 @@ const Product = () => {
 
     localStorage.setItem('cartData', JSON.stringify(cartData))
 
-     
-    // const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-    // const existingItemIndex = cartData.findIndex(item => item.productDetails.name === productDetails.name);
-
-    // if (existingItemIndex !== -1) {
-    //   // Item already exists, update the quantity and total price
-    //   cartData[existingItemIndex].quantity += 1;
-    //   cartData[existingItemIndex].totalPrice = cartData[existingItemIndex].quantity * cartData[existingItemIndex].productDetails.price;
-    // } else {
-    //   // Add the new cart item to the existing cart data
-    //   const newCartItem = {
-    //     selectedImageFilenames: image,
-    //     productDetails: productDetails,
-    //     quantity: 1,
-    //     totalPrice: productDetails.price
-    //   };
-    //   cartData.push(newCartItem);
-    // }
-
-    // localStorage.setItem('cartData', JSON.stringify(cartData));
+    
     Swal.fire({
       title: "Done",
       text: "Item added to cart",

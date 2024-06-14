@@ -15,15 +15,16 @@ exports.getCartItems = async (req, res) => {
 
 // Add a new item to the cart
 exports.addToCart = async (req, res) => {
-  const { productId, quantity, price, image} = req.body;
-  console.log( productId, quantity, price, image);
+  const { productId, quantity, price} = req.body;
+  console.log( productId, quantity, price);
+  const image =  req?.files?.map((x) => x.filename)??[]
   try {
     const cartItem = new CartItem({
 
       productId,
       quantity,
       price,
-      image: req.files.map((x) => x.filename),
+      image
     });
 
     await cartItem.save();

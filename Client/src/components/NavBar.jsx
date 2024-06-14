@@ -63,7 +63,7 @@ const NavBar = () => {
                     <Link to={'/fridgemagnets'} className="dropdown-item">Fridge Magnets</Link>
                     <Link to={'/pinbagesmain'} className="dropdown-item">PinBadges</Link>
                     <Link to={'/thinmagnets'} className="dropdown-item">Thin Magnets</Link>
-                    <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link>
+                    {/* <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link> */}
                   </div>
                 )}
               </div>
@@ -72,9 +72,7 @@ const NavBar = () => {
               <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none me-2 text-dark">
                 <FontAwesomeIcon icon={faInstagram} />
               </Link>
-              <Link to={''} className="nav-link text-decoration-none me-2 text-dark">
-                <FontAwesomeIcon icon={faSearch} />
-              </Link>
+             
               <button className="nav-link text-decoration-none text-dark" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart}  />
               </button>
@@ -116,16 +114,14 @@ const NavBar = () => {
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
                 <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>PinBadges</Link>
                 <Link to={'/thinmagnets'} className={getLinkClass('/thinmagnets')} onClick={handleCloseOffcanvas}>Thin Magnets</Link>
-                <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link>
+                {/* <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link> */}
               </Nav>
               <div className="offcanvas-footer">
                 <div className="social-icons">
                   <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-dark" onClick={handleCloseOffcanvas}>
                     <FontAwesomeIcon icon={faInstagram} />
                   </Link>
-                  <Link to={''} className="nav-link text-dark" onClick={handleCloseOffcanvas}>
-                    <FontAwesomeIcon icon={faSearch} />
-                  </Link>
+                 
                   <button className="nav-link text-decoration-none text-dark" onClick={handleCartClick} >
                     <FontAwesomeIcon icon={faShoppingCart}  />
                   </button>

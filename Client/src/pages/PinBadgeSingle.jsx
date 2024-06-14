@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Image, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import uploadimg from '../assets/img/upload.png';
-import { addToCartApi, getAllCategoryApi } from '../services/allApi';
+import { addToCartApi, getAllCategoryApi, getallproductsByIdapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
 import Swal from 'sweetalert2';
 
-const Product = () => {
+const PinBadgeSingle = () => {
   const { id } = useParams();
-  const defaultCategory = id ? id : "fridgemagnets";
   const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
@@ -18,23 +17,11 @@ const Product = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
   const [productDetails, setProductDetails] = useState({});
-  const [image, setImage] = useState([]);
-  const [selectedImageFilenames, setSelectedImageFilenames] = useState([]);
-
-  const handleFileUpload = (event) => {
-    const files = event.target.files;
-    const uploadedFiles = Array.from(files)
-      .filter((file) => file.type.startsWith('image/'))
-      .map((file) => ({ url: URL.createObjectURL(file), file: file }));
-
-    const maxPhotos = getMaxPhotos();
-    const selectedFiles = uploadedFiles.slice(0, maxPhotos);
-
-    setUploadedPhotos((prevPhotos) => [...prevPhotos, ...selectedFiles]);
-    setSelectedImageFilenames(selectedFiles.map((file) => file.file));
-    setImage(files);
-  };
-
+  const [cartItem, setCartItem] = useState({
+    productId:'',
+    quantity:1,
+    price:''
+  });
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
@@ -52,48 +39,16 @@ const Product = () => {
     );
   };
 
-  const getMaxPhotos = () => {
-    switch (saveTheDateSize) {
-      case '9 Images':
-        return 9;
-      case '6 Images':
-        return 6;
-      case '4 Images':
-        return 4;
-      default:
-        return 4;
-    }
-  };
-
   const handleAddToCart = async() => {
-    const requiredPhotos = getMaxPhotos();
-    if (uploadedPhotos.length !== requiredPhotos) {
-      setAlertMessage(`Please upload exactly ${requiredPhotos} images.`);
-      setShowAlert(true);
-      return;
-    }
-    setAlertMessage('');
-    setShowAlert(false);
-
     const reqBody = new FormData()
     reqBody.append('productId',productDetails._id)
     reqBody.append('quantity',1)
     reqBody.append('price',productDetails.price)
-    // reqBody.append('image', image, image.name);
-
-    // uploadedPhotos.file?.map((item) => {
-    //   console.log(item);
-    //   reqBody.append('images', item, item.name);
-    // });
-
-    Array.from(image).forEach((file) => {
-      reqBody.append('images', file);
-    });
 
     const reqHeader ={
-      "Content-Type":"multipart/form-data"
+      "Content-Type":"application/json"
     }
-
+    console.log(cartItem);
     const result = await addToCartApi(reqBody,reqHeader)
     console.log(result);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
@@ -102,26 +57,7 @@ const Product = () => {
 
     localStorage.setItem('cartData', JSON.stringify(cartData))
 
-     
-    // const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-    // const existingItemIndex = cartData.findIndex(item => item.productDetails.name === productDetails.name);
-
-    // if (existingItemIndex !== -1) {
-    //   // Item already exists, update the quantity and total price
-    //   cartData[existingItemIndex].quantity += 1;
-    //   cartData[existingItemIndex].totalPrice = cartData[existingItemIndex].quantity * cartData[existingItemIndex].productDetails.price;
-    // } else {
-    //   // Add the new cart item to the existing cart data
-    //   const newCartItem = {
-    //     selectedImageFilenames: image,
-    //     productDetails: productDetails,
-    //     quantity: 1,
-    //     totalPrice: productDetails.price
-    //   };
-    //   cartData.push(newCartItem);
-    // }
-
-    // localStorage.setItem('cartData', JSON.stringify(cartData));
+    
     Swal.fire({
       title: "Done",
       text: "Item added to cart",
@@ -129,7 +65,6 @@ const Product = () => {
     });
     setAlertMessage('');
     setShowAlert(false);
-    setUploadedPhotos([])
   };
 
   const visibleThumbnailCount = 5;
@@ -138,23 +73,19 @@ const Product = () => {
     visibleStartIndex + Math.min(visibleThumbnailCount, thumbnailUrls.length)
   );
 
-  const idMapping = {
-    fridgemagnets: 'fridge magnets',
-    pinbadges: 'pin badges',
-    thinmagnets: 'thin magnets'
-  };
-
   const getAllCategory = async () => {
     try {
       const category = await getAllCategoryApi();
-      const backendCategoryName = idMapping[defaultCategory?.toLowerCase()];
+      const backendCategoryName = "Pin Badges"
       const categoryData = category?.data?.data?.find(
         (item) => item.name.toLowerCase() === backendCategoryName?.toLowerCase()
       );
 
       if (categoryData) {
-        setThumbnailUrls(categoryData?.products?.[0]?.image);
-        setProductDetails(categoryData?.products?.[0]);
+          const product = await getallproductsByIdapi(id)
+          setProductDetails(product.data.data)
+          setThumbnailUrls(product.data.data?.image)
+          console.log(product.data.data);
       }
     } catch (error) {
       console.error('Error fetching category data:', error);
@@ -163,7 +94,7 @@ const Product = () => {
 
   useEffect(() => {
     getAllCategory();
-  }, [defaultCategory]);
+  }, []);
 
   return (
     <>
@@ -218,55 +149,22 @@ const Product = () => {
           </Col>
           <Col md={6}>
             <h2 className="fw-bold">{productDetails.name}</h2>
-            <h4 className="text-danger">₹{productDetails.price}</h4>
-            <h5>Select Size:</h5>
-            <div className="d-flex mb-3">
-              {['9 Images', '6 Images', '4 Images'].map((size) => (
-                <Button
-                  key={size}
-                  variant={saveTheDateSize === size ? 'dark' : 'light'}
-                  className="mx-1"
-                  onClick={() => {
-                    setSaveTheDateSize(size);
-                    setUploadedPhotos([]);
-                  }}
-                >
-                  {size}
-                </Button>
-              ))}
-            </div>
-            <h5>Upload Photos:</h5>
-            <Row className="mb-3">
-              {uploadedPhotos.length > 0
-                ? uploadedPhotos.map((photo, idx) => (
-                    <Col xs={4} className="mb-2" key={idx}>
-                      <div className="border p-1">
-                        <Image src={photo.url} fluid style={{ width: '100%', height: 'auto' }} />
-                      </div>
-                    </Col>
-                  ))
-                : [...Array(getMaxPhotos())].map((_, idx) => (
-                    <Col xs={3} className="mb-2" key={idx}>
-                      <div className="border p-1">
-                        <Image src={uploadimg} style={{ width: '100%' }} fluid />
-                      </div>
-                    </Col>
-                  ))}
-            </Row>
-            <input
-              type="file"
-              multiple
-              onChange={handleFileUpload}
-              accept="image/*"
-              className="d-none"
-              id="file-upload"
-            />
-            <label htmlFor="file-upload" className="btn btn-outline-warning w-100 mb-2 text-dark rounded-pill">
-              Upload Photos
-            </label>
+            <h4 className="text-danger"><span className='text-dark text-muted fw-bold'>Price :</span>₹{productDetails.price}</h4>
+            <span className='m-1 text-muted text-decoration-line-through'>₹999</span>
+            <span className='text-success fw-bold bg-success-subtle p-1'>70% off</span>
+            <p className="mt-4">
+              Add a touch of personality to your belongings with our premium collection of pin badges! Crafted with care and attention to detail.
+            </p>
+            <ul>
+              <li><strong>High-Quality Materials:</strong> Made from durable metal with a smooth enamel finish, ensuring longevity and a polished look.</li>
+              <li><strong>Unique Designs:</strong> A wide variety of designs to suit all tastes, from quirky and fun to elegant and sophisticated.</li>
+              <li><strong>Secure Fastening:</strong> Equipped with a reliable pin back to keep your badge securely in place.</li>
+              <li><strong>Perfect Size:</strong> Compact and lightweight, easy to wear without being bulky.</li>
+              <li><strong>Versatile Use:</strong> Great for personal use or as thoughtful gifts for friends and family.</li>
+            </ul>
             <Button
               variant="warning"
-              className="w-100 rounded-pill"
+              className="w-100 rounded-pill mt-4"
               onClick={handleAddToCart}
             >
               Add To Cart
@@ -281,4 +179,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default PinBadgeSingle;
