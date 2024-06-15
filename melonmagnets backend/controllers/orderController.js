@@ -1,9 +1,21 @@
 const Order = require('../models/order')
+const BulkOrders = require('../models/bulkOrder')
 const Address = require('../models/address')
 
 const getOrders = async (req, res) => {
   try {
-    const data = await Order.find()
+    console.log('poi');
+    const data = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json({ data })
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
+  }
+};
+
+const getBulkOrders = async (req, res) => {
+  try {
+    const data = await BulkOrders.find().sort({ createdAt: -1 });
     res.status(200).json({ data })
   } catch (err) {
     console.log(err);
@@ -45,6 +57,17 @@ const createOrder = async (req, res) => {
   }
 }
 
+const createBulkOrder = async (req, res) => {
+  const { email, mobile, name, product, quantity, message } = req?.body
+  try {
+    const data = await BulkOrders.create({ email, mobile, name, product, quantity, message })
+    return res.status(201).json({ data, message: 'Order placed successfully' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
+  }
+}
+
 const updateOrder = async (req, res) => {
   const { _id, status } = req?.body
   try {
@@ -59,7 +82,9 @@ const updateOrder = async (req, res) => {
 
 module.exports = {
   getOrders,
+  getBulkOrders,
   getOrderById,
   createOrder,
+  createBulkOrder,
   updateOrder,
 }
