@@ -54,8 +54,13 @@ const AuthLayout = ({ color, header, title, description, illustration, children 
                   opacity={0.7}
                />
                <Box position="relative">
+                  {illustration.image && (
+                     <Box>
+                        <img src={illustration.image} width={400} />
+                     </Box>
+                  )}
                   {illustration.title && (
-                     <Box mt={6} mb={1}>
+                     <Box mb={1}>
                         <Typography variant="h4" color="white" fontWeight="bold">
                            {illustration.title}
                         </Typography>

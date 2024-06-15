@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { useController } from 'context'
 import { setAuth } from 'context'
 import toast from 'react-hot-toast'
+import image from 'assets/images/logo-ct.png'
 
 const Login = () => {
     const [controller, dispatch] = useController();
@@ -33,6 +34,7 @@ const Login = () => {
                 title: "Melon Magnets",
                 description:
                     "Admin Management Console",
+                image
             }}
             color='info'
         >
