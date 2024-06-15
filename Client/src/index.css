@@ -1,3 +1,18 @@
-body{
+body {
     font-family: Helvetica, 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.close-button {
+    position: absolute;
+    background-color: white;
+    border: 2px solid grey;
+    border-radius: 50%;
+    top: 0;
+    right: 0;
+    padding: 8px;
 }

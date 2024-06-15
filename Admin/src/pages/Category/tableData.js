@@ -56,7 +56,7 @@ const TableData = () => {
       </Icon>
     ),
   }))
-  return isLoading ? <>loading...</> : <Table columns={columns} rows={rows} />
+  return isLoading ? <Typography fontSize={14} sx={{ paddingX: 5 }}>loading...</Typography> : <Table columns={columns} rows={rows} />
 };
 
 export default TableData;
