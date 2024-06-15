@@ -1,8 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getOrderById, getOrders } from "./orderUrls";
+import { getBulkOrders, getOrderById, getOrders } from "./orderUrls";
 
 const useGetOrders = (data) => {
   return useQuery(["get_orders", data], () => getOrders(data), {
+    staleTime: 3000,
+    keepPreviousData: true,
+    // refetchOnWindowFocus: false,
+  });
+};
+
+const useGetBulkOrders = (data) => {
+  return useQuery(["get_bulk_orders", data], () => getBulkOrders(data), {
     staleTime: 3000,
     keepPreviousData: true,
     // refetchOnWindowFocus: false,
@@ -19,5 +27,6 @@ const useGetOrderById = (data) => {
 
 export {
   useGetOrders,
-  useGetOrderById
+  useGetOrderById,
+  useGetBulkOrders
 };

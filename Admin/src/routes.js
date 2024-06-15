@@ -8,6 +8,7 @@ import Settings from "pages/Settings";
 import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import Box from "components/Box";
+import BulkOrders from "pages/BulkOrder";
 
 const routes = [
   {
@@ -41,6 +42,14 @@ const routes = [
     route: "/orders",
     icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-cart" />,
     component: <Orders />,
+  },
+  {
+    type: "route",
+    name: "Bulk Orders",
+    key: "bulkorders",
+    route: "/bulkorders",
+    icon: <Box component="i" color="primary" fontSize="14px" className="ni ni-book-bookmark" />,
+    component: <BulkOrders />,
   },
   // {
   //   type: "route",

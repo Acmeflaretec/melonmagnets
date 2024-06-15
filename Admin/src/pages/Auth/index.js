@@ -21,7 +21,6 @@ const Login = () => {
         } else {
             toast.error('Invalid username or password')
         }
-        console.log(data);
     }
     const handleChange = (e) => {
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
