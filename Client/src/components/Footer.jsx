@@ -1,8 +1,8 @@
 // src/Footer.js
 import React from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import './Footer.css';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import './Footer.css';
 
 const Footer = () => {
   return (
@@ -16,7 +16,7 @@ const Footer = () => {
               <li><Link to={'/privacypolicy'}>Privacy Policy</Link></li>
               <li><Link to={'/cancellation'}>Cancellation & Refunds</Link></li>
               <li><Link to={'/returnpolicy'}>Return Policy</Link></li>
-              <li><Link to={'/storepolicy'}>Store Policies</Link></li>
+              <li><Link to={'/storepolicy'}>Store FAQS</Link></li>
             </ul>
           </Col>
           <Col md={4}>
@@ -29,7 +29,7 @@ const Footer = () => {
                 <Link to={'/pinbagesmain'} >PinBadges</Link>
              </li>
               <li> 
-                <Link to={'/thinmagnets'} >Thin Magnets</Link>
+                <Link to={'/savethedate'} >Save The Date</Link>
               </li>
             </ul>
           </Col>

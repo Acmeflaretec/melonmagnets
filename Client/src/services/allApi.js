@@ -18,7 +18,10 @@ export const addToCartApi = async (reqBody ,reqHeader) => {
 
   export const addOrderApi = async(reqBody )=>{
    return await commonApi('POST',`${ServerURL}/api/v1/orders`,reqBody)
-}
+ }
+  export const createBulkOrderApi = async(reqBody )=>{
+   return await commonApi('POST',`${ServerURL}/api/v1/orders/bulkorder`,reqBody)
+ }
 
 export const getCartItemApi = async (id)=>{
     return await commonApi('GET', `${ServerURL}/api/v1/cart?${id}`)

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Image, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import uploadimg from '../assets/img/upload.png';
+import Swal from 'sweetalert2';
 import { addToCartApi, getAllCategoryApi, getallproductsByIdapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
-import Swal from 'sweetalert2';
+import '../App.css'
+
 
 const PinBadgeSingle = () => {
   const { id } = useParams();
@@ -17,6 +18,8 @@ const PinBadgeSingle = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
   const [productDetails, setProductDetails] = useState({});
+  const [loading,setLoading]=useState(true)
+
   const [cartItem, setCartItem] = useState({
     productId:'',
     quantity:1,
@@ -48,9 +51,7 @@ const PinBadgeSingle = () => {
     const reqHeader ={
       "Content-Type":"application/json"
     }
-    console.log(cartItem);
     const result = await addToCartApi(reqBody,reqHeader)
-    console.log(result);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
 
     cartData.push(result?.data?._id);
@@ -85,7 +86,7 @@ const PinBadgeSingle = () => {
           const product = await getallproductsByIdapi(id)
           setProductDetails(product.data.data)
           setThumbnailUrls(product.data.data?.image)
-          console.log(product.data.data);
+          setLoading(false)
       }
     } catch (error) {
       console.error('Error fetching category data:', error);
@@ -98,7 +99,12 @@ const PinBadgeSingle = () => {
 
   return (
     <>
-      <Container className="mt-4 mb-5">
+      {loading?(
+        <div className='d-flex justify-content-center align-items-center' style={{height:'60vh'}}>
+        <div className='loader'></div>
+        </div>
+      ):(
+        <Container className="mt-4 mb-5">
         {showAlert && <Alert variant="danger">{alertMessage}</Alert>}
         <Row>
           <Col md={6}>
@@ -175,6 +181,8 @@ const PinBadgeSingle = () => {
           <Review />
         </Row>
       </Container>
+      )
+      }
     </>
   );
 };

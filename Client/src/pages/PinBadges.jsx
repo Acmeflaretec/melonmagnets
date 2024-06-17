@@ -4,9 +4,13 @@ import '../App.css';
 import { getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import './PinBadges.css';
+import '../App.css'
+import { Col, Row } from 'react-bootstrap';
 
 function PinBadges() {
   const [badges, setBadges] = useState([]);
+  const [loading,setLoading]=useState(true)
+
   const [sortOrder, setSortOrder] = useState('bestselling');
 
   // Function to fetch all badges from API
@@ -18,6 +22,7 @@ function PinBadges() {
       );
       if (categoryData) {
         setBadges(categoryData.products);
+        setLoading(false)
       }
     } catch (error) {
       console.error('Error fetching badges:', error);
@@ -46,6 +51,11 @@ function PinBadges() {
 
   return (
     <div>
+      {loading?(
+        <div className='d-flex justify-content-center align-items-center' style={{height:'60vh'}}>
+        <div className='loader'></div>
+        </div>
+      ):(
       <div className="container mb-5">
         <h3 className='display-4 fw-bold'>Badges</h3>
         <div className="row mb-4">
@@ -57,24 +67,26 @@ function PinBadges() {
             </select>
           </div>
         </div>
-        <div className="row row-cols-1 row-cols-md-4 g-4">
+        <Row>
           {sortedBadges.map((badge) => (
-            <div key={badge._id} className="col">
+            <Col key={badge._id} xs={6} md={3} lg={3} className='mb-3'>
               <Link to={`/pinbadges/${badge._id}`} className='text-decoration-none'>
                 <div className="card h-100 shadow">
                   <div className="card-img-container p-2">
                     <img src={`${ServerURL}/uploads/${badge.image[0]}`} className="card-img-top" alt={badge.name} />
                   </div>
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{badge.name}</h5>
-                    <p className="card-text mb-auto">Rs. {badge.price}</p>
+                    <h5 className="card-title fw-bold mb-2">{badge.name}</h5>
+                    <p className="card-text ">Rs. {badge.price}</p>
                   </div>
                 </div>
               </Link>
-            </div>
+            </Col>
           ))}
-        </div>
+        </Row>
       </div>
+      )
+      }
     </div>
   );
 }

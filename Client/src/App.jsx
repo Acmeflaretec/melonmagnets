@@ -14,6 +14,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import CancellationRefunds from './pages/CancellationRefunds'
 import ReturnPolicy from './pages/ReturnPolicy'
 import StorePolicy from './pages/StorePolicy'
+import AllProducts from './pages/AllProducts'
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
         <Route path='/cancellation' element={<CancellationRefunds/>}/>
         <Route path='/returnpolicy' element={<ReturnPolicy/>}/>
         <Route path='/storepolicy' element={<StorePolicy/>}/>
+        <Route path='/allproducts' element={<AllProducts/>}/>
       </Routes>
       <WhatsAppButton/>
       <Footer/>
