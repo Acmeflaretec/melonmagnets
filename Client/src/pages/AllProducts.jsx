@@ -51,9 +51,9 @@ function AllProducts() {
      ):
       (
       <div className="container mt-3">
-        <Row className='container'>
+        <Row>
           {products?.map((item) => (
-            <Col sm={6} lg={4} className='mb-3' key={item?._id}>
+            <Col xs={6} lg={4} className='mb-3' key={item?._id}>
               <div onClick={() => handleRedirect(item?.name, item?._id)}>
                 <div className="card h-100 shadow">
                   <div className="card-img-container p-2">
