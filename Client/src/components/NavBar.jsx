@@ -51,19 +51,19 @@ const NavBar = () => {
             <Nav className="ms-auto">
               <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')}>Fridge Magnets</Link>
               <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')}>Pin Badges</Link>
-              <Link to={'/thinmagnets'} className={getLinkClass('/thinmagnets')}>Thin Magnets</Link>
+              <Link to={'/savethedate'} className={getLinkClass('/savethedate')}>Save The Date</Link>
               <div 
                 className="dropdown" 
                 onMouseEnter={handleDropdownEnter} 
                 onMouseLeave={handleDropdownLeave}
               >
-                <h5 className="dropdown-toggle nav-link shopall" style={{ marginRight: '10px' }}>Shop All</h5>
+               <Link to={'/allproducts'} className='text-decoration-none'> <h5 className="dropdown-toggle nav-link shopall " style={{ marginRight: '10px' }}>Shop All</h5></Link>
                 {showDropdown && (
                   <div className="dropdown-menu show">
                     <Link to={'/fridgemagnets'} className="dropdown-item">Fridge Magnets</Link>
                     <Link to={'/pinbagesmain'} className="dropdown-item">Pin Badges</Link>
-                    <Link to={'/thinmagnets'} className="dropdown-item">Thin Magnets</Link>
-                    {/* <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link> */}
+                    <Link to={'/savethedate'} className="dropdown-item">Save The Date</Link>
+                    <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link>
                   </div>
                 )}
               </div>
@@ -113,8 +113,9 @@ const NavBar = () => {
               <Nav className="flex-column">
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
                 <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
-                <Link to={'/thinmagnets'} className={getLinkClass('/thinmagnets')} onClick={handleCloseOffcanvas}>Thin Magnets</Link>
-                {/* <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link> */}
+                <Link to={'/savethedate'} className={getLinkClass('/savethedate')} onClick={handleCloseOffcanvas}>Save The Date</Link>
+                <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link> 
+                <Link to={'/allproducts'} className={getLinkClass('/allproducts')} onClick={handleCloseOffcanvas}>ShopAll</Link> 
               </Nav>
               <div className="offcanvas-footer">
                 <div className="social-icons">

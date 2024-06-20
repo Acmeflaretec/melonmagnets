@@ -4,19 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 
 function Review() {
   const reviews = [
-    {
-      name: 'Adithi',
-      verified: true,
-      rating: 5,
-      comment: 'Thank you so much for this amazing magnets., Much love to you❤️🥰 still more to add on in future Lots of love to you baby Good Luck 🥰',
-      image: 'https://via.placeholder.com/50',
-    },
-    {
-      name: 'Tripura Y.',
-      verified: false,
-      rating: 5,
-      comment: 'Service was great',
-    },
+    
   ];
 
   const ratingCounts = {

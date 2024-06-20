@@ -6,6 +6,7 @@ import { addToCartApi, getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
 import Swal from 'sweetalert2';
+import '../App.css'
 
 const Product = () => {
   const { id } = useParams();
@@ -18,6 +19,7 @@ const Product = () => {
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
   const [productDetails, setProductDetails] = useState({});
   const [image, setImage] = useState([]);
+  const [loading,setLoading]=useState(true)
 
   const fileInputRef = React.useRef(null);
 
@@ -128,7 +130,7 @@ const Product = () => {
   };
 
   const visibleThumbnailCount = 5;
-  const visibleThumbnailUrls = thumbnailUrls.slice(
+  const visibleThumbnailUrls = thumbnailUrls?.slice(
     visibleStartIndex,
     visibleStartIndex + Math.min(visibleThumbnailCount, thumbnailUrls.length)
   );
@@ -136,7 +138,7 @@ const Product = () => {
   const idMapping = {
     fridgemagnets: 'fridge magnets',
     pinbadges: 'pin badges',
-    thinmagnets: 'thin magnets'
+    savethedate: 'save the date'
   };
 
   const getAllCategory = async () => {
@@ -150,6 +152,7 @@ const Product = () => {
       if (categoryData) {
         setThumbnailUrls(categoryData?.products?.[0]?.image);
         setProductDetails(categoryData?.products?.[0]);
+        setLoading(false)
       }
     } catch (error) {
       console.error('Error fetching category data:', error);
@@ -160,14 +163,21 @@ const Product = () => {
     getAllCategory();
   }, [defaultCategory]);
 
+
   return (
     <>
-      <Container className="mt-4 mb-5">
+      {loading?(
+         <div className='d-flex justify-content-center align-items-center' style={{height:'60vh'}}>
+          <div className='loader'></div>
+          </div>
+      ):
+        (
+        <Container className="mt-4 mb-5">
         <Row>
           <Col md={6}>
             <div className="mb-4">
               <Image
-                src={`${ServerURL}/uploads/${thumbnailUrls[selectedThumbnailIndex]}`}
+                src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
                 fluid
                 style={{ width: '100%' }}
                 className="rounded shadow"
@@ -178,14 +188,14 @@ const Product = () => {
                 variant="outline-secondary"
                 onClick={handleNextThumbnail}
                 disabled={
-                  visibleStartIndex === thumbnailUrls.length - visibleThumbnailUrls.length
+                  visibleStartIndex === thumbnailUrls?.length - visibleThumbnailUrls?.length
                 }
               >
                 <i className="fa-solid fa-arrow-left"></i>
               </Button>
               <div className="d-flex overflow-hidden">
                 <div className="d-flex flex-nowrap">
-                  {visibleThumbnailUrls.map((url, index) => (
+                  {visibleThumbnailUrls?.map((url, index) => (
                     <Image
                       key={visibleStartIndex + index}
                       src={`${ServerURL}/uploads/${url}`}
@@ -204,15 +214,15 @@ const Product = () => {
               <Button
                 variant="outline-secondary"
                 onClick={handlePrevThumbnail}
-                disabled={visibleStartIndex === 0 && visibleThumbnailUrls.length === thumbnailUrls.length}
+                disabled={visibleStartIndex === 0 && visibleThumbnailUrls?.length === thumbnailUrls?.length}
               >
                 <i className="fa-solid fa-arrow-right"></i>
               </Button>
             </div>
           </Col>
           <Col md={6}>
-            <h2 className="fw-bold">{productDetails.name}</h2>
-            <h4 className="text-danger">₹{getMaxPhotos(saveTheDateSize)===9?productDetails.type3:getMaxPhotos(saveTheDateSize)===6?productDetails.type2:productDetails.type1}</h4>
+            <h2 className="fw-bold">{productDetails?.name}</h2>
+            <h4 className="text-danger">₹{getMaxPhotos(saveTheDateSize)===9?productDetails?.type3:getMaxPhotos(saveTheDateSize)===6?productDetails?.type2:productDetails?.type1}</h4>
 
             <h5>Select Size:</h5>
             <div className="d-flex mb-3">
@@ -283,6 +293,8 @@ const Product = () => {
           <Review />
         </Row>
       </Container>
+      )
+      }
     </>
   );
 };
@@ -412,7 +424,7 @@ export default Product;
 //   const idMapping = {
 //     fridgemagnets: 'fridge magnets',
 //     pinbadges: 'pin badges',
-//     thinmagnets: 'thin magnets'
+//     savethedate: 'save the date'
 //   };
 
 //   const getAllCategory = async () => {

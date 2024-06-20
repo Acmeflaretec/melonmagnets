@@ -1,8 +1,8 @@
 // src/Footer.js
 import React from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import './Footer.css';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import './Footer.css';
 
 const Footer = () => {
   return (
@@ -30,7 +30,7 @@ const Footer = () => {
                 <Link to={'/pinbagesmain'} >PinBadges</Link>
              </li>
               <li> 
-                <Link to={'/thinmagnets'} >Thin Magnets</Link>
+                <Link to={'/savethedate'} >Save The Date</Link>
               </li>
             </ul>
           </Col>
