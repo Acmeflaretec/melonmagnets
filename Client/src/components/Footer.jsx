@@ -17,6 +17,7 @@ const Footer = () => {
               <li><Link to={'/cancellation'}>Cancellation & Refunds</Link></li>
               <li><Link to={'/returnpolicy'}>Return Policy</Link></li>
               <li><Link to={'/storepolicy'}>Store Policies</Link></li>
+              <li><Link to={'/termsofservice'}>Terms of Service</Link></li>
             </ul>
           </Col>
           <Col md={4}>
