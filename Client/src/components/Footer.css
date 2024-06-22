@@ -38,3 +38,8 @@
     margin: 0;
   }
   
+  /* Custom CSS for hover effect */
+.social-media-icons i:hover {
+  color: #4b5fb8; /* Change color on hover */
+  transition: color 0.3s ease; /* Smooth transition */
+}

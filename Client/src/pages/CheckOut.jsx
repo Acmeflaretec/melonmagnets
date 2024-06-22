@@ -74,7 +74,7 @@ function CheckOut() {
 
     const handlePayment = () => {
       const options = {
-        key: 'rzp_test_wNhVz81BFxrIrL',
+        key: import.meta.env.Razorpay_Api,
         amount: parseInt(subtotal) * 100, // amount in paisa
         currency: 'INR',
         name: 'MELON MAGNETS',

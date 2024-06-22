@@ -2,18 +2,21 @@ import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faSearch, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
-import { Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Badge, Container, Nav, Navbar, Offcanvas } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
 import './NavBar.css';
 import Cart from '../pages/Cart';
+import { getCartItemApi } from '../services/allApi';
+import { cartResponseContext } from '../context/ContextShare';
 
 const NavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showCart, setShowCart] = useState(false);
-
+  const [cartItems, setCartItems] = useState([]);
+  const {toggleCart , setToggleCart} = useContext(cartResponseContext)
   const location = useLocation();
   const activePath = location.pathname;
 
@@ -28,13 +31,35 @@ const NavBar = () => {
   const handleCloseOffcanvas = () => setShowOffcanvas(false);
   const handleShowOffcanvas = () => setShowOffcanvas(true);
   const handleCartClick = () => {
-    handleCloseOffcanvas()
+    handleCloseOffcanvas();
     setShowCart(!showCart);
-  }
+    setToggleCart(!toggleCart);  // Ensure toggleCart is toggled properly
+  };
 
   const getLinkClass = (path) => {
     return activePath === path || (activePath === '/' && path === '/fridgemagnets') ? 'nav-link active-link' : 'nav-link';
   };
+
+  const getCartItems = async () => {
+    const ids = JSON.parse(localStorage.getItem('cartData')) || [];
+    const params = new URLSearchParams();
+    ids.forEach(id => params.append('id', id));
+    const result = await getCartItemApi(params.toString());
+    setCartItems(result.data);
+  };
+
+  useEffect(() => {
+    getCartItems();
+  }, [toggleCart]);
+
+
+  useEffect(() => {
+    if (toggleCart) {
+      setShowCart(true);
+    } else {
+      setShowCart(false);
+    }
+  }, [toggleCart]);
 
   return (
     <>
@@ -73,8 +98,13 @@ const NavBar = () => {
                 <FontAwesomeIcon icon={faInstagram} />
               </Link>
              
-              <button className="nav-link text-decoration-none text-dark" onClick={handleCartClick}>
-                <FontAwesomeIcon icon={faShoppingCart}  />
+              <button className="nav-link text-decoration-none text-dark position-relative" onClick={handleCartClick}>
+                <FontAwesomeIcon icon={faShoppingCart} />
+                {cartItems?.length > 0 && (
+                  <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                    {cartItems?.length}
+                  </Badge>
+                )}
               </button>
             </Nav>
           </Navbar.Collapse>
@@ -86,7 +116,7 @@ const NavBar = () => {
           <Offcanvas.Title>CART</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body onClick={handleCloseOffcanvas}>
-          <Cart/>
+          <Cart />
         </Offcanvas.Body>
       </Offcanvas>
 
@@ -123,8 +153,13 @@ const NavBar = () => {
                     <FontAwesomeIcon icon={faInstagram} />
                   </Link>
                  
-                  <button className="nav-link text-decoration-none text-dark" onClick={handleCartClick} >
-                    <FontAwesomeIcon icon={faShoppingCart}  />
+                  <button className="nav-link text-decoration-none text-dark position-relative" onClick={handleCartClick}>
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                    {cartItems.length > 0 && (
+                      <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                        {cartItems.length}
+                      </Badge>
+                    )}
                   </button>
                 </div>
               </div>

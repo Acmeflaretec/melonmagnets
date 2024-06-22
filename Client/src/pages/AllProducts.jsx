@@ -61,7 +61,7 @@ function AllProducts() {
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-bold mb-2">{item?.name}</h5>
-                    <p className="card-text mb-auto">Rs. {item?.price}</p>
+                    <p className="card-text mb-auto">Rs. {item?.sale_rate}</p>
                   </div>
                 </div>
               </div>

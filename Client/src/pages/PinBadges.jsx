@@ -36,12 +36,12 @@ function PinBadges() {
   // Function to sort badges based on sortOrder
   const sortedBadges = useMemo(() => {
     if (sortOrder === 'bestselling') {
-      return [...badges].sort((a, b) => b.price - a.price);
+      return [...badges].sort((a, b) => b.sale_rate - a.sale_rate);
     } else if (sortOrder === 'priceasc') {
-      return [...badges].sort((a, b) => a.price - b.price);
+      return [...badges].sort((a, b) => a.sale_rate - b.sale_rate);
     }
     // Return default sorted list (bestselling) if sortOrder is invalid
-    return [...badges].sort((a, b) => b.price - a.price);
+    return [...badges].sort((a, b) => b.sale_rate - a.sale_rate);
   }, [badges, sortOrder]);
 
   // Event handler for sorting dropdown change
@@ -77,7 +77,7 @@ function PinBadges() {
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-bold mb-2">{badge.name}</h5>
-                    <p className="card-text ">Rs. {badge.price}</p>
+                    <p className="card-text ">Rs. {badge.sale_rate}</p>
                   </div>
                 </div>
               </Link>

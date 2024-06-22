@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ServerURL } from '../services/baseUrl';
 import { getCartItemApi, removeCartItemApi, updateCartItemApi } from '../services/allApi';
 import '../App.css'
+import { cartResponseContext } from '../context/ContextShare';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
   const [quantity,setquantity] = useState({})
   const [loading,setLoading]=useState(true)
-
+  const {toggleCart , setToggleCart} = useContext(cartResponseContext)
+  const navigate = useNavigate()
 
   const getCartItems = async()=>{
     const ids = JSON.parse(localStorage.getItem('cartData')) || [];
@@ -43,6 +45,7 @@ const Cart = () => {
       const array = cartItems.filter(x=>x._id!=id)
       setCartItems([...array])
       localStorage.setItem('cartData', JSON.stringify(cartData))
+      setToggleCart(prev => !prev); 
     }
   };
   
@@ -62,6 +65,16 @@ const Cart = () => {
   const totalBeforeDiscount = subtotal;
   const totalAfterDiscount = totalBeforeDiscount - discount + deliveryCharges;
 
+  const handleAddProducts = ()=>{
+     navigate('/allproducts')
+     setToggleCart(false)
+  }
+
+  const handleCheckOut =()=>{
+    navigate('/checkout')
+    setToggleCart(false)
+  }
+
   return (
     <>
   
@@ -75,11 +88,11 @@ const Cart = () => {
         {cartItems?.length === 0 ? (
           <div className="text-center">
             <p className="text-muted">No items in the cart</p>
-            <Link to={'/'}>
-              <button className="btn btn-warning">
+           
+              <button className="btn btn-warning" onClick={handleAddProducts}>
                 <i className="fas fa-plus me-2"></i>Add Items
               </button>
-            </Link>
+           
           </div>
         ) : (
           <div className="row">
@@ -153,9 +166,9 @@ const Cart = () => {
                   <p>Total:</p>
                   <p>₹{totalAfterDiscount}</p>
                 </div>
-                <Link to={'/checkout'}>
-                  <button className='btn btn-warning rounded-pill w-100'>Checkout</button>
-                </Link>
+                
+                  <button className='btn btn-warning rounded-pill w-100' onClick={handleCheckOut}>Checkout</button>
+             
               </div>
             </div> 
           </div>

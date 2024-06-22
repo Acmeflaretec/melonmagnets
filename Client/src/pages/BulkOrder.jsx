@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './BulkOrder.css';
 import { createBulkOrderApi } from '../services/allApi';
+import Swal from 'sweetalert2';
 
 function BulkOrder() {
   const [formData, setFormData] = useState({
@@ -79,6 +80,10 @@ function BulkOrder() {
 
     if (isValid) {
       const result = await createBulkOrderApi({...formData});
+       Swal.fire({
+      text: `Thank you, ${result.data.data.name}! We appreciate your bulk order request for ${result.data.data.quantity} ${result.data.data.product}.We will reach out to you within 24 hours to finalize the details and provide you with a quote.`,
+      icon: "success"
+    });
       // Reset form fields
       setFormData({
         name: '',

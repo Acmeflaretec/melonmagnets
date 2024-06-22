@@ -36,13 +36,50 @@ const Footer = () => {
           </Col>
           <Col md={4}>
             <h5>Let's connect!</h5>
-            <p>Follow us on Instagram <br /><Link className='text-decoration-none text-dark' to={'https://www.instagram.com/melonmagnets'}>@melonmagnets</Link> </p>
+            <p>
+            Stay in touch with us for exclusive offers, new arrivals, and more!
+            </p>
+            {/* <p>Follow us on Instagram <br /><Link className='text-decoration-none text-dark' to={''}>@melonmagnets</Link> </p> */}
+            <div className="social-media-icons mt-2">
+            <ul className="list-unstyled d-flex">
+      <li className="me-3">
+        <a href="/" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-facebook fa-xl"></i>
+        </a>
+      </li>
+      <li className="me-3">
+        <a href="https://www.instagram.com/melonmagnets" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-instagram fa-xl"></i>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/company/melonmagnets" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-linkedin fa-xl"></i>
+        </a>
+      </li>
+    </ul>
+            </div>
           </Col>
         </Row>
         <Row className="mt-5">
+         
           <Col>
-            <p className="text-center">&copy; 2024 MelonMagnets. Designed by <Link className='text-decoration-none text-dark ' to={'https://www.acmeflare.in/'}>Acmeflare</Link>.</p>
+          <div> 
+            <img src="visa.png" alt=""  width={50}/>
+            <img src="money.png" alt=""  width={50}/>
+            <img src="google-pay.png" alt=""  width={50}/>
+            <img src="icons8-paytm-120.png" className='ms-2' alt=""  width={50}/>
+            <img src="icons8-bhim-upi-100.png" alt="" className='ms-2' width={40}/>
+          </div>
           </Col>
+
+        </Row>
+        <Row className="mt-5">
+         
+          <Col>
+            <p className="text-center">&copy; 2024 MelonMagnets. Designed by <Link className='text-decoration-none fw-bold text-dark' to={'https://www.acmeflare.in/'}>Acmeflare</Link>.</p>
+          </Col>
+
         </Row>
       </Container>
     </footer>
