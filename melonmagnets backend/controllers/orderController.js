@@ -1,6 +1,7 @@
 const Order = require('../models/order')
 const BulkOrders = require('../models/bulkOrder')
 const Address = require('../models/address')
+const { sendMail } = require('../utils/mailer')
 
 const getOrders = async (req, res) => {
   try {
@@ -50,6 +51,13 @@ const createOrder = async (req, res) => {
     })
 
     const data = await Order.create({ email, mobile, amount, address: address._id, products })
+    const html = `<h1>Order Received</h1>
+    <br/>New order has been placed by <b>${firstname + " " + lastname}</b>, at ${new Date().toTimeString()} on ${new Date().toDateString()}.
+    <br/>Email : ${email} 
+    <br/>Phone : ${mobile} 
+    <br/>for more details <a href="https://www.admin.melonmagnets.com/#/orders/editOrder/${data?._id}" target="_blank">Click here</a>. 
+    `;
+    await sendMail(html)
     return res.status(201).json({ data, message: 'Order placed successfully' });
   } catch (err) {
     console.log(err);
@@ -61,6 +69,17 @@ const createBulkOrder = async (req, res) => {
   const { email, mobile, name, product, quantity, message } = req?.body
   try {
     const data = await BulkOrders.create({ email, mobile, name, product, quantity, message })
+    const html = `<h1>Order Received</h1>
+    <br/>New order has been placed by <b>${name}</b>, at ${new Date().toTimeString()} on ${new Date().toDateString()}.
+    <br/>Email : ${email} 
+    <br/>Phone : ${mobile} 
+    <br/>Message : ${message} 
+    <br/><b>Product Details</b>
+    <br/>Product : ${product}
+    <br/>Quantity : ${quantity} 
+    <br/>for more details <a href="https://www.admin.melonmagnets.com/#/bulkorders" target="_blank">Click here</a>. 
+    `;
+    await sendMail(html)
     return res.status(201).json({ data, message: 'Order placed successfully' });
   } catch (err) {
     console.log(err);
