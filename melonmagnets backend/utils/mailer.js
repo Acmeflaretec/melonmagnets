@@ -8,7 +8,7 @@ const sendMail = async (data) => {
             secure: false,
             auth: {
                 user: 'apikey',
-                pass: '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'
+                pass: process.env.SENDGRID_API_KEY
             },
             tls: {
                 rejectUnauthorized: false
