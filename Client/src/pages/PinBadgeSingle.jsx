@@ -19,7 +19,7 @@ const PinBadgeSingle = () => {
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
   const [productDetails, setProductDetails] = useState({});
   const [loading, setLoading] = useState(true);
-  const {toggleCart , setToggleCart} = useContext(cartResponseContext)
+  const { toggleCart, setToggleCart } = useContext(cartResponseContext);
 
   const [cartItem, setCartItem] = useState({
     productId: '',
@@ -32,13 +32,13 @@ const PinBadgeSingle = () => {
   };
 
   const handlePrevThumbnail = () => {
-    setVisibleStartIndex((prevIndex) =>
+    setSelectedThumbnailIndex((prevIndex) =>
       prevIndex === 0 ? thumbnailUrls.length - 1 : prevIndex - 1
     );
   };
 
   const handleNextThumbnail = () => {
-    setVisibleStartIndex((prevIndex) =>
+    setSelectedThumbnailIndex((prevIndex) =>
       prevIndex === thumbnailUrls.length - 1 ? 0 : prevIndex + 1
     );
   };
@@ -59,21 +59,10 @@ const PinBadgeSingle = () => {
 
     localStorage.setItem('cartData', JSON.stringify(cartData));
 
-    // Swal.fire({
-    //   title: "Done",
-    //   text: "Item added to cart",
-    //   icon: "success"
-    // });
     setToggleCart(prev => !prev); 
     setAlertMessage('');
     setShowAlert(false);
   };
-
-  const visibleThumbnailCount = 5;
-  const visibleThumbnailUrls = thumbnailUrls.slice(
-    visibleStartIndex,
-    visibleStartIndex + Math.min(visibleThumbnailCount, thumbnailUrls.length)
-  );
 
   const getAllCategory = async () => {
     try {
@@ -126,23 +115,20 @@ const PinBadgeSingle = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <Button
                   variant="outline-secondary"
-                  onClick={handleNextThumbnail}
-                  disabled={
-                    visibleStartIndex === thumbnailUrls.length - visibleThumbnailUrls.length
-                  }
+                  onClick={handlePrevThumbnail}
+                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-left"></i>
                 </Button>
                 <div className="d-flex overflow-hidden">
                   <div className="d-flex flex-nowrap">
-                    {visibleThumbnailUrls.map((url, index) => (
+                    {thumbnailUrls.map((url, index) => (
                       <Image
-                        key={visibleStartIndex + index}
+                        key={index}
                         src={`${ServerURL}/uploads/${url}`}
-                        alt={`Thumbnail ${visibleStartIndex + index + 1}`}
-                        className={`img-thumbnail mx-1 ${visibleStartIndex + index === selectedThumbnailIndex ? 'border-primary' : ''
-                          }`}
-                        onClick={() => handleThumbnailClick(visibleStartIndex + index)}
+                        alt={`Thumbnail ${index + 1}`}
+                        className={`img-thumbnail mx-1 ${index === selectedThumbnailIndex ? 'border-primary' : ''}`}
+                        onClick={() => handleThumbnailClick(index)}
                         style={{ width: '60px', height: '60px', cursor: 'pointer' }}
                       />
                     ))}
@@ -150,8 +136,8 @@ const PinBadgeSingle = () => {
                 </div>
                 <Button
                   variant="outline-secondary"
-                  onClick={handlePrevThumbnail}
-                  disabled={visibleStartIndex === 0 && visibleThumbnailUrls.length === thumbnailUrls.length}
+                  onClick={handleNextThumbnail}
+                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-right"></i>
                 </Button>

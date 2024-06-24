@@ -14,7 +14,6 @@ const Product = () => {
   const defaultCategory = id ? id : "fridgemagnets";
   const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
-  const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
@@ -71,30 +70,6 @@ const Product = () => {
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
-  };
-
-  const handlePrevThumbnail = () => {
-    setVisibleStartIndex((prevIndex) => {
-      if (prevIndex === 0) {
-        setSelectedThumbnailIndex(thumbnailUrls.length - 1);
-        return thumbnailUrls.length - 1;
-      } else {
-        setSelectedThumbnailIndex(prevIndex - 1);
-        return prevIndex - 1;
-      }
-    });
-  };
-
-  const handleNextThumbnail = () => {
-    setVisibleStartIndex((prevIndex) => {
-      if (prevIndex === thumbnailUrls.length - 1) {
-        setSelectedThumbnailIndex(0);
-        return 0;
-      } else {
-        setSelectedThumbnailIndex(prevIndex + 1);
-        return prevIndex + 1;
-      }
-    });
   };
 
   useEffect(() => {
@@ -154,12 +129,6 @@ const Product = () => {
     setImage([]);
   };
 
-  const visibleThumbnailCount = 5;
-  const visibleThumbnailUrls = thumbnailUrls?.slice(
-    visibleStartIndex,
-    visibleStartIndex + Math.min(visibleThumbnailCount, thumbnailUrls.length)
-  );
-
   const idMapping = {
     fridgemagnets: 'fridge magnets',
     pinbadges: 'pin badges',
@@ -211,6 +180,26 @@ const Product = () => {
   const salePrice = getPrice();
   const percentageOff = calculatePercentageOff(originalPrice, salePrice);
 
+  const handlePrevThumbnail = () => {
+    setSelectedThumbnailIndex((prevIndex) => {
+      if (prevIndex === 0) {
+        return thumbnailUrls.length - 1;
+      } else {
+        return prevIndex - 1;
+      }
+    });
+  };
+
+  const handleNextThumbnail = () => {
+    setSelectedThumbnailIndex((prevIndex) => {
+      if (prevIndex === thumbnailUrls.length - 1) {
+        return 0;
+      } else {
+        return prevIndex + 1;
+      }
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -239,17 +228,17 @@ const Product = () => {
                 </Button>
                 <div className="d-flex overflow-hidden">
                   <div className="d-flex flex-nowrap">
-                    {visibleThumbnailUrls?.map((url, index) => (
+                    {thumbnailUrls?.map((url, index) => (
                       <Image
-                        key={visibleStartIndex + index}
+                        key={index}
                         src={`${ServerURL}/uploads/${url}`}
-                        alt={`Thumbnail ${visibleStartIndex + index + 1}`}
+                        alt={`Thumbnail ${index + 1}`}
                         className={`img-thumbnail mx-1 ${
-                          visibleStartIndex + index === selectedThumbnailIndex
+                          index === selectedThumbnailIndex
                             ? 'border-primary'
                             : ''
                         }`}
-                        onClick={() => handleThumbnailClick(visibleStartIndex + index)}
+                        onClick={() => handleThumbnailClick(index)}
                         style={{ width: '60px', height: '60px', cursor: 'pointer' }}
                       />
                     ))}
@@ -284,14 +273,14 @@ const Product = () => {
               </div>
               <h5>Upload Photos:</h5>
               <Row className="mb-1">
-                {image?.length > 0
-                  && image?.map((img, idx) => (
+                {image?.length > 0 &&
+                  image?.map((img, idx) => (
                     <Col xs={4} sm={3} md={4} lg={3} className="mb-2" key={idx}>
                       <div className="image-container">
                         <Image
                           fluid
                           style={{ width: 90, height: 90, borderRadius: '16px', border: 'solid 1px #D3D3D3' }}
-                          src={typeof (img) == 'object' ? URL.createObjectURL(img) : `${ServerURL}/uploads/${img}`}
+                          src={typeof img === 'object' ? URL.createObjectURL(img) : `${ServerURL}/uploads/${img}`}
                         />
                         <CloseButton
                           onClick={() => handleRemoveImage(idx)}
@@ -303,8 +292,17 @@ const Product = () => {
                 {[...Array(getMaxPhotos() <= image?.length ? 0 : getMaxPhotos() - image?.length)].map((_, idx) => (
                   <Col xs={4} sm={3} md={4} lg={3} className="mb-2" key={idx}>
                     <div>
-                      <Image src={uploadimg} fluid onClick={handleFileSelect}
-                        style={{ width: 90, height: 90, borderRadius: '16px', border: 'solid 1px #D3D3D3', cursor: 'pointer' }}
+                      <Image
+                        src={uploadimg}
+                        fluid
+                        onClick={handleFileSelect}
+                        style={{
+                          width: 90,
+                          height: 90,
+                          borderRadius: '16px',
+                          border: 'solid 1px #D3D3D3',
+                          cursor: 'pointer'
+                        }}
                       />
                     </div>
                   </Col>
@@ -322,8 +320,8 @@ const Product = () => {
                 className="d-none"
                 id="file-upload"
               />
-              <button className="btn btn-outline-warning w-100 mb-2 text-dark rounded-pill" disabled={image.length== getMaxPhotos()}>
-                <label htmlFor="file-upload" >
+              <button className="btn btn-outline-warning w-100 mb-2 text-dark rounded-pill" disabled={image.length === getMaxPhotos()}>
+                <label htmlFor="file-upload">
                   Upload Photos
                 </label>
               </button>
@@ -331,18 +329,17 @@ const Product = () => {
                 variant="warning"
                 className="w-100 rounded-pill"
                 onClick={handleAddToCart}
-                disabled={image.length!== getMaxPhotos()}
+                disabled={image.length !== getMaxPhotos()}
               >
                 Add To Cart
               </Button>
-             
             </Col>
           </Row>
           <Row>
             <Col className='mt-5'>
-            <h2>Product Details</h2>
-            <p>
-              {productDetails.description}
+              <h2>Product Details</h2>
+              <p>
+                {productDetails.description}
               </p>
             </Col>
           </Row>
@@ -356,6 +353,7 @@ const Product = () => {
 };
 
 export default Product;
+
 
 
 
