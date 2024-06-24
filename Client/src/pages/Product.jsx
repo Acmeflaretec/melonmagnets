@@ -14,6 +14,7 @@ const Product = () => {
   const defaultCategory = id ? id : "fridgemagnets";
   const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
+  const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
@@ -23,6 +24,7 @@ const Product = () => {
   const { toggleCart, setToggleCart } = useContext(cartResponseContext);
 
   const fileInputRef = React.useRef(null);
+  const visibleThumbnailCount = 5;
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -160,7 +162,7 @@ const Product = () => {
   const calculatePercentageOff = (originalPrice, salePrice) => {
     const discount = originalPrice - salePrice;
     const percentageOff = (discount / originalPrice) * 100;
-    return Math.round(percentageOff); // Round to the nearest integer
+    return Math.round(percentageOff);
   };
 
   const getPrice = () => {
@@ -176,29 +178,33 @@ const Product = () => {
     }
   };
 
-  const originalPrice = productDetails?.price;
-  const salePrice = getPrice();
-  const percentageOff = calculatePercentageOff(originalPrice, salePrice);
+  const updateVisibleStartIndex = (newSelectedIndex) => {
+    if (newSelectedIndex < visibleStartIndex) {
+      setVisibleStartIndex(Math.floor(newSelectedIndex / visibleThumbnailCount) * visibleThumbnailCount);
+    } else if (newSelectedIndex >= visibleStartIndex + visibleThumbnailCount) {
+      setVisibleStartIndex(Math.floor(newSelectedIndex / visibleThumbnailCount) * visibleThumbnailCount);
+    }
+  };
 
   const handlePrevThumbnail = () => {
     setSelectedThumbnailIndex((prevIndex) => {
-      if (prevIndex === 0) {
-        return thumbnailUrls.length - 1;
-      } else {
-        return prevIndex - 1;
-      }
+      const newIndex = prevIndex === 0 ? thumbnailUrls.length - 1 : prevIndex - 1;
+      updateVisibleStartIndex(newIndex);
+      return newIndex;
     });
   };
 
   const handleNextThumbnail = () => {
     setSelectedThumbnailIndex((prevIndex) => {
-      if (prevIndex === thumbnailUrls.length - 1) {
-        return 0;
-      } else {
-        return prevIndex + 1;
-      }
+      const newIndex = prevIndex === thumbnailUrls.length - 1 ? 0 : prevIndex + 1;
+      updateVisibleStartIndex(newIndex);
+      return newIndex;
     });
   };
+
+  const originalPrice = productDetails?.price;
+  const salePrice = getPrice();
+  const percentageOff = calculatePercentageOff(originalPrice, salePrice);
 
   return (
     <>
@@ -222,32 +228,24 @@ const Product = () => {
                 <Button
                   variant="outline-secondary"
                   onClick={handlePrevThumbnail}
-                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-left"></i>
                 </Button>
                 <div className="d-flex overflow-hidden">
-                  <div className="d-flex flex-nowrap">
-                    {thumbnailUrls?.map((url, index) => (
-                      <Image
-                        key={index}
-                        src={`${ServerURL}/uploads/${url}`}
-                        alt={`Thumbnail ${index + 1}`}
-                        className={`img-thumbnail mx-1 ${
-                          index === selectedThumbnailIndex
-                            ? 'border-primary'
-                            : ''
-                        }`}
-                        onClick={() => handleThumbnailClick(index)}
-                        style={{ width: '60px', height: '60px', cursor: 'pointer' }}
-                      />
-                    ))}
-                  </div>
+                  {thumbnailUrls?.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) => (
+                    <Image
+                      key={index + visibleStartIndex}
+                      src={`${ServerURL}/uploads/${url}`}
+                      alt={`Thumbnail ${index + visibleStartIndex + 1}`}
+                      className={`img-thumbnail mx-1 ${index + visibleStartIndex === selectedThumbnailIndex ? 'border-primary' : ''}`}
+                      onClick={() => handleThumbnailClick(index + visibleStartIndex)}
+                      style={{ width: '60px', height: '60px', cursor: 'pointer' }}
+                    />
+                  ))}
                 </div>
                 <Button
                   variant="outline-secondary"
                   onClick={handleNextThumbnail}
-                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-right"></i>
                 </Button>
@@ -255,7 +253,7 @@ const Product = () => {
             </Col>
             <Col md={6}>
               <h2 className="fw-bold">{productDetails?.name}</h2>
-              <h4 className="text-danger">₹{salePrice}</h4>
+              <h4 className="text-danger">Price : ₹{salePrice}</h4>
               <span className='m-1 text-muted text-decoration-line-through'>₹{originalPrice}</span>
               <span className='text-success fw-bold bg-success-subtle p-1'>{percentageOff}% off</span>
               <h5>Select Size:</h5>

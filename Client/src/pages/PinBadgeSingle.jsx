@@ -10,10 +10,8 @@ import { cartResponseContext } from '../context/ContextShare';
 
 const PinBadgeSingle = () => {
   const { id } = useParams();
-  const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
-  const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
@@ -21,26 +19,34 @@ const PinBadgeSingle = () => {
   const [loading, setLoading] = useState(true);
   const { toggleCart, setToggleCart } = useContext(cartResponseContext);
 
-  const [cartItem, setCartItem] = useState({
-    productId: '',
-    quantity: 1,
-    price: ''
-  });
+  const visibleThumbnailCount = 5;
 
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
   };
 
   const handlePrevThumbnail = () => {
-    setSelectedThumbnailIndex((prevIndex) =>
-      prevIndex === 0 ? thumbnailUrls.length - 1 : prevIndex - 1
-    );
+    setSelectedThumbnailIndex((prevIndex) => {
+      const newIndex = prevIndex === 0 ? thumbnailUrls.length - 1 : prevIndex - 1;
+      updateVisibleStartIndex(newIndex);
+      return newIndex;
+    });
   };
 
   const handleNextThumbnail = () => {
-    setSelectedThumbnailIndex((prevIndex) =>
-      prevIndex === thumbnailUrls.length - 1 ? 0 : prevIndex + 1
-    );
+    setSelectedThumbnailIndex((prevIndex) => {
+      const newIndex = prevIndex === thumbnailUrls.length - 1 ? 0 : prevIndex + 1;
+      updateVisibleStartIndex(newIndex);
+      return newIndex;
+    });
+  };
+
+  const updateVisibleStartIndex = (newSelectedIndex) => {
+    if (newSelectedIndex < visibleStartIndex) {
+      setVisibleStartIndex(Math.floor(newSelectedIndex / visibleThumbnailCount) * visibleThumbnailCount);
+    } else if (newSelectedIndex >= visibleStartIndex + visibleThumbnailCount) {
+      setVisibleStartIndex(Math.floor(newSelectedIndex / visibleThumbnailCount) * visibleThumbnailCount);
+    }
   };
 
   const handleAddToCart = async () => {
@@ -90,7 +96,7 @@ const PinBadgeSingle = () => {
   const calculatePercentageOff = (originalPrice, salePrice) => {
     const discount = originalPrice - salePrice;
     const percentageOff = (discount / originalPrice) * 100;
-    return Math.round(percentageOff); // Round to the nearest integer
+    return Math.round(percentageOff);
   };
 
   return (
@@ -116,28 +122,24 @@ const PinBadgeSingle = () => {
                 <Button
                   variant="outline-secondary"
                   onClick={handlePrevThumbnail}
-                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-left"></i>
                 </Button>
                 <div className="d-flex overflow-hidden">
-                  <div className="d-flex flex-nowrap">
-                    {thumbnailUrls.map((url, index) => (
-                      <Image
-                        key={index}
-                        src={`${ServerURL}/uploads/${url}`}
-                        alt={`Thumbnail ${index + 1}`}
-                        className={`img-thumbnail mx-1 ${index === selectedThumbnailIndex ? 'border-primary' : ''}`}
-                        onClick={() => handleThumbnailClick(index)}
-                        style={{ width: '60px', height: '60px', cursor: 'pointer' }}
-                      />
-                    ))}
-                  </div>
+                  {thumbnailUrls.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) => (
+                    <Image
+                      key={index + visibleStartIndex}
+                      src={`${ServerURL}/uploads/${url}`}
+                      alt={`Thumbnail ${index + visibleStartIndex + 1}`}
+                      className={`img-thumbnail mx-1 ${index + visibleStartIndex === selectedThumbnailIndex ? 'border-primary' : ''}`}
+                      onClick={() => handleThumbnailClick(index + visibleStartIndex)}
+                      style={{ width: '60px', height: '60px', cursor: 'pointer' }}
+                    />
+                  ))}
                 </div>
                 <Button
                   variant="outline-secondary"
                   onClick={handleNextThumbnail}
-                  disabled={thumbnailUrls.length <= 1}
                 >
                   <i className="fa-solid fa-arrow-right"></i>
                 </Button>
