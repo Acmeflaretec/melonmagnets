@@ -120,6 +120,12 @@ function CheckOut() {
       setSubtotal(subtotal);
     }, [cartItems]);
 
+    const calculatePercentageOff = (originalPrice, salePrice) => {
+      const discount = originalPrice - salePrice;
+      const percentageOff = (discount / originalPrice) * 100;
+      return Math.round(percentageOff);
+    };
+
     return (
       <div className="container my-5" style={{ position: 'relative', zIndex: '0' }}>
         <div className="row">
@@ -211,8 +217,11 @@ function CheckOut() {
           <div className="col-md-5">
             <div className="sticky-top">
               <h2 className="mb-4">Order Summary</h2>
-              {cartItems.map((item, index) => (
-                <div key={index} className="card mb-3 border-dark p-3 shadow">
+              {cartItems.map((item, index) => {
+                       const originalPrice = item.productId.price;
+                       const salePrice = item.price;
+                       const percentageOff = calculatePercentageOff(originalPrice, salePrice);
+                return(<div key={index} className="card mb-3 border-dark p-3 shadow">
                   <div className="row g-0">
                     <div className="col-md-4 col-5 d-flex align-items-center">
                       <img
@@ -225,14 +234,14 @@ function CheckOut() {
                       <div className="card-body">
                         <h5 className="card-title text-dark fw-bold">{item?.productId?.name}</h5>
                         <p className="card-text fw-bold ">₹{item?.price}</p>
-                        <span className="m-1 text-muted text-decoration-line-through">₹999</span>
-                        <span className="text-success fw-bold bg-success-subtle p-1">70% off</span>
+                        <span className="m-1 text-muted text-decoration-line-through">₹{originalPrice}</span>
+                        <span className="text-success fw-bold bg-success-subtle p-1">{percentageOff}% off</span>
                         <p className="card-text fw-bold ">Quantity: {item?.quantity}</p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                </div>)
+               })}
 
               <div className="mb-4">
                 <label htmlFor="discountCode" className="form-label">
