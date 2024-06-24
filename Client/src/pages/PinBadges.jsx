@@ -56,8 +56,8 @@ function PinBadges() {
         <div className='loader'></div>
         </div>
       ):(
-      <div className="container mb-5">
-        <h3 className='display-4 fw-bold'>Badges</h3>
+      <div className="container mb-5 mt-2">
+        <h2 className='fw-bold'>Pin Badges</h2>
         <div className="row mb-4">
           <div className="col-md-4">
             <label htmlFor="sortOrder" className="me-2">Sort by:</label>
@@ -69,11 +69,11 @@ function PinBadges() {
         </div>
         <Row>
           {sortedBadges.map((badge) => (
-            <Col key={badge._id} xs={6} md={3} lg={3} className='mb-3'>
+            <Col key={badge._id} xs={6} md={4} lg={4} className='mb-3'>
               <Link to={`/pinbadges/${badge._id}`} className='text-decoration-none'>
                 <div className="card h-100 shadow">
                   <div className="card-img-container p-2">
-                    <img src={`${ServerURL}/uploads/${badge.image[0]}`} className="card-img-top" alt={badge.name} />
+                    <img src={`${ServerURL}/uploads/${badge.image[0]}`} className="card-img-top rounded" alt={badge.name} />
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-bold mb-2">{badge.name}</h5>

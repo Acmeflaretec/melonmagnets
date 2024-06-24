@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Image, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useSwipeable } from 'react-swipeable';
 import { addToCartApi, getAllCategoryApi, getallproductsByIdapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
@@ -99,6 +100,13 @@ const PinBadgeSingle = () => {
     return Math.round(percentageOff);
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNextThumbnail,
+    onSwipedRight: handlePrevThumbnail,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
+
   return (
     <>
       {loading ? (
@@ -110,7 +118,7 @@ const PinBadgeSingle = () => {
           {showAlert && <Alert variant="danger">{alertMessage}</Alert>}
           <Row>
             <Col md={6}>
-              <div className="mb-4">
+              <div className="mb-4" {...swipeHandlers}>
                 <Image
                   src={`${ServerURL}/uploads/${thumbnailUrls[selectedThumbnailIndex]}`}
                   fluid

@@ -8,6 +8,7 @@ import Review from './Review';
 import Swal from 'sweetalert2';
 import '../App.css';
 import { cartResponseContext } from '../context/ContextShare';
+import { useSwipeable } from 'react-swipeable';
 
 const Product = () => {
   const { id } = useParams();
@@ -206,6 +207,13 @@ const Product = () => {
   const salePrice = getPrice();
   const percentageOff = calculatePercentageOff(originalPrice, salePrice);
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleNextThumbnail,
+    onSwipedRight: handlePrevThumbnail,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
+
   return (
     <>
       {loading ? (
@@ -216,7 +224,7 @@ const Product = () => {
         <Container className="mt-4 mb-5">
           <Row>
             <Col md={6}>
-              <div className="mb-4">
+              <div className="mb-4" {...swipeHandlers}>
                 <Image
                   src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
                   fluid
@@ -253,7 +261,7 @@ const Product = () => {
             </Col>
             <Col md={6}>
               <h2 className="fw-bold">{productDetails?.name}</h2>
-              <h4 className="text-danger">Price : ₹{salePrice}</h4>
+              <h4 className="text-danger">₹ {salePrice}</h4>
               <span className='m-1 text-muted text-decoration-line-through'>₹{originalPrice}</span>
               <span className='text-success fw-bold bg-success-subtle p-1'>{percentageOff}% off</span>
               <h5>Select Size:</h5>

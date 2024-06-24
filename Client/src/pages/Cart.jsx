@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ServerURL } from '../services/baseUrl';
 import { getCartItemApi, removeCartItemApi, updateCartItemApi } from '../services/allApi';
 import '../App.css'
-import { cartResponseContext } from '../context/ContextShare';
+import { cartResponseContext, removeCartContext } from '../context/ContextShare';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
   const [quantity,setquantity] = useState({})
   const [loading,setLoading]=useState(true)
   const {toggleCart , setToggleCart} = useContext(cartResponseContext)
+  const {removeCart , setRemoveCart} = useContext(removeCartContext)
   const navigate = useNavigate()
 
   const getCartItems = async()=>{
@@ -45,7 +46,7 @@ const Cart = () => {
       const array = cartItems.filter(x=>x._id!=id)
       setCartItems([...array])
       localStorage.setItem('cartData', JSON.stringify(cartData))
-      setToggleCart(prev => !prev); 
+      setRemoveCart(prev => !prev); 
     }
   };
   

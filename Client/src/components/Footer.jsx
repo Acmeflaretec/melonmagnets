@@ -9,7 +9,7 @@ const Footer = () => {
     <footer className="footer mt-5 ">
       <Container>
         <Row>
-          <Col md={4}>
+          <Col md={8}>
             <h5>Menu</h5>
             <ul className="list-unstyled">
               <li><Link to={'/aboutus'}>About us</Link></li>
@@ -20,27 +20,14 @@ const Footer = () => {
               <li><Link to={'/termsofservice'}>Terms of Service</Link></li>
             </ul>
           </Col>
-          <Col md={4}>
-            <h5>Quick links</h5>
-            <ul className="list-unstyled">
-              <li>
-                <Link to={'/fridgemagnets'} >Fridge Magnets</Link>
-              </li>
-              <li>
-                <Link to={'/pinbagesmain'} >PinBadges</Link>
-             </li>
-              <li> 
-                <Link to={'/savethedate'} >Save The Date</Link>
-              </li>
-            </ul>
-          </Col>
+         
           <Col md={4}>
             <h5>Let's connect!</h5>
             <p>
             Stay in touch with us for exclusive offers, new arrivals, and more!
             </p>
             {/* <p>Follow us on Instagram <br /><Link className='text-decoration-none text-dark' to={''}>@melonmagnets</Link> </p> */}
-            <div className="social-media-icons mt-2">
+            <div className="social-media-icons mt-3">
             <ul className="list-unstyled d-flex">
       <li className="me-3">
         <a href="/" target="_blank" rel="noopener noreferrer">

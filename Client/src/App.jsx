@@ -17,6 +17,7 @@ import StorePolicy from './pages/StorePolicy'
 import AllProducts from './pages/AllProducts'
 import TermsOfService from './pages/TermsOfServicce'
 import NotFound from './pages/NotFound'
+import BackButton from './components/BackButton'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
     <>
       <Topnav/>
       <NavBar/>
+      <BackButton/>
       <Routes>
         <Route path='/' element={<Product />} />
         <Route path='/:id' element={<Product />} />
