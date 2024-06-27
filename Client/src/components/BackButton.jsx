@@ -10,9 +10,9 @@ const BackButton = () => {
   };
 
   return (
-  <div className='container mt-2 '>
-        <button className='btn btn-light' onClick={handleBackClick}>
-        <i className="fa-solid fa-arrow-left"></i>
+  <div className='container mt-2 d-flex justify-content-end mb-3'>
+        <button className='btn btn-dark ' onClick={handleBackClick}>
+        <i className="fa-solid fa-caret-left"></i> Back
         </button>
   </div>
   );

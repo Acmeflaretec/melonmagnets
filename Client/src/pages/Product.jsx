@@ -228,7 +228,8 @@ const Product = () => {
                 <Image
                   src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
                   fluid
-                  style={{ width: '100%' }}
+                  style={{width:'100%', height:'500px',objectFit:'cover'}}
+
                   className="rounded shadow"
                 />
               </div>
@@ -260,7 +261,7 @@ const Product = () => {
               </div>
             </Col>
             <Col md={6}>
-              <h2 className="fw-bold">{productDetails?.name}</h2>
+              <h2 className="fw-bold mt-3">{productDetails?.name}</h2>
               <h4 className="text-danger">₹ {salePrice}</h4>
               <span className='m-1 text-muted text-decoration-line-through'>₹{originalPrice}</span>
               <span className='text-success fw-bold bg-success-subtle p-1'>{percentageOff}% off</span>

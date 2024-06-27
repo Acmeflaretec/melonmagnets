@@ -1,23 +1,22 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import BulkOrder from './pages/BulkOrder'
-import PinBadges from './pages/PinBadges'
-import Product from './pages/Product'
-import WhatsAppButton from './pages/WhatsAppButton'
-import CheckOut from './pages/CheckOut'
-import Topnav from './components/Topnav'
-import NavBar from './components/NavBar'
 import Footer from './components/Footer'
-import PinBadgeSingle from './pages/PinBadgeSingle'
+import NavBar from './components/NavBar'
+import Topnav from './components/Topnav'
 import AboutUs from './pages/AboutUs'
-import PrivacyPolicy from './pages/PrivacyPolicy'
+import AllProducts from './pages/AllProducts'
+import BulkOrder from './pages/BulkOrder'
 import CancellationRefunds from './pages/CancellationRefunds'
+import CheckOut from './pages/CheckOut'
+import NotFound from './pages/NotFound'
+import PinBadgeSingle from './pages/PinBadgeSingle'
+import PinBadges from './pages/PinBadges'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Product from './pages/Product'
 import ReturnPolicy from './pages/ReturnPolicy'
 import StorePolicy from './pages/StorePolicy'
-import AllProducts from './pages/AllProducts'
 import TermsOfService from './pages/TermsOfServicce'
-import NotFound from './pages/NotFound'
-import BackButton from './components/BackButton'
+import WhatsAppButton from './pages/WhatsAppButton'
 
 function App() {
 
@@ -25,7 +24,6 @@ function App() {
     <>
       <Topnav/>
       <NavBar/>
-      <BackButton/>
       <Routes>
         <Route path='/' element={<Product />} />
         <Route path='/:id' element={<Product />} />

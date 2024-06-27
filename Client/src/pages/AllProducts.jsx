@@ -8,6 +8,7 @@ import '../App.css';
 function AllProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredProduct, setHoveredProduct] = useState(null); // State to manage hovered product
 
   const navigate = useNavigate();
 
@@ -55,20 +56,34 @@ function AllProducts() {
       ) : (
         <div className="container mt-3">
           <Row>
-          {products.map((item) => (
-            <Col key={item._id} xs={6} md={4} lg={4} className='mb-3' onClick={() => handleRedirect(item?.name, item?._id)}>
+            {products.map((item) => (
+              <Col
+                key={item._id}
+                xs={6}
+                md={4}
+                lg={4}
+                className='mb-3'
+                onClick={() => handleRedirect(item?.name, item?._id)}
+                onMouseEnter={() => setHoveredProduct(item._id)}
+                onMouseLeave={() => setHoveredProduct(null)}
+              >
                 <div className="card h-100 shadow">
                   <div className="card-img-container p-2">
-                    <img src={`${ServerURL}/uploads/${item.image[0]}`} className="card-img-top rounded" alt={item.name} />
+                    <img
+                      src={`${ServerURL}/uploads/${hoveredProduct === item._id && item.image[1] ? item.image[1] : item.image[0]}`}
+                      className="card-img-top rounded"
+                      alt={item.name}
+                      style={{width:'100%', height:'300px',objectFit:'cover'}}
+                    />
                   </div>
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title fw-bold mb-2">{item.name}</h5>
-                    <p className="card-text ">Rs. {item.sale_rate}</p>
+                    <h5 className="card-title fw-bold mb-2">{truncateName(item.name, 20)}</h5>
+                    <p className="card-text">Rs. {item.sale_rate}</p>
                   </div>
                 </div>
-            </Col>
-          ))}
-        </Row>
+              </Col>
+            ))}
+          </Row>
         </div>
       )}
     </div>

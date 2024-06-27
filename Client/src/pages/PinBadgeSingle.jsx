@@ -6,6 +6,7 @@ import { useSwipeable } from 'react-swipeable';
 import { addToCartApi, getAllCategoryApi, getallproductsByIdapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import Review from './Review';
+import BackButton from '../components/BackButton'
 import '../App.css';
 import { cartResponseContext } from '../context/ContextShare';
 
@@ -115,6 +116,7 @@ const PinBadgeSingle = () => {
         </div>
       ) : (
         <Container className="mt-4 mb-5">
+           <BackButton/>
           {showAlert && <Alert variant="danger">{alertMessage}</Alert>}
           <Row>
             <Col md={6}>
@@ -154,7 +156,7 @@ const PinBadgeSingle = () => {
               </div>
             </Col>
             <Col md={6}>
-              <h2 className="fw-bold">{productDetails.name}</h2>
+              <h2 className="fw-bold mt-3">{productDetails.name}</h2>
               <h4 className="text-danger"><span className='text-dark text-muted fw-bold'>Price :</span>₹{productDetails.sale_rate}</h4>
               <span className='m-1 text-muted text-decoration-line-through'>₹{productDetails.price}</span>
               <span className='text-success fw-bold bg-success-subtle p-1'>{calculatePercentageOff(productDetails.price, productDetails.sale_rate)}% off</span>
