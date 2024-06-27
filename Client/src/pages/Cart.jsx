@@ -149,7 +149,7 @@ const Cart = () => {
               <div className="col-md-12">
                 <div className="card border-dark p-3 shadow">
                   <h5 className="card-title text-dark fw-bold">Order Summary</h5>
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-between mt-2">
                     <p>Subtotal:</p>
                     <p>₹{subtotal}</p>
                   </div>

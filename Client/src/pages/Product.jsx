@@ -336,7 +336,7 @@ const Product = () => {
                 variant="warning"
                 className="w-100 rounded-pill"
                 onClick={handleAddToCart}
-                disabled={image.length !== getMaxPhotos()}
+                // disabled={image.length !== getMaxPhotos()}
               >
                 Add To Cart
               </Button>

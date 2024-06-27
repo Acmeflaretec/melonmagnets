@@ -1,0 +1,34 @@
+.allimage{
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+
+@media (max-width:550px){
+    .allimage{
+        height: 200px;
+    }
+}
+@media (max-width:480px){
+    .allimage{
+        height: 200px;
+    }
+    .card-title{
+     font-size: 18px;
+    }
+    .card-text{
+
+    }
+}
+@media (max-width:380px){
+    .allimage{
+        height: 150px;
+    }
+    .card-title{
+     font-size: 15px;
+    }
+    .card-text{
+      font-size: 15px;
+    }
+}

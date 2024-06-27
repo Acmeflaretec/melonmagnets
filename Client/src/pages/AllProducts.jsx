@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getallproductsapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 import '../App.css';
+import './AllProducts.css'
 
 function AllProducts() {
   const [products, setProducts] = useState([]);
@@ -71,9 +72,9 @@ function AllProducts() {
                   <div className="card-img-container p-2">
                     <img
                       src={`${ServerURL}/uploads/${hoveredProduct === item._id && item.image[1] ? item.image[1] : item.image[0]}`}
-                      className="card-img-top rounded"
+                      className="card-img-top rounded allimage"
                       alt={item.name}
-                      style={{width:'100%', height:'300px',objectFit:'cover'}}
+                      // style={{width:'100%', height:'300px',objectFit:'cover'}}
                     />
                   </div>
                   <div className="card-body d-flex flex-column">
