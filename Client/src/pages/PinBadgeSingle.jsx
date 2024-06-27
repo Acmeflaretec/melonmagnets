@@ -124,7 +124,7 @@ const PinBadgeSingle = () => {
                 <Image
                   src={`${ServerURL}/uploads/${thumbnailUrls[selectedThumbnailIndex]}`}
                   fluid
-                  style={{ width: '100%' }}
+                  style={{width:'100%', height:'500px',objectFit:'cover'}}
                   className="rounded shadow"
                 />
               </div>

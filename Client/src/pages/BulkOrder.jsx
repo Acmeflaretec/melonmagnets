@@ -114,8 +114,7 @@ function BulkOrder() {
       <div>
         <img
           src="banner.jpg"
-          alt=""
-          className="mt-2"
+          alt="banner image"
           fluid
           style={{ width: "100%" }}
         />

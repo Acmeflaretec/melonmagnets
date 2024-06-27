@@ -80,6 +80,7 @@ function PinBadges() {
                         src={`${ServerURL}/uploads/${hoveredBadge === badge._id && badge.image[1] ? badge.image[1] : badge.image[0]}`}
                         className="card-img-top rounded"
                         alt={badge.name}
+                        style={{width:'100%', height:'300px',objectFit:'cover'}}
                       />
                     </div>
                     <div className="card-body d-flex flex-column">
