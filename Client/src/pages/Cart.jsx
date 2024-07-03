@@ -71,7 +71,7 @@ const Cart = () => {
   });
 
   const discount = 0;
-  const deliveryCharges = 0;
+  const deliveryCharges = subtotal < 299 ? 79 : 0;
 
   const totalBeforeDiscount = subtotal;
   const totalAfterDiscount = totalBeforeDiscount - discount + deliveryCharges;
@@ -159,7 +159,7 @@ const Cart = () => {
                   </div>
                   <div className="d-flex justify-content-between">
                     <p>Delivery Charges:</p>
-                    <p>₹{deliveryCharges}</p>
+                    {deliveryCharges ? <p>₹{deliveryCharges}</p> : <p>Free</p>}
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between">
