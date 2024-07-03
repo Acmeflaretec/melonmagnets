@@ -75,7 +75,7 @@ function CheckOut() {
     const handlePayment = () => {
       const options = {
         key: import.meta.env.VITE_APP_Razorpay_Api,
-        amount: parseInt(subtotal) * 100, // amount in paisa
+        amount: parseInt(subtotal < 299 ? subtotal+79 : subtotal) * 100, // amount in paisa
         currency: 'INR',
         name: 'MELON MAGNETS',
         description: 'Purchase course',
@@ -94,7 +94,7 @@ function CheckOut() {
 
     const handlePaymentSuccess = async () => {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
-      const result = await addOrderApi({ ...address, products, amount: subtotal });
+      const result = await addOrderApi({ ...address, products, amount: subtotal < 299 ? subtotal+79 : subtotal });
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         Swal.fire({
@@ -269,11 +269,11 @@ function CheckOut() {
                   </div>
                   <div className="d-flex justify-content-between mb-3">
                     <span>Shipping</span>
-                    <span>0</span>
+                    <span>{subtotal < 299 ? '₹79' : 'Free'}</span>
                   </div>
                   <div className="d-flex justify-content-between">
                     <h5>Total</h5>
-                    <h5>₹{subtotal}</h5>
+                    <h5>₹{subtotal < 299 ? subtotal+79 : subtotal}</h5>
                   </div>
                   <div className="mt-3">
                     <button type="button" className="btn btn-warning btn-block w-100" onClick={handleClick}>
