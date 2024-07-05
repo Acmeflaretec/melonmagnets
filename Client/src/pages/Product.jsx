@@ -23,7 +23,7 @@ const Product = () => {
   const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(true);
   const { toggleCart, setToggleCart } = useContext(cartResponseContext);
-
+  const [cartLoading, setCartLoading] = useState(false)
   const fileInputRef = React.useRef(null);
   const visibleThumbnailCount = 5;
 
@@ -107,7 +107,7 @@ const Product = () => {
     }
     setAlertMessage('');
     setShowAlert(false);
-
+    setCartLoading(true)
     const reqBody = new FormData();
     reqBody.append('productId', productDetails._id);
     reqBody.append('quantity', 1);
@@ -125,7 +125,7 @@ const Product = () => {
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
     cartData.push(result?.data?._id);
     localStorage.setItem('cartData', JSON.stringify(cartData));
-
+    setCartLoading(false)
     setToggleCart(prev => !prev);
     setAlertMessage('');
     setShowAlert(false);
@@ -336,9 +336,17 @@ const Product = () => {
                 variant="warning"
                 className="w-100 rounded-pill"
                 onClick={handleAddToCart}
+                disabled={cartLoading}
                 // disabled={image.length !== getMaxPhotos()}
               >
-                Add To Cart
+              {cartLoading ? (
+               <>
+               <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+               <span className="sr-only">Loading...</span> Preparing to cart...
+               </>
+              ) : (
+              'Add To Cart'
+              )}
               </Button>
             </Col>
           </Row>

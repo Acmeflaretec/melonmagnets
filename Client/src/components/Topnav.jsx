@@ -4,7 +4,7 @@ import './topnav.css'
 function Topnav() {
   const messages = [
     'Premium Quality ',
-    'Free shipping all over India ',
+    'Free shipping on orders above ₹299 all over India ',
     'Whatsapp +91 8618012964',
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
