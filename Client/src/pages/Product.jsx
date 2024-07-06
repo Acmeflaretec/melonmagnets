@@ -342,7 +342,7 @@ const Product = () => {
               {cartLoading ? (
                <>
                <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-               <span className="sr-only">Loading...</span> Preparing to cart...
+               <span className="sr-only">Loading...</span> Uploading Photos to cart...
                </>
               ) : (
               'Add To Cart'
