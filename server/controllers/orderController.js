@@ -1,6 +1,7 @@
 const Order = require('../models/order')
 const BulkOrders = require('../models/bulkOrder')
 const Address = require('../models/address')
+const CartItem = require('../models/cartItem')
 const { sendMail } = require('../utils/mailer')
 
 const getOrders = async (req, res) => {
@@ -44,13 +45,20 @@ const getOrderById = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const { email, mobile, amount, products, firstname, lastname, country, address_line_1, address_line_2, city, state, zip } = req?.body
+  const { userId,email, mobile, amount, products, firstname, lastname, country, address_line_1, address_line_2, city, state, zip } = req?.body
   try {
     const address = await Address.create({
       firstname, lastname, country, address_line_1, address_line_2, city, state, zip, mobile,
     })
+    
 
-    const data = await Order.create({ email, mobile, amount, address: address._id, products })
+    const data = await Order.create({ userId,email, mobile, amount, address: address._id, products })
+    const productIds = products.map(product => product);
+    // console.log('productIds',productIds);
+    await CartItem.updateMany(   
+      { _id: { $in: products } },
+      { $set: { is_order: true } }
+    );
     const html = `<h1>Order Received</h1>
     <br/>New order has been placed by <b>${firstname + " " + lastname}</b>, at ${new Date().toTimeString()} on ${new Date().toDateString()}.
     <br/>Email : ${email} 
@@ -98,6 +106,8 @@ const updateOrder = async (req, res) => {
     return res.status(500).json({ message: err?.message ?? 'Something went wrong' })
   }
 }
+
+
 
 module.exports = {
   getOrders,

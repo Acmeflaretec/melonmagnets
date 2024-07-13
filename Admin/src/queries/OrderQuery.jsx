@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getBulkOrders, getOrderById, getOrders } from "./orderUrls";
+import { getBulkOrders, getOrderById, getOrders,editReview ,deleteReview,getReviewById } from "./orderUrls";
 
 const useGetOrders = (data) => {
   return useQuery(["get_orders", data], () => getOrders(data), {
@@ -25,8 +25,46 @@ const useGetOrderById = (data) => {
   });
 };
 
+const useEditReview = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => editReview(data), {
+      
+      onSuccess: (data) => {
+          queryClient.invalidateQueries("get_blogs");
+          return data;
+      },
+      onError: (data) => {
+          return data;
+      },
+  });
+};
+const useDeleteReview = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => deleteReview(data), {
+      onSuccess: (data) => {
+          queryClient.invalidateQueries("get_blogs");
+          return data;
+      },
+      onError: (data) => {
+          return data;
+      },
+  });
+};
+const useGetReviewById = (data) => {
+  return useQuery(["get_orders", data], () => getReviewById(data), {
+    // staleTime: 30000,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export {
   useGetOrders,
   useGetOrderById,
-  useGetBulkOrders
+  useGetBulkOrders,
+  useEditReview,
+  useDeleteReview,
+  useGetReviewById
 };

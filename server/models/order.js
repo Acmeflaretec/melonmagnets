@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const orderSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     mobile: {
         type:Number,
         required: true

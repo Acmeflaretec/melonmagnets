@@ -1,6 +1,6 @@
 const Category = require('../models/category')
 
-const getCategory = async (req, res) => {
+const  getCategory = async (req, res) => {
   try {
     const data = await Category.find().populate('products')
     res.status(200).json({ data })

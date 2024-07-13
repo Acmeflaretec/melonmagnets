@@ -27,7 +27,6 @@ const productSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true
     },
     type1: {
         type: Number
@@ -44,11 +43,27 @@ const productSchema = new mongoose.Schema({
     },
     discount: {
         type: Number,
-        required: true
+    },
+    discount1: {
+        type: Number,
+    },
+    discount2: {
+        type: Number,
+    },
+    discount3: {
+        type: Number,
     },
     sale_rate: {
         type: Number,
-        required: true
+    },
+    sale1: {
+        type: Number,
+    },
+    sale2: {
+        type: Number,
+    },
+    sale3: {
+        type: Number,
     },
     image: {
         type: Array,

@@ -42,6 +42,7 @@ const AddCategory = () => {
       typeof (data.image) == 'object' && formData.append("image", data.image, data?.image?.name);
       addCategory(formData)
         .then((res) => {
+          console.log('res?.message',res?.message);
           toast.success(res?.message ?? "category added");
         })
         .catch((err) => {

@@ -13,16 +13,19 @@ exports.getCartItems = async (req, res) => {
 
 // Add a new item to the cart
 exports.addToCart = async (req, res) => {
-  const { productId, quantity, price} = req.body;
+  // console.log('addToCart');
+  const {userId,productId, quantity, price} = req.body;
+  console.log('userId,productId, quantity, price',userId,productId, quantity, price);
   const image =  req?.files?.map((x) => x.filename)??[]
   try {
     const cartItem = new CartItem({
+      userId,
       productId,
       quantity,
       price,
       image
     });
-
+    console.log('cartItem',cartItem);
     await cartItem.save();
     res.status(201).json(cartItem);
   } catch (error) {
@@ -57,3 +60,18 @@ exports.removeFromCart = async (req, res) => {
     res.status(500).json({ message: 'Server Error', error });
   }
 };
+
+exports.getReviewOrders = async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+    // console.log(' userId, productId', userId, productId);
+
+    const orders = await CartItem.find({ userId, productId,is_order:true});
+    // console.log('orders',orders);
+
+    res.status(200).json({ canWriteReview: orders.length > 0 });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });    
+  }
+};
+

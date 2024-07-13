@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const CartItemSchema = new mongoose.Schema({
-
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
@@ -18,8 +22,11 @@ const CartItemSchema = new mongoose.Schema({
   },
   image: {
     type: Array,
-    required: true
   },
+  is_order:{
+    type: Boolean,
+    default: false 
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('CartItem', CartItemSchema);

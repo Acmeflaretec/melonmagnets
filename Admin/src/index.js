@@ -9,7 +9,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import CustomToaster from "utils/CustomToaster";
 
 const container = document.getElementById("root");
-const root = createRoot(container);
+const root = createRoot(container);    
 const queryClient = new QueryClient();
 
 root.render(

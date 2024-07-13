@@ -1,13 +1,13 @@
 const multer = require('multer')
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req, file, cb) {  
     cb(null, './public/uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
   }
-});
+});   
 
 const upload = multer({
   storage: storage,
@@ -16,7 +16,7 @@ const upload = multer({
       callback(null, true)
     } else {
       console.log('only jpg & png file supported !');
-      callback(null, false)
+      callback(null, false)    
     }
   }
 });
