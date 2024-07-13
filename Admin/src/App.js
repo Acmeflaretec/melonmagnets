@@ -89,7 +89,7 @@ export default function App() {
     <CacheProvider value={rtlCache}>
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
-        {auth ? <Login /> :
+        {!auth ? <Login /> :
           <>
             <Sidenav
               color={sidenavColor}
@@ -120,7 +120,7 @@ export default function App() {
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {auth ? <Login /> : 
+      {!auth ? <Login /> : 
         <>
           <Sidenav
             color={sidenavColor}
