@@ -1,5 +1,6 @@
 import Dashboard from "pages/Dashboard";
 import Category from "pages/Category";
+import Coupon from "pages/Coupon";
 import Products from "pages/Products";
 import Orders from "pages/Orders";
 import Banner from "pages/Banner";
@@ -51,14 +52,14 @@ const routes = [
     icon: <Box component="i" color="primary" fontSize="14px" className="ni ni-book-bookmark" />,
     component: <BulkOrders />,
   },
-  // {
-  //   type: "route",
-  //   name: "Banners",
-  //   key: "banners",
-  //   route: "/banners",
-  //   icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-album-2" />,
-  //   component: <Banner />,
-  // },
+  {
+    type: "route",
+    name: "Coupons",
+    key: "coupons",
+    route: "/coupons",
+    icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-album-2" />,
+    component: <Coupon />,
+  },
   // {
   //   type: "route",
   //   name: "Blogs",

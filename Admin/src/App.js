@@ -21,8 +21,10 @@ import "assets/css/nucleo-icons.css";
 import "assets/css/nucleo-svg.css";
 import "assets/css/style.css";
 import AddCategory from "pages/Category/AddCategory";
+import AddCoupon from "pages/Coupon/AddCoupon";
 import AddProduct from "pages/Products/AddProduct";
 import EditProduct from "pages/Products/EditProduct";
+import EditCoupon from "pages/Coupon/EditCoupon";
 import EditOrder from "pages/Orders/EditOrder";
 import Login from "pages/Auth";
 
@@ -87,7 +89,7 @@ export default function App() {
     <CacheProvider value={rtlCache}>
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
-        {!auth ? <Login /> :
+        {auth ? <Login /> :
           <>
             <Sidenav
               color={sidenavColor}
@@ -102,8 +104,11 @@ export default function App() {
               <Routes>
                 {getRoutes(routes)}
                 <Route path="/category/addCategory" element={<AddCategory />} />
+                <Route path="/coupon/addCoupon" element={<AddCoupon />} />
                 <Route path="/products/addProducts" element={<AddProduct />} />
                 <Route path="/products/editProduct/:id" element={<EditProduct />} />
+                <Route path="/coupon/editCoupon/:id" element={<EditCoupon />} />
+
                 <Route path="/orders/editOrder/:id" element={<EditOrder />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>
@@ -115,7 +120,7 @@ export default function App() {
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {!auth ? <Login /> :
+      {auth ? <Login /> : 
         <>
           <Sidenav
             color={sidenavColor}
@@ -130,8 +135,11 @@ export default function App() {
             <Routes>
               {getRoutes(routes)}
               <Route path="/category/addCategory" element={<AddCategory />} />
+              <Route path="/coupon/addCoupon" element={<AddCoupon />} />
               <Route path="/products/addProducts" element={<AddProduct />} />
               <Route path="/products/editProduct/:id" element={<EditProduct />} />
+              <Route path="/coupon/editCoupon/:id" element={<EditCoupon />} />
+
               <Route path="/orders/editOrder/:id" element={<EditOrder />} />
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
