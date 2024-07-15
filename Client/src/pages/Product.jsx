@@ -4,13 +4,18 @@ import { useParams } from 'react-router-dom';
 import uploadimg from '../assets/img/upload.png';
 import { addToCartApi, getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
-import Review from './Review';
+// import Review from './Review';
+import Review from '../components/Review';
 import Swal from 'sweetalert2';
 import '../App.css';
 import { cartResponseContext } from '../context/ContextShare';
 import { useSwipeable } from 'react-swipeable';
+import { useSelector } from 'react-redux';
+import { Link} from 'react-router-dom';
+
 
 const Product = () => {
+  const userDetails = useSelector((state) => state.userDetails);
   const { id } = useParams();
   const defaultCategory = id ? id : "fridgemagnets";
   const [saveTheDateSize, setSaveTheDateSize] = useState('4 Images');
@@ -110,6 +115,8 @@ const Product = () => {
     setCartLoading(true)
     const reqBody = new FormData();
     reqBody.append('productId', productDetails._id);
+    reqBody.append('userId', userDetails._id);
+
     reqBody.append('quantity', 1);
     reqBody.append('price', getPrice());
 
@@ -123,7 +130,7 @@ const Product = () => {
 
     const result = await addToCartApi(reqBody, reqHeader);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-    cartData.push(result?.data?._id);
+    result?.data?._id && cartData.push(result?.data?._id);
     localStorage.setItem('cartData', JSON.stringify(cartData));
     setCartLoading(false)
     setToggleCart(prev => !prev);
@@ -332,7 +339,7 @@ const Product = () => {
                   Upload Photos
                 </label>
               </button>
-              <Button
+              {userDetails ? ( <Button
                 variant="warning"
                 className="w-100 rounded-pill"
                 onClick={handleAddToCart}
@@ -347,7 +354,8 @@ const Product = () => {
               ) : (
               'Add To Cart'
               )}
-              </Button>
+              </Button>) : (<Link to={'/login'}> <Button variant="warning"
+                className="w-100 rounded-pill">Add To Cart</Button></Link>)}
             </Col>
           </Row>
           <Row>
@@ -359,7 +367,7 @@ const Product = () => {
             </Col>
           </Row>
           <Row>
-            <Review />
+            <Review productId={productDetails._id}/>
           </Row>
         </Container>
       )}

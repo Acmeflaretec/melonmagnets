@@ -2,13 +2,14 @@ import Dashboard from "pages/Dashboard";
 import Category from "pages/Category";
 import Products from "pages/Products";
 import Orders from "pages/Orders";
-import Banner from "pages/Banner";
-import Blogs from "pages/Blogs";
+// import Banner from "pages/Banner";
+// import Blogs from "pages/Blogs";
 import Settings from "pages/Settings";
-import Billing from "layouts/billing";
-import Profile from "layouts/profile";
+// import Billing from "layouts/billing";
+// import Profile from "layouts/profile";
 import Box from "components/Box";
 import BulkOrders from "pages/BulkOrder";
+import Review from "pages/review";
 
 const routes = [
   {
@@ -50,6 +51,14 @@ const routes = [
     route: "/bulkorders",
     icon: <Box component="i" color="primary" fontSize="14px" className="ni ni-book-bookmark" />,
     component: <BulkOrders />,
+  },
+  {
+    type: "route",
+    name: "Review",
+    key: "review",
+    route: "/review",
+    icon: <Box component="i" color="dark" fontSize="14px" className="ni ni-single-02" />,
+    component: <Review />,
   },
   // {
   //   type: "route",

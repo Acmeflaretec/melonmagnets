@@ -10,14 +10,49 @@ import './NavBar.css';
 import Cart from '../pages/Cart';
 import { getCartItemApi } from '../services/allApi';
 import { cartResponseContext, removeCartContext } from '../context/ContextShare';
+import { setUserDetails, clearUserDetails } from '../redux/actions/userActions';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosInstance from '../axios'
+
 
 const NavBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const {toggleCart, setToggleCart} = useContext(cartResponseContext);
-  const {removeCart , setRemoveCart} = useContext(removeCartContext)
+  const { toggleCart, setToggleCart } = useContext(cartResponseContext);
+  const { removeCart, setRemoveCart } = useContext(removeCartContext)
+
+
+  const dispatch = useDispatch();
+  const userDetails = useSelector(state => state.userDetails);
+  console.log('userDetails',userDetails);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/api/v1/auth/user');
+       // console.log(response.data.data)
+        dispatch(setUserDetails(response.data.data));
+      } catch (error) {
+        console.log('errr', error);
+        dispatch(clearUserDetails());
+      }
+    };
+    fetchData();
+  }, []);
+
+
+  const logoutUser = () => {
+    dispatch(clearUserDetails());
+
+    localStorage.removeItem('Tokens');
+    window.location.reload();
+    navigate('/')
+  };
+
+
+
+
 
   const location = useLocation();
   const activePath = location.pathname;
@@ -52,7 +87,7 @@ const NavBar = () => {
 
   useEffect(() => {
     getCartItems();
-  }, [toggleCart , removeCart]);
+  }, [toggleCart, removeCart]);
 
   useEffect(() => {
     if (toggleCart) {
@@ -78,9 +113,9 @@ const NavBar = () => {
               <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')}>Fridge Magnets</Link>
               <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')}>Pin Badges</Link>
               <Link to={'/savethedate'} className={getLinkClass('/savethedate')}>Save The Date</Link>
-              <div 
-                className="dropdown" 
-                onMouseEnter={handleDropdownEnter} 
+              <div
+                className="dropdown"
+                onMouseEnter={handleDropdownEnter}
                 onMouseLeave={handleDropdownLeave}
               >
                 <Link to={'/allproducts'} className='text-decoration-none'>
@@ -97,17 +132,21 @@ const NavBar = () => {
               </div>
             </Nav>
             <Nav className="ms-auto">
-              <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none me-2 text-dark">
+              <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
                 <FontAwesomeIcon icon={faInstagram} />
               </Link>
-              <button className="nav-link text-decoration-none text-dark position-relative" onClick={handleCartClick}>
+              {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
                 {cartItems?.length > 0 && (
                   <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
                     {cartItems?.length}
                   </Badge>
                 )}
-              </button>
+              </button>) : (<Link to={'/login'}><button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
+              {userDetails ? (<button className='btn btn-success' onClick={logoutUser} >Logout</button>
+              ) : (
+              <Link to={'/login'}> <button className='btn btn-success'>Login</button></Link>
+               )}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -156,8 +195,8 @@ const NavBar = () => {
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
                 <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
                 <Link to={'/savethedate'} className={getLinkClass('/savethedate')} onClick={handleCloseOffcanvas}>Save The Date</Link>
-                <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link> 
-                <Link to={'/allproducts'} className={getLinkClass('/allproducts')} onClick={handleCloseOffcanvas}>Shop All</Link> 
+                <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link>
+                <Link to={'/allproducts'} className={getLinkClass('/allproducts')} onClick={handleCloseOffcanvas}>Shop All</Link>
               </Nav>
               <div className="offcanvas-footer">
                 <div className="social-icons">

@@ -22,7 +22,7 @@ const Login = () => {
             toast.error('Invalid username or password')
         }
     }
-    const handleChange = (e) => {
+    const handleChange = (e) => {  
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
     return (

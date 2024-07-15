@@ -7,6 +7,7 @@ const deleteProduct = async (data) => request(`/products/${data?.id}`, 'DELETE',
 const getCategory = async (data) => request(`/category?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const getProducts = async (data) => request(`/products?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const getProductById = async (data) => request(`/products/${data?.id}`, 'GET', data)
+const getReview = async (data) => request(`/reviews/admin?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 
 export {
   addCategory,
@@ -15,5 +16,6 @@ export {
   deleteProduct,
   getCategory,
   getProducts,
-  getProductById
+  getProductById,
+  getReview
 };

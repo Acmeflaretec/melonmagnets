@@ -25,6 +25,7 @@ import AddProduct from "pages/Products/AddProduct";
 import EditProduct from "pages/Products/EditProduct";
 import EditOrder from "pages/Orders/EditOrder";
 import Login from "pages/Auth";
+import EditReview from "pages/review/EditReview"; 
 
 export default function App() {
   const [controller, dispatch] = useController();
@@ -105,6 +106,7 @@ export default function App() {
                 <Route path="/products/addProducts" element={<AddProduct />} />
                 <Route path="/products/editProduct/:id" element={<EditProduct />} />
                 <Route path="/orders/editOrder/:id" element={<EditOrder />} />
+                <Route path="/review/editReview/:id" element={<EditReview />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>
               <Footer />
@@ -133,6 +135,7 @@ export default function App() {
               <Route path="/products/addProducts" element={<AddProduct />} />
               <Route path="/products/editProduct/:id" element={<EditProduct />} />
               <Route path="/orders/editOrder/:id" element={<EditOrder />} />
+              <Route path="/review/editReview/:id" element={<EditReview />} />
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
             <Footer />

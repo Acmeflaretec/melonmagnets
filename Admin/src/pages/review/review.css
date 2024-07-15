@@ -1,0 +1,11 @@
+.review-images {
+    /* display: flex; */
+    overflow-x: auto;
+  }
+  
+  .review-images img {
+    /* height: 100px; */
+    width: 30%;
+    margin-right: 10px;
+    object-fit: cover;
+  }

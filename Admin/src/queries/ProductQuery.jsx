@@ -7,6 +7,7 @@ import {
   getProductById,
   getProducts,
   updateProduct,
+  getReview
 } from "./productUrls";
 
 const useGetCategory = (data) => {
@@ -88,6 +89,14 @@ const useDeleteProduct = () => {
   });
 };
 
+const useGetReview = (data) => {
+  return useQuery(["get_products", data], () => getReview(data), {
+    // staleTime: 30000,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export {
   useGetCategory,
   useGetProducts,
@@ -95,5 +104,6 @@ export {
   useAddCategory,
   useAddProduct,
   useUpdateProduct,
-  useDeleteProduct
+  useDeleteProduct,
+  useGetReview
 };
