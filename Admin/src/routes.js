@@ -3,13 +3,14 @@ import Category from "pages/Category";
 import Coupon from "pages/Coupon";
 import Products from "pages/Products";
 import Orders from "pages/Orders";
-import Banner from "pages/Banner";
-import Blogs from "pages/Blogs";
+// import Banner from "pages/Banner";
+// import Blogs from "pages/Blogs";
 import Settings from "pages/Settings";
-import Billing from "layouts/billing";
-import Profile from "layouts/profile";
+// import Billing from "layouts/billing";
+// import Profile from "layouts/profile";
 import Box from "components/Box";
 import BulkOrders from "pages/BulkOrder";
+import Review from "pages/review";
 
 const routes = [
   {

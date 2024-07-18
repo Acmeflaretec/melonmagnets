@@ -5,12 +5,15 @@ import Swal from 'sweetalert2';
 import { useSwipeable } from 'react-swipeable';
 import { addToCartApi, getAllCategoryApi, getallproductsByIdapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
-import Review from './Review';
+import Review from '../components/Review';
 import BackButton from '../components/BackButton'
 import '../App.css';
 import { cartResponseContext } from '../context/ContextShare';
+import { useSelector } from 'react-redux';
+import { Link} from 'react-router-dom';
 
 const PinBadgeSingle = () => {
+  const userDetails = useSelector((state) => state.userDetails);
   const { id } = useParams();
   const [selectedThumbnailIndex, setSelectedThumbnailIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
@@ -54,6 +57,7 @@ const PinBadgeSingle = () => {
   const handleAddToCart = async () => {
     const reqBody = new FormData();
     reqBody.append('productId', productDetails._id);
+    reqBody.append('userId', userDetails._id);
     reqBody.append('quantity', 1);
     reqBody.append('price', productDetails.sale_rate);
 
@@ -62,8 +66,8 @@ const PinBadgeSingle = () => {
     };
     const result = await addToCartApi(reqBody, reqHeader);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-
-    cartData.push(result?.data?._id);
+console.log('fdh',result?.data);
+    result?.data?._id && cartData.push(result?.data?._id);
 
     localStorage.setItem('cartData', JSON.stringify(cartData));
 
@@ -170,17 +174,18 @@ const PinBadgeSingle = () => {
                 <li><strong>Perfect Size:</strong> Compact and lightweight, easy to wear without being bulky.</li>
                 <li><strong>Versatile Use:</strong> Great for personal use or as thoughtful gifts for friends and family.</li>
               </ul>
-              <Button
+              {userDetails ? (  <Button
                 variant="warning"
                 className="w-100 rounded-pill mt-4"
                 onClick={handleAddToCart}
               >
                 Add To Cart
-              </Button>
+              </Button>) : (<Link to={'/login'}> <Button variant="warning"
+                className="w-100 rounded-pill">Add To Cart</Button></Link>)}
             </Col>
           </Row>
           <Row>
-            <Review />
+          <Review productId={productDetails._id}/>
           </Row>
         </Container>
       )}

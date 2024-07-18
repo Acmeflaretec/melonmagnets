@@ -52,7 +52,7 @@ const EditProduct = () => {
          for (const key in details) {
             if (details.hasOwnProperty(key) && key !== "image") {
                formData.append(key, details[key]);
-             }
+            }
          }
 
          updateProduct(formData)
@@ -138,57 +138,115 @@ const EditProduct = () => {
                         onChange={handleChange}
                      />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="MRP (Maximum Retail Price)"
-                        name="price"
-                        value={details?.price || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="Discount (%)"
-                        name="discount"
-                        value={details?.discount || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="Enter Sale Rate"
-                        name="sale_rate"
-                        value={details?.sale_rate || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
-                  <Grid xs={12} pl={3} pt={2}>
-                     <Typography variant="body2">variations</Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="4 piece"
-                        name="type1"
-                        value={details?.type1 || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="6 piece"
-                        name="type2"
-                        value={details?.type2 || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                     <Input
-                        placeholder="9 piece"
-                        name="type3"
-                        value={details?.type3 || ''}
-                        onChange={handleChange}
-                     />
-                  </Grid>
+                  {details?.price ? (
+                     <>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="MRP (Maximum Retail Price)"
+                              name="price"
+                              value={details?.price || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Discount (%)"
+                              name="discount"
+                              value={details?.discount || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Enter Sale Rate"
+                              name="sale_rate"
+                              value={details?.sale_rate || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                     </>
+                  ) : (
+                     <>
+                        <Grid xs={12} pl={3} pt={2}>
+                           <Typography variant="body2">Variations</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="4 piece MRP"
+                              name="type1"
+                              value={details?.type1 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Discount %"
+                              name="discount1"
+                              value={details?.discount1 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Sale Rate"
+                              name="sale1"
+                              value={details?.sale1 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="6 piece MRP"
+                              name="type2"
+                              value={details?.type2 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Discount %"
+                              name="discount2"
+                              value={details?.discount2 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Sale Rate"
+                              name="sale2"
+                              value={details?.sale2 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="9 piece MRP"
+                              name="type3"
+                              value={details?.type3 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Discount %"
+                              name="discount3"
+                              value={details?.discount3 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Sale Rate"
+                              name="sale3"
+                              value={details?.sale3 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+
+                     </>
+                  )}
                   <Grid item xs={12}>
                      <Input
                         id="description"

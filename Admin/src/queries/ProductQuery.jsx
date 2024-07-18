@@ -7,12 +7,6 @@ import {
   getProductById,
   getProducts,
   updateProduct,
-  getCoupon,
-  addCoupon,
-  couponStatus,
-  updateCoupon,
-  getCouponById
-
 } from "./productUrls";
 
 const useGetCoupon = (data) => {
@@ -155,6 +149,14 @@ const useDeleteProduct = () => {
   });
 };
 
+const useGetReview = (data) => {
+  return useQuery(["get_products", data], () => getReview(data), {
+    // staleTime: 30000,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export {
   useGetCategory,
   useGetProducts,
@@ -162,12 +164,5 @@ export {
   useAddCategory,
   useAddProduct,
   useUpdateProduct,
-  useDeleteProduct,
-  useGetCoupon,
-  useAddCoupon,
-  useUpdateCouponStatus,
-  useUpdateCoupon,
-  useGetCouponById,
-
-
+  useDeleteProduct
 };

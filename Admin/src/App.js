@@ -27,6 +27,7 @@ import EditProduct from "pages/Products/EditProduct";
 import EditCoupon from "pages/Coupon/EditCoupon";
 import EditOrder from "pages/Orders/EditOrder";
 import Login from "pages/Auth";
+import EditReview from "pages/review/EditReview"; 
 
 export default function App() {
   const [controller, dispatch] = useController();
@@ -110,6 +111,7 @@ export default function App() {
                 <Route path="/coupon/editCoupon/:id" element={<EditCoupon />} />
 
                 <Route path="/orders/editOrder/:id" element={<EditOrder />} />
+                <Route path="/review/editReview/:id" element={<EditReview />} />
                 <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>
               <Footer />
@@ -141,6 +143,7 @@ export default function App() {
               <Route path="/coupon/editCoupon/:id" element={<EditCoupon />} />
 
               <Route path="/orders/editOrder/:id" element={<EditOrder />} />
+              <Route path="/review/editReview/:id" element={<EditReview />} />
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
             <Footer />

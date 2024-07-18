@@ -10,6 +10,7 @@ const addCoupon = async (data) => request(`/coupons`, 'POST', data)
 
 const getProducts = async (data) => request(`/products?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const getProductById = async (data) => request(`/products/${data?.id}`, 'GET', data)
+const getReview = async (data) => request(`/reviews/admin?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 
 const couponStatus = async (data) => request(`/coupons/status/${data?._id}`, 'PATCH', data)
 const updateCoupon = async (data) => request(`/coupons`, 'PATCH', data)

@@ -4,8 +4,12 @@ import './Checkout.css';
 import { addOrderApi, getCartItemApi } from '../services/allApi';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+
 
 function CheckOut() {
+  const userDetails = useSelector((state) => state.userDetails);
+  // console.log('userDetails',userDetails);
     const [cartItems, setCartItems] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
     const navigate = useNavigate();
@@ -94,7 +98,8 @@ function CheckOut() {
 
     const handlePaymentSuccess = async () => {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
-      const result = await addOrderApi({ ...address, products, amount: subtotal < 299 ? subtotal+79 : subtotal });
+      console.log('cartData products',products);
+      const result = await addOrderApi({ ...address, products, amount: subtotal < 299 ? subtotal+79 : subtotal,userId:userDetails._id });
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         Swal.fire({
