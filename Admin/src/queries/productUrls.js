@@ -32,5 +32,6 @@ export {
   updateCoupon,
   getCouponById,
 
+  getReview,
 
 };

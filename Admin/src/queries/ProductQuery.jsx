@@ -7,6 +7,11 @@ import {
   getProductById,
   getProducts,
   updateProduct,
+  getCoupon,
+getCouponById,
+addCoupon,
+updateCoupon,
+getReview,
 } from "./productUrls";
 
 const useGetCoupon = (data) => {
@@ -164,5 +169,11 @@ export {
   useAddCategory,
   useAddProduct,
   useUpdateProduct,
-  useDeleteProduct
+  useDeleteProduct,
+  useGetCoupon,
+useGetCouponById,
+useAddCoupon,
+useUpdateCouponStatus,
+useUpdateCoupon,
+useGetReview,
 };
