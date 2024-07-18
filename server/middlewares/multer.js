@@ -1,26 +1,55 @@
-const multer = require('multer')
+// const multer = require('multer')
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {  
+//     cb(null, './public/uploads/');
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });   
+
+// const upload = multer({
+//   storage: storage,
+//   fileFilter: function (params, file, callback) {
+//     if (file.mimetype == "image/png" || file.mimetype == "image/jpeg" || file.mimetype == "image/jpg" || file.mimetype == "image/webp") {
+//       callback(null, true)
+//     } else {
+//       console.log('only jpg & png file supported !');
+//       callback(null, false)    
+//     }
+//   }
+// });
+
+// module.exports = {
+//   upload
+// } 
+
+
+const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {  
-    cb(null, './public/uploads/');
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, './public/uploads/');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
   }
-});   
+});
 
 const upload = multer({
   storage: storage,
-  fileFilter: function (params, file, callback) {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpeg" || file.mimetype == "image/jpg" || file.mimetype == "image/webp") {
-      callback(null, true)
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+      cb(null, true);
     } else {
-      console.log('only jpg & png file supported !');
-      callback(null, false)    
+      cb(new Error('Only image and video files are allowed!'), false);
     }
   }
 });
 
-module.exports = {
-  upload
-} 
+module.exports = { upload };
