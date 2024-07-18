@@ -5,14 +5,18 @@ import React, { useEffect, useState } from 'react'
 import Typography from 'components/Typography'
 import toast from 'react-hot-toast'
 import { useGetProductById } from 'queries/ProductQuery'
-import { useParams } from 'react-router-dom'
+import { useParams,useNavigate } from 'react-router-dom'
 import ImageList from './ImageList'
-import { useUpdateProduct } from 'queries/ProductQuery'
+import { useUpdateProduct,useDeleteProduct } from 'queries/ProductQuery'
 
 const EditProduct = () => {
    const { id } = useParams()
    const [details, setDetails] = useState({})
    const { data, isLoading } = useGetProductById({ id });
+   const { mutateAsync: deleteProduct, isLoading: deleting } =useDeleteProduct()
+   const navigate = useNavigate()
+
+
    useEffect(() => {
       setDetails(data?.data)
    }, [data])
@@ -64,6 +68,21 @@ const EditProduct = () => {
          console.error(error)
       }
    }
+
+   const handleDelete = () => {
+      deleteProduct(details)
+         .then((res) => {
+            if (res) {
+               navigate('/products')
+               toast.success(res?.message ?? "products deleted Successfully");
+           
+            }
+         })
+         .catch((err) => {
+            toast.error(err?.message ?? "Something went wrong");
+         });
+   };
+
    return (
       <PageLayout
          title={'Edit Product'}
@@ -241,7 +260,9 @@ const EditProduct = () => {
                   </Grid>
                   <Grid item xs={12} sm={4} mt={'auto'}>
                      <Grid item xs={12}>
-                        <Button onClick={handleSubmit}>UPDATE PRODUCT</Button>
+                        <Button variant="contained" onClick={handleSubmit}>UPDATE PRODUCT</Button>
+                        <Button variant="contained" color="error" onClick={handleDelete}>Delete PRODUCT</Button>
+
                         {/* <Button color="secondary" onClick={handleDelete}>Delete Blog</Button> */}
                      </Grid>
                   </Grid>
