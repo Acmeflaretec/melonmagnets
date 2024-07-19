@@ -30,6 +30,51 @@ const ImageList = ({ data = [], dispatch }) => {
       dispatch(prev => ({ ...prev, image: updatedImages }));
    };
 
+   const renderThumbnail = (image) => {
+      if (image instanceof File) {
+         const extension = image.name.split('.').pop().toLowerCase();
+         if (extension === 'mp4' || extension === 'avi' || extension === 'mov') {
+            return (
+               <video
+                  style={{ width: 120, height: 100, borderRadius: '20px', border: 'solid 1px #D3D3D3' }}
+                  width="120" height="100" controls loop muted>
+                  <source src={URL.createObjectURL(image)} type={`video/${extension}`} />
+                  Your browser does not support the video tag.
+               </video>
+            );
+         } else {
+            return (
+               <img
+                  style={{ width: 120, height: 100, borderRadius: '20px', border: 'solid 1px #D3D3D3' }}
+                  src={URL.createObjectURL(image)}
+                  alt="Product Image"
+               />
+            );
+         }
+      } else if (typeof image === 'string') {
+         const extension = image.split('.').pop().toLowerCase();
+         if (extension === 'mp4' || extension === 'avi' || extension === 'mov') {
+            return (
+               <video
+                  style={{ width: 120, height: 100, borderRadius: '20px', border: 'solid 1px #D3D3D3' }}
+                  width="180" height="140" controls loop muted>
+                  <source src={`${process.env.REACT_APP_API_URL}/uploads/${image}`} type={`video/${extension}`} />
+                  Your browser does not support the video tag.
+               </video>
+            );
+         } else {
+            return (
+               <img
+                  style={{ width: 120, height: 100, borderRadius: '20px', border: 'solid 1px #D3D3D3' }}
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${image}`}
+                  alt="Product Image"
+               />
+            );
+         }
+      } else {
+         return null;
+      }
+   };
    return (
       <Grid container spacing={2}>
          {data?.map((image, index) => {
@@ -53,10 +98,7 @@ const ImageList = ({ data = [], dispatch }) => {
                   >
                      {image ? (
                         <React.Fragment>
-                           <img
-                              style={{ width: 120, height: 100, borderRadius: '20px', border: 'solid 1px #D3D3D3' }}
-                              src={typeof (image) == 'object' ? URL.createObjectURL(image) : `${process.env.REACT_APP_API_URL}/uploads/${image}`}
-                           />
+                           {renderThumbnail(image)}
                            <IconButton
                               size='small'
                               sx={{
@@ -116,7 +158,7 @@ const ImageList = ({ data = [], dispatch }) => {
          <Grid item xs={12}>
             <input
                type="file"
-               accept="image/*"
+               accept="image/*,video/*"
                style={{ display: "none" }}
                multiple
                ref={fileInputRef}
