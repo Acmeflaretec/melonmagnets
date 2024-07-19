@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: import.meta.env.VITE_APP_API_URL,    
   withCredentials: true,
 });
 
@@ -12,7 +12,7 @@ axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Accept"] = "multi-part/formdata";
 
 instance.interceptors.request.use(
-  async (config) => {
+  async (config) => {  
    
     const token = JSON.parse(localStorage.getItem("Tokens"));
 

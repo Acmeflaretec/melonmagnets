@@ -2,6 +2,7 @@ const Order = require('../models/order')
 const BulkOrders = require('../models/bulkOrder')
 const Address = require('../models/address')
 const CartItem = require('../models/cartItem')
+const User = require('../models/user')
 // const { sendMail } = require('../utils/mailer')
 const nodemailer = require('nodemailer');
 const moment = require('moment-timezone');
@@ -91,14 +92,24 @@ const getOrderById = async (req, res) => {
 //   }
 // }
 const createOrder = async (req, res) => {
-  const { userId, email, mobile, amount, products, firstname, lastname, country, address_line_1, address_line_2, city, state, zip } = req?.body;
-
+  const { userId, email, mobile, amount, products, couponId, firstname, lastname, country, address_line_1, address_line_2, city, state, zip } = req?.body;
+  console.log("couponId", couponId);
   try {
     const address = await Address.create({
       firstname, lastname, country, address_line_1, address_line_2, city, state, zip, mobile,
     });
 
     const order = await Order.create({ userId, email, mobile, amount, address: address._id, products });
+
+    if (couponId) {
+      const user = await User.findById(userId);
+      if (user.coupons.includes(couponId)) {
+        return res.status(400).json({ message: "Coupon already used" });
+      }
+
+      user.coupons.push(couponId);
+      await user.save();
+    }
 
     await CartItem.updateMany(
       { _id: { $in: products } },
@@ -178,7 +189,7 @@ const createOrder = async (req, res) => {
       html: customerEmailHtml,
     });
 
-  
+
     await transporter.sendMail({
       from: process.env.EMAIL_AUTH_USER,
       to: adminEmail,
@@ -259,7 +270,7 @@ const createBulkOrder = async (req, res) => {
       </div>
     `;
 
-   
+
     await transporter.sendMail({
       from: process.env.EMAIL_AUTH_USER,
       to: email,
@@ -267,7 +278,7 @@ const createBulkOrder = async (req, res) => {
       html: customerEmailHtml,
     });
 
- 
+
     await transporter.sendMail({
       from: process.env.EMAIL_AUTH_USER,
       to: adminEmail,
