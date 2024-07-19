@@ -1,4 +1,6 @@
 const Coupon = require('../models/coupon')
+const User = require('../models/user')
+
 const fs = require('fs');
 
 const getCoupons = async (req, res) => {
@@ -6,23 +8,23 @@ const getCoupons = async (req, res) => {
     const { page = 1, limit = 6, sortField, sortOrder, search, category,
       priceGreaterThan, priceLessThan, priceMin, priceMax, sortDiscount, sortDiscountGreaterThan } = req.query;
 
-    
+
     const pageNumber = parseInt(page, 10) || 1;
     const limitNumber = parseInt(limit, 10) || 10;
 
     const query = {};
 
-    
+
     if (search) {
       const searchRegex = new RegExp(search, 'i');
       query.$or = [
         { name: searchRegex },
         { brand: searchRegex }
-       
+
       ];
     }
 
-   
+
     if (category) {
       query.category = category;
     }
@@ -64,7 +66,7 @@ const getCoupons = async (req, res) => {
       .sort(sortOptions)
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber);
-    res.status(200).json({ data:coupons })
+    res.status(200).json({ data: coupons })
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error?.message ?? "Something went wrong !" });
@@ -73,37 +75,37 @@ const getCoupons = async (req, res) => {
 
 const addCoupon = async (req, res) => {
   try {
-    const { name, description, validity, discount,code } = req.body;
-    
-       
-      const image = req?.file?.filename
+    const { name, description, validity, discount, code } = req.body;
 
-const isExisting =await Coupon.findOne({code:code});
-console.log('is exi',isExisting)
-if(isExisting){
 
-  res.status(400).json({ message: "coupon already Exist" });
+    const image = req?.file?.filename
 
-}else{
-  const newCoupon = new Coupon({
-    name,
-    description,
-    validity: new Date(validity),  
-    discount,
-    code,
-    image: image
-  });
+    const isExisting = await Coupon.findOne({ code: code });
+    console.log('is exi', isExisting)
+    if (isExisting) {
 
-  const savedCoupon = await newCoupon.save();
-  if (savedCoupon) {
-    res.status(200).json({ message: "Coupon added successfully!" });
-  } else {
-    res.status(400).json({ message: "Something went wrong while saving the coupon!" });
-  }
+      res.status(400).json({ message: "coupon already Exist" });
 
-}
+    } else {
+      const newCoupon = new Coupon({
+        name,
+        description,
+        validity: new Date(validity),
+        discount,
+        code,
+        image: image
+      });
 
-     
+      const savedCoupon = await newCoupon.save();
+      if (savedCoupon) {
+        res.status(200).json({ message: "Coupon added successfully!" });
+      } else {
+        res.status(400).json({ message: "Something went wrong while saving the coupon!" });
+      }
+
+    }
+
+
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: "Something went wrong!" });
@@ -132,7 +134,7 @@ const updateCoupon = async (req, res) => {
       });
     }
     await Coupon.updateOne({ _id }, {
-      $set: { name, description, validity:new Date(validity), discount, ...(image && { image }) }
+      $set: { name, description, validity: new Date(validity), discount, ...(image && { image }) }
     })
     res.status(200).json({ data, message: 'Coupon updated successfully' });
   } catch (error) {
@@ -167,20 +169,20 @@ const updateCouponStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-      const updatedCoupon = await Coupon.findByIdAndUpdate(id, { status:!status }, { new: true });
+    const updatedCoupon = await Coupon.findByIdAndUpdate(id, { status: !status }, { new: true });
 
-      if (updatedCoupon) {
-          res.status(200).json({ message: "Coupon status updated successfully", updatedCoupon });
-      } else {
-          res.status(404).json({ message: "Coupon not found" });
-      }
+    if (updatedCoupon) {
+      res.status(200).json({ message: "Coupon status updated successfully", updatedCoupon });
+    } else {
+      res.status(404).json({ message: "Coupon not found" });
+    }
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-const getCouponById = async(req,res) => {
+const getCouponById = async (req, res) => {
   const { id } = req.params;
   try {
     const coupon = await Coupon.findById(id);
@@ -194,12 +196,53 @@ const getCouponById = async(req,res) => {
   }
 }
 
-module.exports={
+const getClientCoupons = async (req, res) => {
+  try {
+    const today = new Date();
+    const coupons = await Coupon.find({ status: true, validity: { $gte: today } });
+    res.json(coupons);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+// const validateCoupon = async(req,res) => {
+//   const { code } = req.body;
+//   try {
+//     const coupon = await Coupon.findOne({ code, status: true });
+//     if (coupon) {
+//       res.json({ valid: true, discount: coupon.discount });
+//     } else {
+//       res.json({ valid: false, message: 'Invalid or expired coupon.' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// }
+const validateCoupon = async (req, res) => {
+  const { couponId, userId } = req.body;
+  const id=userId._id
+  const coupon = await Coupon.findOne({ _id: couponId, status: true });
+  try {
+    const user = await User.findById(userId);
+    if (user.coupons.includes(couponId)) {
+      res.json({ valid: false,  message: 'This coupon alredy used' });
+    } else {
+      res.json({ valid: true,discount: coupon.discount});
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+module.exports = {
   getCoupons,
   addCoupon,
   updateCoupon,
   deleteCoupon,
   updateCouponStatus,
   getCouponById,
+  getClientCoupons,
+  validateCoupon
 
 }
