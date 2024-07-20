@@ -1,5 +1,6 @@
 import Dashboard from "pages/Dashboard";
 import Category from "pages/Category";
+import Coupon from "pages/Coupon";
 import Products from "pages/Products";
 import Orders from "pages/Orders";
 // import Banner from "pages/Banner";
@@ -54,20 +55,12 @@ const routes = [
   },
   {
     type: "route",
-    name: "Review",
-    key: "review",
-    route: "/review",
-    icon: <Box component="i" color="dark" fontSize="14px" className="ni ni-single-02" />,
-    component: <Review />,
+    name: "Coupons",
+    key: "coupons",
+    route: "/coupons",
+    icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-album-2" />,
+    component: <Coupon />,
   },
-  // {
-  //   type: "route",
-  //   name: "Banners",
-  //   key: "banners",
-  //   route: "/banners",
-  //   icon: <Box component="i" color="warning" fontSize="14px" className="ni ni-album-2" />,
-  //   component: <Banner />,
-  // },
   // {
   //   type: "route",
   //   name: "Blogs",

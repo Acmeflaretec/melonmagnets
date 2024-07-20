@@ -7,8 +7,20 @@ import {
   getProductById,
   getProducts,
   updateProduct,
-  getReview
+  getCoupon,
+getCouponById,
+addCoupon,
+updateCoupon,
+getReview,
 } from "./productUrls";
+
+const useGetCoupon = (data) => {
+  return useQuery(["get_category", data], () => getCoupon(data), {
+    staleTime: 3000,
+    keepPreviousData: true,
+    // refetchOnWindowFocus: false,
+  });
+};
 
 const useGetCategory = (data) => {
   return useQuery(["get_category", data], () => getCategory(data), {
@@ -34,6 +46,14 @@ const useGetProductById = (data) => {
   });
 };
 
+const useGetCouponById = (data) => {
+  console.log('get coupon by id',data)
+  return useQuery(["get_coupons", data], () => getCouponById(data), {
+    // staleTime: 30000,
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
+};
 
 const useAddCategory = () => {
   const queryClient = useQueryClient();
@@ -41,6 +61,20 @@ const useAddCategory = () => {
   return useMutation((data) => addCategory(data), {
     onSuccess: (data) => {
       queryClient.invalidateQueries("get_category");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
+
+const useAddCoupon = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => addCoupon(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_coupon");
       return data;
     },
     onError: (data) => {
@@ -75,10 +109,41 @@ const useUpdateProduct = () => {
     },
   });
 };
+
+const useUpdateCouponStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => couponStatus(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_coupons");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
+
+const useUpdateCoupon = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => updateCoupon(data), {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_coupons");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
+
 const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation((data) => deleteProduct(data), {
+
+    
     onSuccess: (data) => {
       queryClient.invalidateQueries("get_products");
       return data;
@@ -105,5 +170,10 @@ export {
   useAddProduct,
   useUpdateProduct,
   useDeleteProduct,
-  useGetReview
+  useGetCoupon,
+useGetCouponById,
+useAddCoupon,
+useUpdateCouponStatus,
+useUpdateCoupon,
+useGetReview,
 };

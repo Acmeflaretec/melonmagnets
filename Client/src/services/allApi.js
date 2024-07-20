@@ -1,5 +1,7 @@
 import { ServerURL } from "./baseUrl";
 import { commonApi } from "./commonapi"
+import axios from "axios"
+
 
 
 export const getallproductsapi = async()=>{
@@ -33,3 +35,26 @@ export const updateCartItemApi = async (id , quantity)=>{
 export const removeCartItemApi = async (id)=>{
     return await commonApi('DELETE',`${ServerURL}/api/v1/cart/${id}`)
 }
+
+
+
+
+export const getCouponsApi = async () => {
+  try {
+    const response = await axios.get(`${ServerURL}/api/v1/coupons/client`);
+    return response;
+  } catch (error) {
+    console.error('Error fetching coupons:', error);
+    return { status: 500, data: [] };
+  }
+};
+
+export const validateCouponApi = async (couponId,userId) => {
+  try {
+    const response = await axios.post(`${ServerURL}/api/v1/coupons/validate-coupon`, { couponId,userId });
+    return response;
+  } catch (error) {
+    console.error('Error validating coupon:', error);
+    return { status: 500, data: { valid: false, message: 'Error validating coupon.' } };
+  }
+};

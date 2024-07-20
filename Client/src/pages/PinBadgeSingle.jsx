@@ -102,6 +102,8 @@ console.log('fdh',result?.data);
       console.error('Error fetching category data:', error);
     }
   };
+// console.log('thumbnailUrls',thumbnailUrls);
+// console.log('selectedThumbnailIndex',selectedThumbnailIndex);
 
   useEffect(() => {
     getAllCategory();
