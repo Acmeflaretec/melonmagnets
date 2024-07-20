@@ -132,9 +132,9 @@ const NavBar = () => {
               </div>
             </Nav>
             <Nav className="ms-auto">
-              <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
+              {/* <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
                 <FontAwesomeIcon icon={faInstagram} />
-              </Link>
+              </Link> */}
               {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
                 {cartItems?.length > 0 && (
@@ -142,10 +142,12 @@ const NavBar = () => {
                     {cartItems?.length}
                   </Badge>
                 )}
-              </button>) : (<Link to={'/login'}><button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
-              {userDetails ? (<button className='btn btn-success' onClick={logoutUser} >Logout</button>
+              </button>) : (<Link to={'/login'}>
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
+              
+              {userDetails ? (<button className='btn btn-light' onClick={logoutUser} ><i className="fa-solid fa-arrow-right-to-bracket"></i></button>
               ) : (
-              <Link to={'/login'}> <button className='btn btn-success'>Login</button></Link>
+              <Link to={'/login'}> <button className='btn btn-light'><i className="fa-solid fa-power-off"></i></button></Link>
                )}
             </Nav>
           </Navbar.Collapse>
@@ -170,14 +172,20 @@ const NavBar = () => {
             </Link>
           </Navbar.Brand>
           <div className="d-flex align-items-center">
-            <button className=" btn text-dark position-relative me-3" onClick={handleCartClick}>
-              <FontAwesomeIcon icon={faShoppingCart} />
-              {cartItems?.length > 0 && (
-                <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
-                  {cartItems?.length}
-                </Badge>
-              )}
-            </button>
+          {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+                <FontAwesomeIcon icon={faShoppingCart} />
+                {cartItems?.length > 0 && (
+                  <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                    {cartItems?.length}
+                  </Badge>
+                )}
+              </button>) : (<Link to={'/login'}>
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
+              
+              {userDetails ? (<button className='btn btn-light' onClick={logoutUser} ><i className="fa-solid fa-arrow-right-to-bracket"></i></button>
+              ) : (
+              <Link to={'/login'}> <button className='btn btn-light'><i className="fa-solid fa-power-off"></i></button></Link>
+               )}
             <Navbar.Toggle aria-controls="navbar-offcanvas" onClick={handleShowOffcanvas} />
           </div>
           <Navbar.Offcanvas

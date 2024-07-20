@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getallproductsapi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
@@ -9,7 +9,8 @@ import './AllProducts.css'
 function AllProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hoveredProduct, setHoveredProduct] = useState(null); // State to manage hovered product
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [sortOption, setSortOption] = useState('default');
 
   const navigate = useNavigate();
 
@@ -24,6 +25,30 @@ function AllProducts() {
   useEffect(() => {
     getAllProducts();
   }, []);
+
+  useEffect(() => {
+    sortProducts();
+  }, [sortOption]);
+
+  const sortProducts = () => {
+    let sortedProducts = [...products];
+    switch (sortOption) {
+      case 'priceLowToHigh':
+        sortedProducts.sort((a, b) => a.sale_rate - b.sale_rate);
+        break;
+      case 'priceHighToLow':
+        sortedProducts.sort((a, b) => b.sale_rate - a.sale_rate);
+        break;
+      default:
+        // Do nothing for the default case
+        break;
+    }
+    setProducts(sortedProducts);
+  };
+
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
 
   const nameToRouteMapping = {
     'fridge magnets': '/fridgemagnets',
@@ -56,6 +81,13 @@ function AllProducts() {
         </div>
       ) : (
         <div className="container mt-3">
+          <Form.Group className="mb-3">
+            <Form.Select onChange={handleSortChange} value={sortOption}>
+              <option value="default">Sort by</option>
+              <option value="priceLowToHigh">Price: Low to High</option>
+              <option value="priceHighToLow">Price: High to Low</option>
+            </Form.Select>
+          </Form.Group>
           <Row>
             {products.map((item) => (
               <Col
@@ -74,7 +106,6 @@ function AllProducts() {
                       src={`${ServerURL}/uploads/${hoveredProduct === item._id && item.image[1] ? item.image[1] : item.image[0]}`}
                       className="card-img-top rounded allimage"
                       alt={item.name}
-                      // style={{width:'100%', height:'300px',objectFit:'cover'}}
                     />
                   </div>
                   <div className="card-body d-flex flex-column">

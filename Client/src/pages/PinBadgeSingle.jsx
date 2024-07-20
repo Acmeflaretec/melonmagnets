@@ -22,6 +22,7 @@ const PinBadgeSingle = () => {
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
   const [productDetails, setProductDetails] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isOutOfStock, setIsOutOfStock] = useState(true);
   const { toggleCart, setToggleCart } = useContext(cartResponseContext);
 
   const visibleThumbnailCount = 5;
@@ -88,6 +89,13 @@ console.log('fdh',result?.data);
         const product = await getallproductsByIdapi(id);
         setProductDetails(product.data.data);
         setThumbnailUrls(product.data.data?.image);
+
+        if (product.data.data.stock !== undefined && product.data.data.stock !== null) {
+          setIsOutOfStock(product.data.data.stock === 0);
+        } else {
+          setIsOutOfStock(true);  
+        }
+
         setLoading(false);
       }
     } catch (error) {
@@ -112,6 +120,8 @@ console.log('fdh',result?.data);
     trackMouse: true
   });
 
+
+
   return (
     <>
       {loading ? (
@@ -124,13 +134,21 @@ console.log('fdh',result?.data);
           {showAlert && <Alert variant="danger">{alertMessage}</Alert>}
           <Row>
             <Col md={6}>
-              <div className="mb-4" {...swipeHandlers}>
+            <div className="mb-4 position-relative" {...swipeHandlers}>
                 <Image
                   src={`${ServerURL}/uploads/${thumbnailUrls[selectedThumbnailIndex]}`}
                   fluid
-                  style={{width:'100%', height:'500px',objectFit:'cover'}}
+                  style={{width:'100%', height:'500px', objectFit:'cover'}}
                   className="rounded shadow"
                 />
+                {isOutOfStock && (
+                  <div 
+                    className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+                    style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+                  >
+                    <h3 className="text-white">Out of Stock</h3>
+                  </div>
+                )}
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <Button
@@ -174,7 +192,15 @@ console.log('fdh',result?.data);
                 <li><strong>Perfect Size:</strong> Compact and lightweight, easy to wear without being bulky.</li>
                 <li><strong>Versatile Use:</strong> Great for personal use or as thoughtful gifts for friends and family.</li>
               </ul>
-              {userDetails ? (  <Button
+              {isOutOfStock ? (
+                <Button 
+                  variant="secondary"
+                  className="w-100 rounded-pill"
+                  disabled
+                >
+                  Out of Stock
+                </Button>
+              ) : userDetails ? (  <Button
                 variant="warning"
                 className="w-100 rounded-pill mt-4"
                 onClick={handleAddToCart}

@@ -73,7 +73,7 @@ function Register() {
             <Col className='shadow p-3 ' md={6}>
               <div className='text-center'>
                 <h3>Register</h3>
-                <p> Unlocking Doors to Innovation </p>
+            
               </div>
               <Form onSubmit={handleSubmit}>
                 <FloatingLabel

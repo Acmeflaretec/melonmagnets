@@ -202,7 +202,7 @@ const Login = () => {
           <Col className="shadow p-3" md={6}>
             <div className="text-center">
               <h3>Login</h3>
-              <p>Unlocking Doors to Innovation</p>
+              
             </div>
             <Form onSubmit={handleSubmit}>
               <FloatingLabel controlId="floatingInput" label="Email address" className="mb-3">

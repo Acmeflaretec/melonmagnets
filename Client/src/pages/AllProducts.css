@@ -17,9 +17,7 @@
     .card-title{
      font-size: 18px;
     }
-    .card-text{
-
-    }
+ 
 }
 @media (max-width:380px){
     .allimage{
@@ -32,3 +30,4 @@
       font-size: 15px;
     }
 }
+

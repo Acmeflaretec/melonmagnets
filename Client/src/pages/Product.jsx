@@ -24,6 +24,7 @@ const Product = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
+  const [isOutOfStock, setIsOutOfStock] = useState(false);
   const [productDetails, setProductDetails] = useState({});
   const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +77,18 @@ const Product = () => {
     setImage(images);
   }, [saveTheDateSize]);
 
+  useEffect(() => {
+    getAllCategory();
+  }, [defaultCategory]);
+  
+  useEffect(() => {
+    if (productDetails && productDetails.stock === 0) {
+      setIsOutOfStock(true);
+    } else {
+      setIsOutOfStock(false);
+    }
+  }, [productDetails]);
+
   const handleThumbnailClick = (index) => {
     setSelectedThumbnailIndex(index);
   };
@@ -102,6 +115,8 @@ const Product = () => {
         return 4;
     }
   };
+
+  
 
   const handleAddToCart = async () => {
     const requiredPhotos = getMaxPhotos();
@@ -186,6 +201,19 @@ const Product = () => {
     }
   };
 
+  const getSalePrice = () => {
+    switch (saveTheDateSize) {
+      case '9 Images':
+        return productDetails?.sale3;
+      case '6 Images':
+        return productDetails?.sale2;
+      case '4 Images':
+        return productDetails?.sale1;
+      default:
+        return productDetails?.sale1;
+    }
+  };
+
   const updateVisibleStartIndex = (newSelectedIndex) => {
     if (newSelectedIndex < visibleStartIndex) {
       setVisibleStartIndex(Math.floor(newSelectedIndex / visibleThumbnailCount) * visibleThumbnailCount);
@@ -210,8 +238,9 @@ const Product = () => {
     });
   };
 
-  const originalPrice = productDetails?.price;
-  const salePrice = getPrice();
+
+  const originalPrice = getPrice();
+  const salePrice = getSalePrice();
   const percentageOff = calculatePercentageOff(originalPrice, salePrice);
 
   const swipeHandlers = useSwipeable({
@@ -220,6 +249,8 @@ const Product = () => {
     preventDefaultTouchmoveEvent: true,
     trackMouse: true
   });
+
+  console.log(productDetails)
 
   return (
     <>
@@ -231,15 +262,20 @@ const Product = () => {
         <Container className="mt-4 mb-5">
           <Row>
             <Col md={6}>
-              <div className="mb-4" {...swipeHandlers}>
-                <Image
-                  src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
-                  fluid
-                  style={{width:'100%', height:'500px',objectFit:'cover'}}
-
-                  className="rounded shadow"
-                />
+            <div className="mb-4 position-relative" {...swipeHandlers}>
+            <Image
+              src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
+              fluid
+              style={{width:'100%', height:'500px',objectFit:'cover'}}
+              className="rounded shadow"
+            />
+            {isOutOfStock && (
+              <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 
+                  style={{backgroundColor: 'rgba(0,0,0,0.8)'}}>
+                <h2 className="text-white bg-danger p-2">Out of Stock</h2>
               </div>
+            )}
+          </div>
               <div className="d-flex justify-content-between align-items-center">
                 <Button
                   variant="outline-secondary"
@@ -339,23 +375,40 @@ const Product = () => {
                   Upload Photos
                 </label>
               </button>
-              {userDetails ? ( <Button
-                variant="warning"
+              {isOutOfStock ? (
+              <Button 
+                variant="secondary"
                 className="w-100 rounded-pill"
-                onClick={handleAddToCart}
-                disabled={cartLoading}
-                // disabled={image.length !== getMaxPhotos()}
+                disabled
               >
-              {cartLoading ? (
-               <>
-               <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-               <span className="sr-only">Loading...</span> Uploading Photos to cart...
-               </>
+                Out of Stock
+              </Button>
+            ) : (
+              userDetails ? (
+                <Button
+                  variant="warning"
+                  className="w-100 rounded-pill"
+                  onClick={handleAddToCart}
+                  disabled={cartLoading || image.length !== getMaxPhotos()}
+                >
+                  {cartLoading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+                      <span className="sr-only">Loading...</span> Uploading Photos to cart...
+                    </>
+                  ) : 'Add To Cart'}
+                </Button>
               ) : (
-              'Add To Cart'
-              )}
-              </Button>) : (<Link to={'/login'}> <Button variant="warning"
-                className="w-100 rounded-pill">Add To Cart</Button></Link>)}
+                <Link to={'/login'}>
+                  <Button 
+                    variant="warning"
+                    className="w-100 rounded-pill"
+                  >
+                    Add To Cart
+                  </Button>
+                </Link>
+              )
+)}
             </Col>
           </Row>
           <Row>
