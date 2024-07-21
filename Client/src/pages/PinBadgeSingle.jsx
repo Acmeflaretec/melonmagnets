@@ -10,7 +10,9 @@ import BackButton from '../components/BackButton'
 import '../App.css';
 import { cartResponseContext } from '../context/ContextShare';
 import { useSelector } from 'react-redux';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import RenderImage from './RenderImage';
+import video from '../assets/img/video.png';
 
 const PinBadgeSingle = () => {
   const userDetails = useSelector((state) => state.userDetails);
@@ -67,12 +69,12 @@ const PinBadgeSingle = () => {
     };
     const result = await addToCartApi(reqBody, reqHeader);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-console.log('fdh',result?.data);
+    console.log('fdh', result?.data);
     result?.data?._id && cartData.push(result?.data?._id);
 
     localStorage.setItem('cartData', JSON.stringify(cartData));
 
-    setToggleCart(prev => !prev); 
+    setToggleCart(prev => !prev);
     setAlertMessage('');
     setShowAlert(false);
   };
@@ -93,7 +95,7 @@ console.log('fdh',result?.data);
         if (product.data.data.stock !== undefined && product.data.data.stock !== null) {
           setIsOutOfStock(product.data.data.stock === 0);
         } else {
-          setIsOutOfStock(true);  
+          setIsOutOfStock(true);
         }
 
         setLoading(false);
@@ -102,8 +104,8 @@ console.log('fdh',result?.data);
       console.error('Error fetching category data:', error);
     }
   };
-// console.log('thumbnailUrls',thumbnailUrls);
-// console.log('selectedThumbnailIndex',selectedThumbnailIndex);
+  // console.log('thumbnailUrls',thumbnailUrls);
+  // console.log('selectedThumbnailIndex',selectedThumbnailIndex);
 
   useEffect(() => {
     getAllCategory();
@@ -132,19 +134,14 @@ console.log('fdh',result?.data);
         </div>
       ) : (
         <Container className="mt-4 mb-5">
-           <BackButton/>
+          <BackButton />
           {showAlert && <Alert variant="danger">{alertMessage}</Alert>}
           <Row>
             <Col md={6}>
-            <div className="mb-4 position-relative" {...swipeHandlers}>
-                <Image
-                  src={`${ServerURL}/uploads/${thumbnailUrls[selectedThumbnailIndex]}`}
-                  fluid
-                  style={{width:'100%', height:'500px', objectFit:'cover'}}
-                  className="rounded shadow"
-                />
+              <div className="mb-4 position-relative" {...swipeHandlers}>
+                <RenderImage image={thumbnailUrls?.[selectedThumbnailIndex]} />
                 {isOutOfStock && (
-                  <div 
+                  <div
                     className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
                     style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
                   >
@@ -160,16 +157,19 @@ console.log('fdh',result?.data);
                   <i className="fa-solid fa-arrow-left"></i>
                 </Button>
                 <div className="d-flex overflow-hidden">
-                  {thumbnailUrls.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) => (
-                    <Image
-                      key={index + visibleStartIndex}
-                      src={`${ServerURL}/uploads/${url}`}
-                      alt={`Thumbnail ${index + visibleStartIndex + 1}`}
-                      className={`img-thumbnail mx-1 ${index + visibleStartIndex === selectedThumbnailIndex ? 'border-primary' : ''}`}
-                      onClick={() => handleThumbnailClick(index + visibleStartIndex)}
-                      style={{ width: '60px', height: '60px', cursor: 'pointer' }}
-                    />
-                  ))}
+                  {thumbnailUrls.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) => {
+                    const extension = url.split('.').pop().toLowerCase();
+                    return (
+                      <Image
+                        key={index + visibleStartIndex}
+                        src={extension === 'mp4' || extension === 'avi' || extension === 'mov' ? video : `${ServerURL}/uploads/${url}`}
+                        alt={`Thumbnail ${index + visibleStartIndex + 1}`}
+                        className={`img-thumbnail mx-1 ${index + visibleStartIndex === selectedThumbnailIndex ? 'border-primary' : ''}`}
+                        onClick={() => handleThumbnailClick(index + visibleStartIndex)}
+                        style={{ width: '60px', height: '60px', cursor: 'pointer' }}
+                      />
+                    )
+                  })}
                 </div>
                 <Button
                   variant="outline-secondary"
@@ -195,14 +195,14 @@ console.log('fdh',result?.data);
                 <li><strong>Versatile Use:</strong> Great for personal use or as thoughtful gifts for friends and family.</li>
               </ul>
               {isOutOfStock ? (
-                <Button 
+                <Button
                   variant="secondary"
                   className="w-100 rounded-pill"
                   disabled
                 >
                   Out of Stock
                 </Button>
-              ) : userDetails ? (  <Button
+              ) : userDetails ? (<Button
                 variant="warning"
                 className="w-100 rounded-pill mt-4"
                 onClick={handleAddToCart}
@@ -213,7 +213,7 @@ console.log('fdh',result?.data);
             </Col>
           </Row>
           <Row>
-          <Review productId={productDetails._id}/>
+            <Review productId={productDetails._id} />
           </Row>
         </Container>
       )}

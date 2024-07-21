@@ -12,7 +12,8 @@ import { cartResponseContext } from '../context/ContextShare';
 import { useSwipeable } from 'react-swipeable';
 import { useSelector } from 'react-redux';
 import { Link} from 'react-router-dom';
-
+import RenderImage from './RenderImage';
+import video from '../assets/img/video.png';
 
 const Product = () => {
   const userDetails = useSelector((state) => state.userDetails);
@@ -263,12 +264,7 @@ const Product = () => {
           <Row>
             <Col md={6}>
             <div className="mb-4 position-relative" {...swipeHandlers}>
-            <Image
-              src={`${ServerURL}/uploads/${thumbnailUrls?.[selectedThumbnailIndex]}`}
-              fluid
-              style={{width:'100%', height:'500px',objectFit:'cover'}}
-              className="rounded shadow"
-            />
+            <RenderImage image={thumbnailUrls?.[selectedThumbnailIndex]}/>
             {isOutOfStock && (
               <div className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 
                   style={{backgroundColor: 'rgba(0,0,0,0.8)'}}>
@@ -284,16 +280,18 @@ const Product = () => {
                   <i className="fa-solid fa-arrow-left"></i>
                 </Button>
                 <div className="d-flex overflow-hidden">
-                  {thumbnailUrls?.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) => (
+                  {thumbnailUrls?.slice(visibleStartIndex, visibleStartIndex + visibleThumbnailCount).map((url, index) =>{
+                    const extension = url.split('.').pop().toLowerCase();
+                  return (
                     <Image
                       key={index + visibleStartIndex}
-                      src={`${ServerURL}/uploads/${url}`}
+                      src={extension === 'mp4' || extension === 'avi' || extension === 'mov' ? video : `${ServerURL}/uploads/${url}`}
                       alt={`Thumbnail ${index + visibleStartIndex + 1}`}
                       className={`img-thumbnail mx-1 ${index + visibleStartIndex === selectedThumbnailIndex ? 'border-primary' : ''}`}
                       onClick={() => handleThumbnailClick(index + visibleStartIndex)}
                       style={{ width: '60px', height: '60px', cursor: 'pointer' }}
                     />
-                  ))}
+                  )})}
                 </div>
                 <Button
                   variant="outline-secondary"
