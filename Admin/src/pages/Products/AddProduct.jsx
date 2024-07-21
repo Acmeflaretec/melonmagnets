@@ -232,12 +232,14 @@ import { useGetCategory } from 'queries/ProductQuery';
 import Typography from 'components/Typography';
 import { useAddProduct } from 'queries/ProductQuery';
 import toast from 'react-hot-toast';
+import ImageList from './ImageList';
+import { useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
   const [details, setDetails] = useState({});
   const { data } = useGetCategory({ pageNo: 1, pageCount: 100 });
   const { mutateAsync: addProduct, isLoading: loading } = useAddProduct();
-  const [images, setImage] = useState([]);
+  const navigate = useNavigate()
   const [isSingleType, setIsSingleType] = useState(true);
 
   const handleChange = (e) => {
@@ -268,17 +270,16 @@ const AddProduct = () => {
     //   }));
     // }
     try {
-      console.log('details12-',details);
       const formData = new FormData();
-      images?.forEach((image) => {
+      details?.image?.forEach((image) => {
         formData.append('images', image, image.name);
       });
       for (const key in details) {
-        if (details.hasOwnProperty(key) && key !== "image") {         
+        if (details.hasOwnProperty(key) && key !== "image") {
           // formData.append(key, details[key]);
           if (
-            (isSingleType && !['type1', 'type2', 'type3',,'discount1','discount2','discount3','sale1','sale2','sale3'].includes(key)) ||
-            (!isSingleType && !['price', 'sale_rate', 'discount'].includes(key))
+            (isSingleType && !['type1', 'type2', 'type3', 'sale1', 'sale2', 'sale3'].includes(key)) ||
+            (!isSingleType && !['price', 'sale_rate'].includes(key))
           ) {
             formData.append(key, details[key]);
           }
@@ -288,6 +289,7 @@ const AddProduct = () => {
       addProduct(formData)
         .then((res) => {
           toast.success(res?.message ?? "Product added");
+          navigate('/products')
         })
         .catch((err) => {
           toast.error(err?.message ?? "Something went wrong");
@@ -377,7 +379,7 @@ const AddProduct = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} ml={2} container >
             <FormControlLabel
               control={
                 <Checkbox
@@ -387,6 +389,17 @@ const AddProduct = () => {
                 />
               }
               label="Single Type"
+            />
+            <FormControlLabel
+              sx={{ ml: 3 }}
+              control={
+                <Checkbox
+                  checked={!isSingleType}
+                  onChange={() => setIsSingleType(!isSingleType)}
+                  name="isSingleType"
+                />
+              }
+              label="Variation"
             />
           </Grid>
 
@@ -402,14 +415,6 @@ const AddProduct = () => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Input
-                  placeholder="Discount (%)"
-                  name="discount"
-                  value={details?.discount || ''}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Input
                   placeholder="Enter Sale Rate"
                   name="sale_rate"
                   value={details?.sale_rate || ''}
@@ -419,84 +424,54 @@ const AddProduct = () => {
             </>
           ) : (
             <>
-              <Grid xs={12} pl={3} pt={2}>
-                <Typography variant="body2">Variations</Typography>
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="4 piece MRP"
+                  name="type1"
+                  value={details?.type1 || ''}
+                  onChange={handleChange}
+                />
               </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="4 piece MRP"
-                    name="type1"
-                    value={details?.type1 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Discount %"
-                    name="discount1"
-                    value={details?.discount1 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Sale Rate"
-                    name="sale1"
-                    value={details?.sale1 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-             
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="6 piece MRP"
-                    name="type2"
-                    value={details?.type2 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Discount %"
-                    name="discount2"
-                    value={details?.discount2 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Sale Rate"
-                    name="sale2"
-                    value={details?.sale2 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-              
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="9 piece MRP"
-                    name="type3"
-                    value={details?.type3 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Discount %"
-                    name="discount3"
-                    value={details?.discount3 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Input
-                    placeholder="Sale Rate"
-                    name="sale3"
-                    value={details?.sale3 || ''}
-                    onChange={handleChange}
-                  />
-                </Grid>
-
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="6 piece MRP"
+                  name="type2"
+                  value={details?.type2 || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="9 piece MRP"
+                  name="type3"
+                  value={details?.type3 || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="Sale Rate 4pcs"
+                  name="sale1"
+                  value={details?.sale1 || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="Sale Rate 6pcs"
+                  name="sale2"
+                  value={details?.sale2 || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Input
+                  placeholder="Sale Rate 9pcs"
+                  name="sale3"
+                  value={details?.sale3 || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
             </>
           )}
 
@@ -515,7 +490,7 @@ const AddProduct = () => {
 
         <Grid item container spacing={2} xs={12} sm={12} md={6} py={5}>
           <Grid xs={12}>
-            <DropZone dispatch={setImage} />
+          <ImageList data={details?.image} dispatch={setDetails} />
           </Grid>
           <Grid item xs={12} sm={8}></Grid>
           <Grid item xs={12} sm={4} mt={'auto'}>

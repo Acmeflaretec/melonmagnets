@@ -5,17 +5,16 @@ import React, { useEffect, useState } from 'react'
 import Typography from 'components/Typography'
 import toast from 'react-hot-toast'
 import { useGetProductById } from 'queries/ProductQuery'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import ImageList from './ImageList'
-import { useUpdateProduct,useDeleteProduct } from 'queries/ProductQuery'
+import { useUpdateProduct, useDeleteProduct } from 'queries/ProductQuery'
 
 const EditProduct = () => {
    const { id } = useParams()
    const [details, setDetails] = useState({})
    const { data, isLoading } = useGetProductById({ id });
-   const { mutateAsync: deleteProduct, isLoading: deleting } =useDeleteProduct()
+   const { mutateAsync: deleteProduct, isLoading: deleting } = useDeleteProduct()
    const navigate = useNavigate()
-
 
    useEffect(() => {
       setDetails(data?.data)
@@ -24,20 +23,27 @@ const EditProduct = () => {
    const handleChange = (e) => {
       setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
    };
-   useEffect(() => {
-      console.log(details);
-   }, [details])
+
    const handleSubmit = () => {
       try {
-         // if (!details?.name) {
-         //   return toast.error("name is required")
-         // }
-         // if (!details?.desc) {
-         //   return toast.error("description is required")
-         // }
-         // if (!details?.image) {
-         //   return toast.error("image is required")
-         // }
+         if (!details?.name) {
+           return toast.error("name is required")
+         }
+         if (!details?.subheading) {
+           return toast.error("subheading is required")
+         }
+         if (!details?.brand) {
+           return toast.error("brand name is required")
+         }
+         if (!details?.stock) {
+           return toast.error("stock is required")
+         }
+         if (!details?.desc) {
+           return toast.error("description is required")
+         }
+         if (!details?.image) {
+           return toast.error("image is required")
+         }
          const formData = new FormData();
 
          const image = details?.image?.filter((image) => typeof (image) === 'string');
@@ -59,6 +65,7 @@ const EditProduct = () => {
             .then((res) => {
                if (res) {
                   toast.success(res?.message ?? "product updated successfully");
+                  navigate('/products')
                }
             })
             .catch((err) => {
@@ -75,7 +82,6 @@ const EditProduct = () => {
             if (res) {
                navigate('/products')
                toast.success(res?.message ?? "products deleted Successfully");
-           
             }
          })
          .catch((err) => {
@@ -150,14 +156,6 @@ const EditProduct = () => {
                         </Grid>
                         <Grid item xs={12} sm={4}>
                            <Input
-                              placeholder="Discount (%)"
-                              name="discount"
-                              value={details?.discount || ''}
-                              onChange={handleChange}
-                           />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                           <Input
                               placeholder="Enter Sale Rate"
                               name="sale_rate"
                               value={details?.sale_rate || ''}
@@ -180,46 +178,12 @@ const EditProduct = () => {
                         </Grid>
                         <Grid item xs={12} sm={4}>
                            <Input
-                              placeholder="Discount %"
-                              name="discount1"
-                              value={details?.discount1 || ''}
-                              onChange={handleChange}
-                           />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                           <Input
-                              placeholder="Sale Rate"
-                              name="sale1"
-                              value={details?.sale1 || ''}
-                              onChange={handleChange}
-                           />
-                        </Grid>
-
-                        <Grid item xs={12} sm={4}>
-                           <Input
                               placeholder="6 piece MRP"
                               name="type2"
                               value={details?.type2 || ''}
                               onChange={handleChange}
                            />
                         </Grid>
-                        <Grid item xs={12} sm={4}>
-                           <Input
-                              placeholder="Discount %"
-                              name="discount2"
-                              value={details?.discount2 || ''}
-                              onChange={handleChange}
-                           />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                           <Input
-                              placeholder="Sale Rate"
-                              name="sale2"
-                              value={details?.sale2 || ''}
-                              onChange={handleChange}
-                           />
-                        </Grid>
-
                         <Grid item xs={12} sm={4}>
                            <Input
                               placeholder="9 piece MRP"
@@ -230,21 +194,28 @@ const EditProduct = () => {
                         </Grid>
                         <Grid item xs={12} sm={4}>
                            <Input
-                              placeholder="Discount %"
-                              name="discount3"
-                              value={details?.discount3 || ''}
+                              placeholder="Sale Rate 4pcs"
+                              name="sale1"
+                              value={details?.sale1 || ''}
                               onChange={handleChange}
                            />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                            <Input
-                              placeholder="Sale Rate"
+                              placeholder="Sale Rate 6pcs"
+                              name="sale2"
+                              value={details?.sale2 || ''}
+                              onChange={handleChange}
+                           />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                           <Input
+                              placeholder="Sale Rate 9pcs"
                               name="sale3"
                               value={details?.sale3 || ''}
                               onChange={handleChange}
                            />
                         </Grid>
-
                      </>
                   )}
                   <Grid item xs={12}>
@@ -258,12 +229,10 @@ const EditProduct = () => {
                         rows={5}
                      />
                   </Grid>
-                  <Grid item xs={12} sm={4} mt={'auto'}>
+                  <Grid item xs={12} mt={'auto'}>
                      <Grid item xs={12}>
-                        <Button variant="contained" onClick={handleSubmit}>UPDATE PRODUCT</Button>
-                        <Button variant="contained" color="error" onClick={handleDelete}>Delete PRODUCT</Button>
-
-                        {/* <Button color="secondary" onClick={handleDelete}>Delete Blog</Button> */}
+                        <Button color='primary' onClick={handleSubmit}>UPDATE PRODUCT</Button>
+                        <Button color="secondary" onClick={handleDelete}>DELETE PRODUCT</Button>
                      </Grid>
                   </Grid>
                </Grid>
