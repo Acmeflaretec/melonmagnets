@@ -227,7 +227,6 @@ import Box from 'components/Box';
 import Input from 'components/Input';
 import PageLayout from 'layouts/PageLayout';
 import React, { useEffect, useState } from 'react';
-import DropZone from './Dropzone';
 import { useGetCategory } from 'queries/ProductQuery';
 import Typography from 'components/Typography';
 import { useAddProduct } from 'queries/ProductQuery';
