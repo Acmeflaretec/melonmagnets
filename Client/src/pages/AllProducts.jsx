@@ -27,24 +27,25 @@ function AllProducts() {
   }, []);
 
   useEffect(() => {
-    sortProducts();
-  }, [sortOption]);
+    if (products.length > 0) {
+      const sortProducts = () => {
+        let sortedProducts = [...products];
+        switch (sortOption) {
+          case 'priceLowToHigh':
+            sortedProducts.sort((a, b) => (a.sale_rate || a.sale1 || 0) - (b.sale_rate || b.sale1 || 0));
+            break;
+          case 'priceHighToLow':
+            sortedProducts.sort((a, b) => (b.sale_rate || b.sale1 || 0) - (a.sale_rate || a.sale1 || 0));
+            break;
+          default:
+            break;
+        }
+        setProducts(sortedProducts);
+      };
 
-  const sortProducts = () => {
-    let sortedProducts = [...products];
-    switch (sortOption) {
-      case 'priceLowToHigh':
-        sortedProducts.sort((a, b) => a.sale_rate - b.sale_rate);
-        break;
-      case 'priceHighToLow':
-        sortedProducts.sort((a, b) => b.sale_rate - a.sale_rate);
-        break;
-      default:
-        // Do nothing for the default case
-        break;
+      sortProducts();
     }
-    setProducts(sortedProducts);
-  };
+  }, [sortOption, products]);
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -73,6 +74,9 @@ function AllProducts() {
     return name.slice(0, maxLength) + '...';
   };
 
+  console.log(products);
+
+
   return (
     <div>
       {loading ? (
@@ -81,13 +85,15 @@ function AllProducts() {
         </div>
       ) : (
         <div className="container mt-3">
-          <Form.Group className="mb-3">
-            <Form.Select onChange={handleSortChange} value={sortOption}>
-              <option value="default">Sort by</option>
-              <option value="priceLowToHigh">Price: Low to High</option>
-              <option value="priceHighToLow">Price: High to Low</option>
-            </Form.Select>
-          </Form.Group>
+        <div className='col-md-4'>
+            <Form.Group className="mb-3">
+              <Form.Select onChange={handleSortChange} value={sortOption}>
+                <option value="default">Sort by</option>
+                <option value="priceLowToHigh">Price: Low to High</option>
+                <option value="priceHighToLow">Price: High to Low</option>
+              </Form.Select>
+            </Form.Group>
+        </div>
           <Row>
             {products.map((item) => (
               <Col
@@ -110,7 +116,7 @@ function AllProducts() {
                   </div>
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-bold mb-2">{truncateName(item.name, 20)}</h5>
-                    <p className="card-text">Rs. {item.sale_rate}</p>
+                    <p className="card-text">Rs. {item.sale_rate?item.sale_rate:item.sale1}</p>
                   </div>
                 </div>
               </Col>

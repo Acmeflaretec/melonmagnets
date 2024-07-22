@@ -1,27 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./BulkOrder.css";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { createBulkOrderApi } from "../services/allApi";
 import Swal from "sweetalert2";
+import styled from "styled-components";
+import { FaBox, FaEnvelope, FaPhone, FaUser, FaCommentAlt } from "react-icons/fa";
+const StyledCard = styled(Card)`
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: none;
+`;
+
+const Banner = styled.div`
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('banner.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+`;
+
+const StyledInput = styled(Form.Control)`
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #80bdff;
+  }
+`;
+
+const StyledTextArea = styled(StyledInput)`
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+`;
+
+const StyledButton = styled(Button)`
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #007bff;
+  border-color: #007bff;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+`;
+
+const FormLabel = styled(Form.Label)`
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+`;
+
+const IconWrapper = styled.span`
+  margin-right: 0.5rem;
+  color: #007bff;
+`;
 
 function BulkOrder() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    mobile: "", // Changed from 'phone' to 'mobile'
+    mobile: "",
     quantity: "",
     product: "",
     message: "",
   });
 
-  const [formErrors, setFormErrors] = useState({
-    name: "",
-    email: "",
-    mobile: "", // Changed from 'phone' to 'mobile'
-    quantity: "",
-    product: "",
-    message: "",
-  });
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isSubmitted) {
+      const errors = validateForm();
+      setFormErrors(errors);
+    }
+  }, [formData, isSubmitted]);
 
   const handleChange = (e) => {
     const { id, value, checked } = e.target;
@@ -31,211 +98,196 @@ function BulkOrder() {
         ...prevState,
         product: checked ? id : "",
       }));
+    } else if (id === "quantity") {
+      const newValue = Math.max(10, parseInt(value) || 10);
+      setFormData((prevState) => ({
+        ...prevState,
+        [id]: newValue.toString(),
+      }));
     } else {
       setFormData((prevState) => ({
         ...prevState,
         [id]: value,
       }));
     }
+
+    if (isSubmitted) {
+      const updatedErrors = { ...formErrors };
+      delete updatedErrors[id];
+      setFormErrors(updatedErrors);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitted(true);
+    const errors = validateForm();
 
-    // Validation
-    let errors = {};
-    let isValid = true;
-
-    if (!formData.name.trim()) {
-      errors.name = "Name is required";
-      isValid = false;
-    }
-
-    if (!formData.email.trim()) {
-      errors.email = "Email is required";
-      isValid = false;
-    }
-
-    if (
-      !formData.mobile.trim() ||
-      !isValidPhoneNumber(formData.mobile.trim())
-    ) {
-      errors.mobile = "Valid mobile number is required"; // Changed from 'phone' to 'mobile'
-      isValid = false;
-    }
-
-    if (
-      !formData.quantity.trim() ||
-      isNaN(formData.quantity) ||
-      parseInt(formData.quantity) < 10
-    ) {
-      errors.quantity = "Quantity must be a number and minimum 10";
-      isValid = false;
-    }
-
-    if (!formData.product) {
-      errors.product = "Please select a product";
-      isValid = false;
-    }
-
-    if (formData.message.trim().length === 0) {
-      errors.message = "Message is required";
-      isValid = false;
-    }
-
-    setFormErrors(errors);
-
-    if (isValid) {
-      const result = await createBulkOrderApi({ ...formData });
-      Swal.fire({
-        text: `Thank you, ${result.data.data.name}! We appreciate your bulk order request for ${result.data.data.quantity} ${result.data.data.product}.We will reach out to you within 24 hours to finalize the details and provide you with a quote.`,
-        icon: "success",
-      });
-      // Reset form fields
-      setFormData({
-        name: "",
-        email: "",
-        mobile: "", // Changed from 'phone' to 'mobile'
-        quantity: "",
-        product: "",
-        message: "",
-      });
+    if (Object.keys(errors).length === 0) {
+      try {
+        const result = await createBulkOrderApi({ ...formData });
+        Swal.fire({
+          title: "Order Received!",
+          text: `Thank you, ${result.data.data.name}! We appreciate your bulk order request for ${result.data.data.quantity} ${result.data.data.product}. We will reach out to you within 24 hours to finalize the details and provide you with a quote.`,
+          icon: "success",
+          confirmButtonColor: "#007bff",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          quantity: "",
+          product: "",
+          message: "",
+        });
+        setIsSubmitted(false);
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "An error occurred while submitting your order. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#007bff",
+        });
+      }
+    } else {
+      setFormErrors(errors);
     }
   };
 
-  // Function to validate mobile number format
-  const isValidPhoneNumber = (mobile) => {
-    const mobileRegex = /^[0-9]{10}$/; // Matches 10 digits
-    return mobileRegex.test(mobile);
+  const validateForm = () => {
+    const errors = {};
+    const mobileRegex = /^[0-9]{10}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!emailRegex.test(formData.email.trim())) errors.email = "Invalid email format";
+    if (!mobileRegex.test(formData.mobile.trim())) errors.mobile = "Valid 10-digit mobile number is required";
+    if (!formData.quantity.trim() || parseInt(formData.quantity) < 10) errors.quantity = "Quantity must be at least 10";
+    if (!formData.product) errors.product = "Please select a product";
+    if (!formData.message.trim()) errors.message = "Message is required";
+
+    return errors;
   };
 
   return (
-    <div>
-      <div>
-        <img
-          src="banner.jpg"
-          alt="banner image"
-          fluid
-          style={{ width: "100%" }}
-        />
-      </div>
-      <div className="container mt-5 bulk-order-container">
-        <div className="form-header">
-          <h2>Bulk Order Form</h2>
-        </div>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">
-              Name
-            </label>
-            <input
-              type="text"
-              className={`form-control ${formErrors.name && "is-invalid"}`}
-              id="name"
-              placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">{formErrors.name}</div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
-            <input
-              type="email"
-              className={`form-control ${formErrors.email && "is-invalid"}`}
-              id="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">{formErrors.email}</div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="mobile" className="form-label">
-              Mobile Number
-            </label>{" "}
-            {/* Changed from 'phone' to 'mobile' */}
-            <input
-              type="tel"
-              className={`form-control ${formErrors.mobile && "is-invalid"}`}
-              id="mobile"
-              placeholder="Enter your mobile number (10 digits)"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">{formErrors.mobile}</div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="quantity" className="form-label">
-              Quantity (minimum 10)
-            </label>
-            <input
-              type="number"
-              className={`form-control ${formErrors.quantity && "is-invalid"}`}
-              id="quantity"
-              placeholder="Enter quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-            />
-            <div className="invalid-feedback">{formErrors.quantity}</div>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Products</label>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="magnets"
-                value="magnets"
-                checked={formData.product === "magnets"}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="magnets">
-                Square Magnets
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="pinbadges"
-                value="pinbadges"
-                checked={formData.product === "pinbadges"}
-                onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="pinbadges">
-                Square Pin Badges
-              </label>
-            </div>
-            <div className="invalid-feedback d-block">{formErrors.product}</div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="message" className="form-label">
-              Message
-            </label>
-            <textarea
-              className={`form-control ${formErrors.message && "is-invalid"}`}
-              id="message"
-              rows="3"
-              placeholder="Add a message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-            ></textarea>
-            <div className="invalid-feedback">{formErrors.message}</div>
-          </div>
-          <button type="submit" className="btn btn-primary submit-btn">
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+    <>
+      <Banner>
+        <h1>Bulk Order Request</h1>
+      </Banner>
+      <Container className="my-5">
+        <StyledCard>
+          <Card.Body className="p-5">
+            <h2 className="text-center mb-4">Bulk Order Form</h2>
+            <Form onSubmit={handleSubmit}>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-4">
+                    <FormLabel><IconWrapper><FaUser /></IconWrapper>Name</FormLabel>
+                    <StyledInput
+                      type="text"
+                      id="name"
+                      placeholder="Enter your name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      isInvalid={!!formErrors.name}
+                    />
+                    <Form.Control.Feedback type="invalid">{formErrors.name}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-4">
+                    <FormLabel><IconWrapper><FaEnvelope /></IconWrapper>Email</FormLabel>
+                    <StyledInput
+                      type="email"
+                      id="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      isInvalid={!!formErrors.email}
+                    />
+                    <Form.Control.Feedback type="invalid">{formErrors.email}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-4">
+                    <FormLabel><IconWrapper><FaPhone /></IconWrapper>Mobile Number</FormLabel>
+                    <StyledInput
+                      type="tel"
+                      id="mobile"
+                      placeholder="Enter your mobile number (10 digits)"
+                      value={formData.mobile}
+                      onChange={handleChange}
+                      isInvalid={!!formErrors.mobile}
+                    />
+                    <Form.Control.Feedback type="invalid">{formErrors.mobile}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-4">
+                    <FormLabel><IconWrapper><FaBox /></IconWrapper>Quantity (minimum 10)</FormLabel>
+                    <StyledInput
+                      type="number"
+                      id="quantity"
+                      min="10"
+                      placeholder="Enter quantity"
+                      value={formData.quantity}
+                      onChange={handleChange}
+                      isInvalid={!!formErrors.quantity}
+                    />
+                    <Form.Control.Feedback type="invalid">{formErrors.quantity}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Form.Group className="mb-4">
+                <FormLabel>Products</FormLabel>
+                <div>
+                  <Form.Check
+                    inline
+                    type="checkbox"
+                    id="magnets"
+                    label="Square Magnets"
+                    checked={formData.product === "magnets"}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.product}
+                  />
+                  <Form.Check
+                    inline
+                    type="checkbox"
+                    id="pinbadges"
+                    label="Square Pin Badges"
+                    checked={formData.product === "pinbadges"}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.product}
+                  />
+                </div>
+                {formErrors.product && <div className="text-danger mt-2">{formErrors.product}</div>}
+              </Form.Group>
+              <Form.Group className="mb-4">
+                <FormLabel><IconWrapper><FaCommentAlt /></IconWrapper>Message</FormLabel>
+                <StyledTextArea
+                  as="textarea"
+                  id="message"
+                  rows={4}
+                  placeholder="Add any additional details or requirements for your bulk order"
+                  value={formData.message}
+                  onChange={handleChange}
+                  isInvalid={!!formErrors.message}
+                />
+                <Form.Control.Feedback type="invalid">{formErrors.message}</Form.Control.Feedback>
+              </Form.Group>
+              <div className="text-center">
+                <StyledButton type="submit">
+                  Submit Bulk Order Request
+                </StyledButton>
+              </div>
+            </Form>
+          </Card.Body>
+        </StyledCard>
+      </Container>
+    </>
   );
 }
 

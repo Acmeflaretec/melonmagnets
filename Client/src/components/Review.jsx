@@ -328,7 +328,8 @@ function Review({ productId }) {
     const fetchReviews = async () => {
       try {
         const response = await axiosInstance.get(`/api/v1/reviews/${productId}`);
-        setReviews(response.data.data);
+        const sortedReviews = response.data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setReviews(sortedReviews);
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
@@ -378,7 +379,7 @@ function Review({ productId }) {
         },
       });
 
-      setReviews([...reviews, response.data.data]);
+      setReviews([response.data.data, ...reviews]);
       setNewReview({ name: '', rating: 0, review: '', images: [] });
       handleCloseReviewModal();
     } catch (error) {
@@ -402,11 +403,11 @@ function Review({ productId }) {
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
   return (
-    <Container fluid className="review-section py-5">
+    <Container fluid className="review-section py-5 mt-3">
       <h2 className="text-center mb-4 fw-bold">Customer Reviews</h2>
       <Row className="g-4">
         <Col lg={4} md={6}>
-          <Card className="rating-summary-card  shadow-sm">
+          <Card className="rating-summary-card shadow-sm">
             <Card.Body>
               <Card.Title className="fw-bold mb-3">Ratings & Reviews</Card.Title>
               <Row className="align-items-center mb-4">
@@ -527,28 +528,25 @@ function Review({ productId }) {
             </Form.Group>
             <Form.Group controlId="formRating" className="mb-3">
               <Form.Label>Rating</Form.Label>
-              <Form.Select
+              <Form.Control
+                type="number"
                 name="rating"
                 value={newReview.rating}
                 onChange={handleReviewChange}
-              >
-                <option value={0}>Select rating</option>
-                <option value={1}>1 star</option>
-                <option value={2}>2 stars</option>
-                <option value={3}>3 stars</option>
-                <option value={4}>4 stars</option>
-                <option value={5}>5 stars</option>
-              </Form.Select>
+                placeholder="Enter your rating (1-5)"
+                min="1"
+                max="5"
+              />
             </Form.Group>
             <Form.Group controlId="formReview" className="mb-3">
               <Form.Label>Review</Form.Label>
               <Form.Control
                 as="textarea"
+                rows={3}
                 name="review"
                 value={newReview.review}
                 onChange={handleReviewChange}
-                rows={3}
-                placeholder="Write your review"
+                placeholder="Write your review here"
               />
             </Form.Group>
             <Form.Group controlId="formImages" className="mb-3">

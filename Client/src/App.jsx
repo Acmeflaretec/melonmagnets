@@ -93,7 +93,7 @@ function App() {
           <Route path='/pinbagesmain' element={<><Topnav /><NavBar /><PinBadges /><WhatsAppButton /><Footer /></>} />
           <Route path='/pinbadges/:id' element={<><Topnav /><NavBar /><PinBadgeSingle /><WhatsAppButton /><Footer /></>} />
           <Route path='/bulkorder' element={<><Topnav /><NavBar /><BulkOrder /><WhatsAppButton /><Footer /></>} />
-          <Route path='/checkout' element={<><Topnav /><NavBar /><CheckOut /><WhatsAppButton /><Footer /></>} />
+          <Route path='/checkout' element={<><CheckOut /></>} />
           <Route path='/aboutus' element={<><Topnav /><NavBar /><AboutUs /><WhatsAppButton /><Footer /></>} />
           <Route path='/privacypolicy' element={<><Topnav /><NavBar /><PrivacyPolicy /><WhatsAppButton /><Footer /></>} />
           <Route path='/cancellation' element={<><Topnav /><NavBar /><CancellationRefunds /><WhatsAppButton /><Footer /></>} />
