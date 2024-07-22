@@ -135,6 +135,7 @@ const Product = () => {
 
     reqBody.append('quantity', 1);
     reqBody.append('price', getPrice());
+    reqBody.append('salePrice', getSalePrice());
 
     Array.from(image).forEach((file) => {
       reqBody.append('images', file);
@@ -251,7 +252,7 @@ const Product = () => {
     trackMouse: true
   });
 
-  console.log(productDetails)
+  // console.log(productDetails)
 
   return (
     <>

@@ -302,9 +302,9 @@
 
 
 
-
+// Review.jsx
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Col, Form, Modal, ProgressBar, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, Modal, ProgressBar, Row, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Review.css';
 import { useSelector } from 'react-redux';
@@ -397,48 +397,48 @@ function Review({ productId }) {
   });
 
   const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-  const averageRating = (totalRating / totalReviews).toFixed(1);
+  const averageRating = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : '0';
 
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
   return (
-    <div className="review-section mt-5">
-      <h1 className="text-center mb-4 fw-bold">Customer Reviews</h1>
-      <Row className="mb-4">
-        <Col md={4}>
-          <Card className="rating-summary-card">
+    <Container fluid className="review-section py-5">
+      <h2 className="text-center mb-4 fw-bold">Customer Reviews</h2>
+      <Row className="g-4">
+        <Col lg={4} md={6}>
+          <Card className="rating-summary-card  shadow-sm">
             <Card.Body>
               <Card.Title className="fw-bold mb-3">Ratings & Reviews</Card.Title>
-              <Row>
-                <Col lg={4} className="text-center">
+              <Row className="align-items-center mb-4">
+                <Col xs={5} className="text-center">
                   <div className="rating-summary">
-                    <h1>{totalReviews > 0 ? averageRating : '0'}</h1>
-                    <div>
+                    <h2 className="display-4 fw-bold mb-0">{averageRating}</h2>
+                    <div className="star-rating mb-2">
                       {[...Array(5)].map((_, index) => (
                         <i
                           key={index}
-                          className={`fas fa-star ${index < Math.floor(averageRating) ? 'text-success' : 'text-muted'}`}
+                          className={`fas fa-star ${index < Math.floor(averageRating) ? 'text-warning' : 'text-muted'}`}
                         />
                       ))}
                     </div>
-                    <small>{totalReviews} ratings</small>
+                    <small className="text-muted">{totalReviews} ratings</small>
                   </div>
                 </Col>
-                <Col lg={8}>
+                <Col xs={7}>
                   <div className="rating-bars">
                     {[5, 4, 3, 2, 1].map((rating) => (
                       <div key={rating} className="d-flex align-items-center mb-2">
-                        <span className="text-muted me-2 d-flex">
-                          <span className="fw-bold">{rating}</span> <i className="fas fa-star" />
+                        <span className="text-muted me-2 d-flex align-items-center">
+                          <span className="fw-bold me-1">{rating}</span>
+                          <i className="fas fa-star text-warning"></i>
                         </span>
-                        <div className="progress-container flex-grow-1 mx-2">
-                          <ProgressBar
-                            now={(ratingCounts[rating - 1] / totalReviews) * 100}
-                            variant="success"
-                            className="progress-bar-custom"
-                          />
-                        </div>
-                        <span>
+                        <ProgressBar
+                          now={(ratingCounts[rating - 1] / totalReviews) * 100}
+                          variant="warning"
+                          className="flex-grow-1 me-2"
+                          style={{ height: '8px' }}
+                        />
+                        <span className="text-muted small">
                           {totalReviews > 0 ? `${((ratingCounts[rating - 1] / totalReviews) * 100).toFixed(0)}%` : '0%'}
                         </span>
                       </div>
@@ -446,58 +446,60 @@ function Review({ productId }) {
                   </div>
                 </Col>
               </Row>
-              <Row className="mt-3">
-                <Col>
-                  <div>
-                    <h5 className="fw-bold">Review this product</h5>
-                    <p className="text-muted">Help others make an informed decision</p>
-                  </div>
-                  <Button
-                    variant="outline-success"
-                    className="rounded-pill w-100 p-2 mt-2"
-                    onClick={handleOpenReviewModal}
-                    disabled={!canWriteReview}
-                  >
-                    Write a Review
-                  </Button>
-                </Col>
-              </Row>
+              <div className="mt-4">
+                <h5 className="fw-bold">Review this product</h5>
+                <p className="text-muted">Help others make an informed decision</p>
+                <Button
+                  variant="outline-primary"
+                  className="rounded-pill w-100 p-2 mt-2"
+                  onClick={handleOpenReviewModal}
+                  disabled={!canWriteReview}
+                >
+                  Write a Review
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={8}>
-          <Card>
+        <Col lg={8} md={6}>
+          <Card className="h-100 shadow-sm">
             <Card.Body>
-              <Card.Title>Reviews from customers</Card.Title>
+              <Card.Title className="mb-4">Customer Reviews</Card.Title>
               {displayedReviews.map((review) => (
-                <div key={review._id} className="mb-4">
-                  <div className="d-flex align-items-center justify-content-between mb-2">
-                    <div>
+                <div key={review._id} className="mb-4 pb-4 border-bottom">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <div className="star-rating">
                       {[...Array(5)].map((_, index) => (
                         <i
                           key={index}
-                          className={`fas fa-star ${index < review.rating ? 'text-success' : 'text-muted'}`}
+                          className={`fas fa-star ${index < review.rating ? 'text-warning' : 'text-muted'}`}
                         />
                       ))}
                     </div>
-                    <div>
-                      <span className="me-2 fw-bold">{review.name}</span>
-                      <small className="me-auto">{new Date(review.date).toLocaleDateString()}</small>
+                    <div className="text-muted small">
+                      <span className="fw-bold me-2">{review.name}</span>
+                      <span>{new Date(review.date).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <p>{review.review}</p>
+                  <p className="mb-3">{review.review}</p>
                   {review.image && review.image.length > 0 && (
-                    <div className="review-images">
+                    <div className="review-images d-flex flex-wrap gap-2">
                       {review.image.map((img, index) => (
-                        <img key={index} src={`${ServerURL}/uploads/${img}`} alt={`Review ${index}`} />
+                        <img
+                          key={index}
+                          src={`${ServerURL}/uploads/${img}`}
+                          alt={`Review ${index}`}
+                          className="img-thumbnail"
+                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                        />
                       ))}
                     </div>
                   )}
                 </div>
               ))}
-              {!showAllReviews && (
-                <div className="text-center">
-                  <Button variant="outline-success" onClick={handleReadMore}>
+              {!showAllReviews && reviews.length > 4 && (
+                <div className="text-center mt-4">
+                  <Button variant="outline-primary" onClick={handleReadMore}>
                     Read More Reviews
                   </Button>
                 </div>
@@ -513,7 +515,7 @@ function Review({ productId }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="formName">
+            <Form.Group controlId="formName" className="mb-3">
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
@@ -523,10 +525,9 @@ function Review({ productId }) {
                 placeholder="Enter your name"
               />
             </Form.Group>
-            <Form.Group controlId="formRating" className="mt-3">
+            <Form.Group controlId="formRating" className="mb-3">
               <Form.Label>Rating</Form.Label>
-              <Form.Control
-                as="select"
+              <Form.Select
                 name="rating"
                 value={newReview.rating}
                 onChange={handleReviewChange}
@@ -537,9 +538,9 @@ function Review({ productId }) {
                 <option value={3}>3 stars</option>
                 <option value={4}>4 stars</option>
                 <option value={5}>5 stars</option>
-              </Form.Control>
+              </Form.Select>
             </Form.Group>
-            <Form.Group controlId="formReview" className="mt-3">
+            <Form.Group controlId="formReview" className="mb-3">
               <Form.Label>Review</Form.Label>
               <Form.Control
                 as="textarea"
@@ -550,7 +551,7 @@ function Review({ productId }) {
                 placeholder="Write your review"
               />
             </Form.Group>
-            <Form.Group controlId="formImages" className="mt-3">
+            <Form.Group controlId="formImages" className="mb-3">
               <Form.Label>Upload Images</Form.Label>
               <Form.Control
                 type="file"
@@ -565,12 +566,12 @@ function Review({ productId }) {
           <Button variant="secondary" onClick={handleCloseReviewModal}>
             Close
           </Button>
-          <Button variant="success" onClick={handleSubmitReview}>
+          <Button variant="primary" onClick={handleSubmitReview}>
             Submit Review
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </Container>
   );
 }
 

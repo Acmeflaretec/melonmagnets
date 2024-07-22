@@ -67,7 +67,7 @@ const Cart = () => {
 
   let subtotal = 0;
   cartItems?.forEach(x => {
-    subtotal += x?.price * quantity[x._id];
+    subtotal += x?.salePrice * quantity[x._id];
   });
 
   const discount = 0;
@@ -75,6 +75,8 @@ const Cart = () => {
 
   const totalBeforeDiscount = subtotal;
   const totalAfterDiscount = totalBeforeDiscount - discount + deliveryCharges;
+
+
 
   return (
     <>
@@ -95,8 +97,8 @@ const Cart = () => {
             <div className="row">
               <div className="col-md-12">
                 {cartItems?.map((item) => {
-                  const originalPrice = item.productId.price;
-                  const salePrice = item.price;
+                  const originalPrice = item.price;
+                  const salePrice = item.salePrice;
                   const percentageOff = calculatePercentageOff(originalPrice, salePrice);
 
                   return (
@@ -112,7 +114,7 @@ const Cart = () => {
                         <div className="col-md-8 col-7">
                           <div className="card-body">
                             <h5 className="card-title text-dark fw-bold">{item?.productId?.name}</h5>
-                            <p className="card-text fw-bold ">₹{item?.price}</p>
+                            <p className="card-text fw-bold ">₹{salePrice}</p>
                             <span className='m-1 text-muted text-decoration-line-through'>₹{originalPrice}</span>
                             <span className='text-success fw-bold bg-success-subtle p-1'>{percentageOff}% off</span>
                             <div className="d-flex align-items-center justify-content-between mt-3">

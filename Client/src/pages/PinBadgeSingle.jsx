@@ -62,14 +62,14 @@ const PinBadgeSingle = () => {
     reqBody.append('productId', productDetails._id);
     reqBody.append('userId', userDetails._id);
     reqBody.append('quantity', 1);
-    reqBody.append('price', productDetails.sale_rate);
-
+    reqBody.append('price', productDetails.price);
+    reqBody.append('salePrice', productDetails.sale_rate);
     const reqHeader = {
       "Content-Type": "application/json"
     };
     const result = await addToCartApi(reqBody, reqHeader);
     const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
-    console.log('fdh', result?.data);
+    // console.log('fdh', result?.data);
     result?.data?._id && cartData.push(result?.data?._id);
 
     localStorage.setItem('cartData', JSON.stringify(cartData));

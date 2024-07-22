@@ -26,7 +26,7 @@ const NavBar = () => {
 
   const dispatch = useDispatch();
   const userDetails = useSelector(state => state.userDetails);
-  console.log('userDetails',userDetails);
+  // console.log('userDetails',userDetails);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -145,10 +145,24 @@ const NavBar = () => {
               </button>) : (<Link to={'/login'}>
               <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
               
-              {userDetails ? (<button className='btn btn-light' onClick={logoutUser} ><i className="fa-solid fa-arrow-right-to-bracket"></i></button>
-              ) : (
-              <Link to={'/login'}> <button className='btn btn-light'><i className="fa-solid fa-power-off"></i></button></Link>
-               )}
+              {userDetails ? (
+  <button 
+    className='btn btn-light' 
+    onClick={logoutUser} 
+    title="Logout"
+  >
+    <i className="fa-solid fa-arrow-right-to-bracket"></i>
+  </button>
+) : (
+  <Link to={'/login'}>
+    <button 
+      className='btn btn-light'
+      title="Login"
+    >
+      <i className="fa-solid fa-power-off"></i>
+    </button>
+  </Link>
+)}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -182,9 +196,9 @@ const NavBar = () => {
               </button>) : (<Link to={'/login'}>
               <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
               
-              {userDetails ? (<button className='btn btn-light' onClick={logoutUser} ><i className="fa-solid fa-arrow-right-to-bracket"></i></button>
+              {userDetails ? (<button className='btn btn-light' title="Logout" onClick={logoutUser} ><i className="fa-solid fa-arrow-right-to-bracket"></i></button>
               ) : (
-              <Link to={'/login'}> <button className='btn btn-light'><i className="fa-solid fa-power-off"></i></button></Link>
+              <Link to={'/login'}> <button className='btn btn-light' title="Login"><i className="fa-solid fa-power-off"></i></button></Link>
                )}
             <Navbar.Toggle aria-controls="navbar-offcanvas" onClick={handleShowOffcanvas} />
           </div>
