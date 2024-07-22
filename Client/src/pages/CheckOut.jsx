@@ -80,8 +80,8 @@ function CheckOut() {
   const handlePayment = () => {
     const options = {
       key: import.meta.env.VITE_APP_Razorpay_Api,
-      // amount: parseInt(subtotal < 299 ? subtotal + 79 : subtotal) * 100, 
-      amount: parseInt(subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) ) * 100, 
+      amount: 1 * 100, // price for testing purpose only
+      // amount: parseInt(subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) ) * 100, 
       currency: 'INR',
       name: 'MELON MAGNETS',
       description: 'Purchase course',
