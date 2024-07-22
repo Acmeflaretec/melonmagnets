@@ -27,7 +27,7 @@ import EditProduct from "pages/Products/EditProduct";
 import EditCoupon from "pages/Coupon/EditCoupon";
 import EditOrder from "pages/Orders/EditOrder";
 import Login from "pages/Auth";
-import EditReview from "pages/review/EditReview"; 
+import EditReview from "pages/review/EditReview";
 
 export default function App() {
   const [controller, dispatch] = useController();
@@ -112,7 +112,7 @@ export default function App() {
 
                 <Route path="/orders/editOrder/:id" element={<EditOrder />} />
                 <Route path="/review/editReview/:id" element={<EditReview />} />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route path="*" element={<Navigate to="/products" />} />
               </Routes>
               <Footer />
             </DashboardLayout>
@@ -122,7 +122,7 @@ export default function App() {
   ) : (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {!auth ? <Login /> : 
+      {!auth ? <Login /> :
         <>
           <Sidenav
             color={sidenavColor}
@@ -144,7 +144,7 @@ export default function App() {
 
               <Route path="/orders/editOrder/:id" element={<EditOrder />} />
               <Route path="/review/editReview/:id" element={<EditReview />} />
-              <Route path="*" element={<Navigate to="/dashboard" />} />
+              <Route path="*" element={<Navigate to="/products" />} />
             </Routes>
             <Footer />
           </DashboardLayout>

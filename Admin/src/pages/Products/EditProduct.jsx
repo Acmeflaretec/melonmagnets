@@ -38,7 +38,7 @@ const EditProduct = () => {
          if (!details?.stock) {
            return toast.error("stock is required")
          }
-         if (!details?.desc) {
+         if (!details?.description) {
            return toast.error("description is required")
          }
          if (!details?.image) {
