@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Card, Container, Form, Navbar } from 'react-bootstrap';
+import { Button, Card, Container, Form, Navbar, Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
 import { FaLock } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,9 @@ import Coupon from '../components/Coupon';
 import { removeCartContext } from '../context/ContextShare';
 import { addOrderApi, getCartItemApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
+import axiosInstance from '../axios'
 import './Checkout.css';
+import '../App.css'
 
 const StyledCard = styled(Card)`
   border-radius: 15px;
@@ -90,7 +92,10 @@ function CheckOut() {
   const [discountCode, setDiscountCode] = useState('');
   const { removeCart, setRemoveCart } = useContext(removeCartContext)
   const navigate = useNavigate();
+  const [user, setUser] = useState()
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCartLoading, setIsCartLoading] = useState(true);
   const [address, setAddress] = useState({
     email: '',
     mobile: '',
@@ -104,12 +109,50 @@ function CheckOut() {
     zip: '',
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/api/v1/auth/user');
+        console.log(response.data.data);
+        setUser(response.data.data)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setAddress((prevAddress) => ({
+        ...prevAddress,
+        email: user.email,
+        mobile: user.phone,
+        firstname: '',
+        lastname: '',
+        address_line_1: '',
+        address_line_2: '',
+        city: '',
+        state: '',
+        zip: '',
+      }));
+    }
+  }, [user]);
+
   const getCartItems = async () => {
-    const ids = JSON.parse(localStorage.getItem('cartData')) || [];
-    const params = new URLSearchParams();
-    ids.forEach(id => params.append('id', id));
-    const result = await getCartItemApi(params.toString());
-    setCartItems(result?.data);
+    setIsCartLoading(true);
+    try {
+      const ids = JSON.parse(localStorage.getItem('cartData')) || [];
+      const params = new URLSearchParams();
+      ids.forEach(id => params.append('id', id));
+      const result = await getCartItemApi(params.toString());
+      setCartItems(result?.data);
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    } finally {
+      setIsCartLoading(false);
+    }
   };
 
   const validateField = (name, value) => {
@@ -158,6 +201,7 @@ function CheckOut() {
 
   const handleClick = () => {
     if (validateForm()) {
+      setIsLoading(true);
       handlePayment();
     } else {
       Swal.fire({
@@ -181,7 +225,6 @@ function CheckOut() {
   const handlePayment = () => {
     const options = {
       key: import.meta.env.VITE_APP_Razorpay_Api,
-      // amount: 1 * 100, // price for testing purpose only  
       amount: parseInt(subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) ) * 100, 
       currency: 'INR',
       name: 'MELON MAGNETS',
@@ -200,20 +243,29 @@ function CheckOut() {
   };
 
   const handlePaymentSuccess = async () => {
-    const products = JSON.parse(localStorage.getItem('cartData')) || [];
-    console.log('cartData products', products);
-    // const result = await addOrderApi({ ...address, products, amount: subtotal < 299 ? subtotal + 79 : subtotal, userId: userDetails._id });
-    const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) , userId: userDetails._id, couponId: discountCode._id });
-    if (result.status === 201) {
-      localStorage.setItem('cartData', JSON.stringify([]));
-      setRemoveCart(prev => !prev);
+    try {
+      const products = JSON.parse(localStorage.getItem('cartData')) || [];
+      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) , userId: userDetails._id, couponId: discountCode._id });
+      if (result.status === 201) {
+        localStorage.setItem('cartData', JSON.stringify([]));
+        setRemoveCart(prev => !prev);
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Placed Successfully',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
       Swal.fire({
-        icon: 'success',
-        title: 'Order Placed Successfully',
-        showConfirmButton: false,
-        timer: 1500,
+        icon: 'error',
+        title: 'Payment Error',
+        text: 'An error occurred while processing your payment. Please try again.',
       });
-      navigate('/');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -237,123 +289,139 @@ function CheckOut() {
   };
 
   return (
- <>
-  <HeaderContainer expand="lg">
-      <Container>
-        <Navbar.Brand as={Link} to="/">
-          <HeaderLogo src='logo.png' alt="Company Logo" />
-        </Navbar.Brand>
-        <SecureText>
-          <FaLock className="me-2" /> SECURE CHECKOUT
-        </SecureText>
-      </Container>
-    </HeaderContainer>
+    <>
+      <HeaderContainer expand="lg">
+        <Container>
+          <Navbar.Brand as={Link} to="/">
+            <HeaderLogo src='logo.png' alt="Company Logo" />
+          </Navbar.Brand>
+          <SecureText>
+            <FaLock className="me-2" /> SECURE CHECKOUT
+          </SecureText>
+        </Container>
+      </HeaderContainer>
       <div className="container my-5" style={{ position: 'relative', zIndex: '0' }}>
-      <div className="row">
-        <div className="col-md-7">
-          <h2 className="mb-4">Checkout</h2>
-          <div className="card mb-4">
-            <div className="card-body">
-              <h4 className="mb-3">Contact</h4>
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <input 
-                    type="email" 
-                    className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
-                    id="email" 
-                    name="email"
-                    value={address.email} 
-                    onChange={handleInputChange} 
-                    onBlur={handleInputChange}
-                  />
-                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="mobile" className="form-label">
-                    Phone
-                  </label>
-                  <input 
-                    type="tel" 
-                    className={`form-control ${errors.mobile ? 'is-invalid' : ''}`} 
-                    id="mobile" 
-                    name="mobile"
-                    value={address.mobile} 
-                    onChange={handleInputChange}
-                    onBlur={handleInputChange}
-                  />
-                  {errors.mobile && <div className="invalid-feedback">{errors.mobile}</div>}
-                </div>
-              </form>
-            </div>
+        {isLoading && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999
+          }}>
+            <div className='loader'></div>
           </div>
-  
-          <div className="card mb-4">
-            <div className="card-body">
-              <h4 className="mb-3">Delivery</h4>
-              <form>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="firstname" className="form-label">
-                      First name
+        )}
+        <div className="row">
+          <div className="col-md-7">
+            <h2 className="mb-4">Checkout</h2>
+            <div className="card mb-4">
+              <div className="card-body">
+                <h4 className="mb-3">Contact</h4>
+                <form>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">
+                      Email
                     </label>
                     <input 
-                      type="text" 
-                      className={`form-control ${errors.firstname ? 'is-invalid' : ''}`} 
-                      id="firstname" 
-                      name="firstname"
-                      value={address.firstname} 
+                      type="email" 
+                      className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
+                      id="email" 
+                      name="email"
+                      value={address.email} 
+                      onChange={handleInputChange} 
+                      onBlur={handleInputChange}
+                    />
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="mobile" className="form-label">
+                      Phone
+                    </label>
+                    <input 
+                      type="tel" 
+                      className={`form-control ${errors.mobile ? 'is-invalid' : ''}`} 
+                      id="mobile" 
+                      name="mobile"
+                      value={address.mobile} 
                       onChange={handleInputChange}
                       onBlur={handleInputChange}
                     />
-                    {errors.firstname && <div className="invalid-feedback">{errors.firstname}</div>}
+                    {errors.mobile && <div className="invalid-feedback">{errors.mobile}</div>}
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="lastname" className="form-label">
-                      Last name
+                </form>
+              </div>
+            </div>
+    
+            <div className="card mb-4">
+              <div className="card-body">
+                <h4 className="mb-3">Delivery</h4>
+                <form>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="firstname" className="form-label">
+                        First name
+                      </label>
+                      <input 
+                        type="text" 
+                        className={`form-control ${errors.firstname ? 'is-invalid' : ''}`} 
+                        id="firstname" 
+                        name="firstname"
+                        value={address.firstname} 
+                        onChange={handleInputChange}
+                        onBlur={handleInputChange}
+                      />
+                      {errors.firstname && <div className="invalid-feedback">{errors.firstname}</div>}
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="lastname" className="form-label">
+                        Last name
+                      </label>
+                      <input 
+                        type="text" 
+                        className={`form-control ${errors.lastname ? 'is-invalid' : ''}`} 
+                        id="lastname" 
+                        name="lastname"
+                        value={address.lastname} 
+                        onChange={handleInputChange}
+                        onBlur={handleInputChange}
+                      />
+                      {errors.lastname && <div className="invalid-feedback">{errors.lastname}</div>}
+                    </div>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="address_line_1" className="form-label">
+                      Address
                     </label>
                     <input 
                       type="text" 
-                      className={`form-control ${errors.lastname ? 'is-invalid' : ''}`} 
-                      id="lastname" 
-                      name="lastname"
-                      value={address.lastname} 
+                      className={`form-control ${errors.address_line_1 ? 'is-invalid' : ''}`} 
+                      id="address_line_1" 
+                      name="address_line_1"
+                      value={address.address_line_1} 
                       onChange={handleInputChange}
                       onBlur={handleInputChange}
                     />
-                    {errors.lastname && <div className="invalid-feedback">{errors.lastname}</div>}
+                    {errors.address_line_1 && <div className="invalid-feedback">{errors.address_line_1}</div>}
                   </div>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="address_line_1" className="form-label">
-                    Address
-                  </label>
-                  <input 
-                    type="text" 
-                    className={`form-control ${errors.address_line_1 ? 'is-invalid' : ''}`} 
-                    id="address_line_1" 
-                    name="address_line_1"
-                    value={address.address_line_1} 
-                    onChange={handleInputChange}
-                    onBlur={handleInputChange}
-                  />
-                  {errors.address_line_1 && <div className="invalid-feedback">{errors.address_line_1}</div>}
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="address_line_2" className="form-label">
-                    Apartment, suite, etc. (optional)
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="address_line_2" 
-                    name="address_line_2"
-                    value={address.address_line_2} 
-                    onChange={handleInputChange}
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label htmlFor="address_line_2" className="form-label">
+                      Apartment, suite, etc. (optional)
+                    </label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      id="address_line_2" 
+                      name="address_line_2"
+                      value={address.address_line_2} 
+                      onChange={handleInputChange}
+                    />
+                  </div>
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="city" className="form-label">
@@ -464,9 +532,21 @@ function CheckOut() {
             </div>
           </div>
           
-          <button type="button" className="btn btn-warning btn-lg w-100 mt-4" onClick={handleClick}>
-            Proceed to Payment
-          </button>
+          <button 
+                  type="button" 
+                  className="btn btn-warning btn-lg w-100 mt-4" 
+                  onClick={handleClick}
+                  disabled={isLoading || isCartLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                      Processing...
+                    </>
+                  ) : (
+                    'Proceed to Payment'
+                  )}
+                </button>
         </div>
       </div>
     </div>

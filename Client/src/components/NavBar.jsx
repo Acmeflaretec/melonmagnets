@@ -31,7 +31,7 @@ const NavBar = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/api/v1/auth/user');
-       // console.log(response.data.data)
+      //  console.log(response.data.data)
         dispatch(setUserDetails(response.data.data));
       } catch (error) {
         console.log('errr', error);

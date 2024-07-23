@@ -451,7 +451,7 @@ function Review({ productId }) {
                 <h5 className="fw-bold">Review this product</h5>
                 <p className="text-muted">Help others make an informed decision</p>
                 <Button
-                  variant="outline-primary"
+                  variant="outline-success"
                   className="rounded-pill w-100 p-2 mt-2"
                   onClick={handleOpenReviewModal}
                   disabled={!canWriteReview}
@@ -500,7 +500,7 @@ function Review({ productId }) {
               ))}
               {!showAllReviews && reviews.length > 4 && (
                 <div className="text-center mt-4">
-                  <Button variant="outline-primary" onClick={handleReadMore}>
+                  <Button variant="outline-success" onClick={handleReadMore}>
                     Read More Reviews
                   </Button>
                 </div>
