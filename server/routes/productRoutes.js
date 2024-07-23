@@ -6,8 +6,8 @@ const { upload } = require('../middlewares/multer');
 
 router.post('/', upload.array('images', 10), addProduct);
 router.get('/', getProducts);
-router.delete('/:id', deleteProduct);
+router.delete('/:id', authorization, deleteProduct);
 router.get('/:id', getProductById);
-router.patch('/', upload.array('images', 10), updateProduct);
+router.patch('/',authorization,upload.array('images', 10), updateProduct);
 
 module.exports = router;

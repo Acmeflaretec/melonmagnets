@@ -139,6 +139,8 @@ function CheckOut() {
     }
   };
 
+  const discoutAmount = discountCode?.maxValue < ((subtotal * discount) / 100) ? discountCode?.maxValue : ((subtotal * discount) / 100) ;
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddress({ ...address, [name]: value });
@@ -182,7 +184,7 @@ function CheckOut() {
     const options = {
       key: import.meta.env.VITE_APP_Razorpay_Api,
       // amount: 1 * 100, // price for testing purpose only  
-      amount: parseInt(subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) ) * 100, 
+      amount: parseInt(subtotal - discoutAmount  < 299 ? subtotal - discoutAmount  + 79 : subtotal - discoutAmount) * 100, 
       currency: 'INR',
       name: 'MELON MAGNETS',
       description: 'Purchase course',
@@ -203,7 +205,7 @@ function CheckOut() {
     const products = JSON.parse(localStorage.getItem('cartData')) || [];
     console.log('cartData products', products);
     // const result = await addOrderApi({ ...address, products, amount: subtotal < 299 ? subtotal + 79 : subtotal, userId: userDetails._id });
-    const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) , userId: userDetails._id, couponId: discountCode._id });
+    const result = await addOrderApi({ ...address, products, amount: subtotal - discoutAmount  < 299 ? subtotal - discoutAmount  + 79 : subtotal - discoutAmount , userId: userDetails._id, couponId: discountCode._id });
     if (result.status === 201) {
       localStorage.setItem('cartData', JSON.stringify([]));
       setRemoveCart(prev => !prev);
@@ -235,7 +237,8 @@ function CheckOut() {
     const percentageOff = (discount / originalPrice) * 100;
     return Math.round(percentageOff);
   };
-
+console.log('discoutAmount',discoutAmount);
+console.log('discount',discount);
   return (
  <>
   <HeaderContainer expand="lg">
@@ -439,7 +442,7 @@ function CheckOut() {
             );
           })}
   
-          <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails}/>
+          <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} />
   
           <div className="mt-4">
             <h5 className="mb-3">Order Details</h5>
@@ -449,17 +452,17 @@ function CheckOut() {
             </div>
             <div className="d-flex justify-content-between mb-2 text-success">
               <span>Discount</span>
-              <span>-₹{((subtotal * discount) / 100).toFixed(2)}</span>
+              <span>-₹{discoutAmount.toFixed(2)}</span>
             </div>
             <div className="d-flex justify-content-between mb-3">
               <span>Shipping</span>
-              <span>{subtotal - ((subtotal * discount) / 100) < 299 ? '₹79.00' : 'Free'}</span>
+              <span>{subtotal - discoutAmount < 299 ? '₹79.00' : 'Free'}</span>
             </div>
             <div className="d-flex justify-content-between border-top pt-3">
               <h5>Total</h5>
-              <h5 className="text-dark fw-bold">₹{(subtotal - ((subtotal * discount) / 100) < 299 ? 
-                subtotal - ((subtotal * discount) / 100) + 79 : 
-                subtotal - ((subtotal * discount) / 100)).toFixed(2)}
+              <h5 className="text-dark fw-bold">₹{(subtotal - discoutAmount < 299 ? 
+                subtotal - discoutAmount + 79 : 
+                subtotal - discoutAmount).toFixed(2)}
               </h5>
             </div>
           </div>

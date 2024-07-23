@@ -4,7 +4,7 @@ import Input from 'components/Input';
 import PageLayout from 'layouts/PageLayout';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useGetCouponById, useUpdateCoupon } from 'queries/ProductQuery';
+import { useGetCouponById, useUpdateCoupon,useDeletecoupons } from 'queries/ProductQuery';
 import { useParams } from 'react-router-dom';
 // import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { useNavigate  } from 'react-router-dom';
@@ -24,6 +24,7 @@ const EditCoupon = () => {
    }, [res]);
 
    const { mutateAsync: updateCoupon, isLoading: loading } = useUpdateCoupon();
+   const { mutateAsync: deletecoupons, isLoading: deleting } = useDeletecoupons()
 
    const handleChange = (e) => {
       setDetails(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -64,6 +65,19 @@ const EditCoupon = () => {
       } catch (error) {
          console.error(error);
       }
+   };
+
+   const handleDelete = () => {
+      deletecoupons(details)
+         .then((res) => {
+            if (res) {
+               navigate('/coupons')
+               toast.success(res?.message ?? "coupon deleted Successfully");
+            }
+         })
+         .catch((err) => {
+            toast.error(err?.message ?? "Something went wrong");
+         });
    };
 
    
@@ -108,13 +122,44 @@ const EditCoupon = () => {
 
                      <Grid item xs={12} sm={12}>
                      <Input
-                         placeholder="Brand name"
+                         placeholder="validity"
                           type='date'
                          name="validity"
                          value={details?.validity || ''}
                          onChange={handleChange}
                       />
                    </Grid>
+                   <Grid item xs={12} sm={6}>
+            <Input
+              type='number'
+              required
+              placeholder="Minimum Value"
+              id="minValue"
+              name="minValue"
+              label="Minimum Value"
+              value={details?.minValue || ''}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="minValue"
+              variant="outlined"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Input
+              type='number'
+              required
+              placeholder="Maximum Value"
+              id="maxValue"
+              name="maxValue"
+              label="Maximum Value"
+              value={details?.maxValue || ''}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="maxValue"
+              variant="outlined"
+            />
+          </Grid>
                   <Grid item xs={12}>
                      <Input
                         id="description"
@@ -194,8 +239,9 @@ const EditCoupon = () => {
                         />
                      </Box>
                   </Grid>
-                  <Grid item xs={12} sm={4} mt={'auto'}>
+                  <Grid item xs={12} sm={12} mt={'auto'}>
                      <Button onClick={handleSubmit} disabled={loading}>UPDATE COUPON</Button>
+                     <Button color="secondary" onClick={handleDelete}>DELETE COUPON</Button>
                    
                   </Grid>
                </Grid>

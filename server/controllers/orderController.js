@@ -5,7 +5,7 @@ const CartItem = require('../models/cartItem')
 const User = require('../models/user')
 // const { sendMail } = require('../utils/mailer')
 const nodemailer = require('nodemailer');
-const moment = require('moment-timezone');
+const moment = require('moment-timezone');     
 const dotenv = require('dotenv');
 dotenv.config();
 
