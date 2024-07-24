@@ -28,7 +28,7 @@ function Blogs({ image, name, email }) {
 const TableData = () => {
   const { data, isLoading } = useGetOrders({ pageNo: 1, pageCount: 100 });
   const columns = [
-    { name: "Blogs", align: "left" },
+    { name: "order", align: "left" },
     { name: "amount", align: "center" },
     { name: "status", align: "center" },
     { name: "ordered", align: "center" },
@@ -37,7 +37,7 @@ const TableData = () => {
   ]
 
   const rows = data?.data?.map(item => ({
-    Blogs: <Blogs image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`} name={item?.mobile} email={item?.email} />,
+    order: <Blogs image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`} name={item?.mobile} email={item?.email} />,
     amount: (
       <Typography variant="caption" color="secondary" fontWeight="medium">
         {item?.amount}

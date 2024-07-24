@@ -22,6 +22,14 @@ const couponSchema = new Schema({
     type: Number,
     required: true
   },
+  minValue: {
+    type: Number,
+    required: true
+  },
+  maxValue: {
+    type: Number,
+    required: true
+  },
   image: {
     type: String,
    

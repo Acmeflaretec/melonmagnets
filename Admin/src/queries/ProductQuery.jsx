@@ -12,6 +12,8 @@ getCouponById,
 addCoupon,
 updateCoupon,
 getReview,
+deletecoupons,
+couponStatus
 } from "./productUrls";
 
 const useGetCoupon = (data) => {
@@ -153,6 +155,21 @@ const useDeleteProduct = () => {
     },
   });
 };
+const useDeletecoupons = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => deletecoupons(data), {
+
+    
+    onSuccess: (data) => {
+      queryClient.invalidateQueries("get_coupons");
+      return data;
+    },
+    onError: (data) => {
+      return data;
+    },
+  });
+};
 
 const useGetReview = (data) => {
   return useQuery(["get_products", data], () => getReview(data), {
@@ -176,4 +193,5 @@ useAddCoupon,
 useUpdateCouponStatus,
 useUpdateCoupon,
 useGetReview,
+useDeletecoupons
 };

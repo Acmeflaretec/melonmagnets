@@ -27,23 +27,30 @@ const AddCoupon = () => {
 
   const handleSubmit = () => {
     try {
-      if (!data?.name) {
-        return toast.error("name is required")
-      }
-      if (!data?.code) {
-        return toast.error("code is required")
-      }
-      if (!data?.discount) {
-        return toast.error("discount is required")
-      }
-      if (!data?.validity) {
-        return toast.error("validity is required")
-      }
-      if (!data?.description) {
-        return toast.error("description is required")
-      }
-      if (!data?.image) {
-        return toast.error("image is required")
+      // if (!data?.name) {
+      //   return toast.error("name is required")
+      // }
+      // if (!data?.code) {
+      //   return toast.error("code is required")
+      // }
+      // if (!data?.discount) {
+      //   return toast.error("discount is required")
+      // }
+      // if (!data?.validity) {
+      //   return toast.error("validity is required")
+      // }
+      // if (!data?.description) {
+      //   return toast.error("description is required")
+      // }
+      // if (!data?.image) {
+      //   return toast.error("image is required")
+      // }
+
+      const requiredFields = ['name', 'code', 'discount', 'validity', 'description', 'image', 'minValue', 'maxValue'];
+      for (const field of requiredFields) {
+        if (!data[field]) {
+          return toast.error(`${field} is required`);
+        }
       }
       const formData = new FormData();
       for (const key in data) {
@@ -67,7 +74,7 @@ const AddCoupon = () => {
   }
   return (
     <PageLayout
-      title={'Add Category'}
+      title={'Add Coupon'}
     >
       <Box sx={{ flexGrow: 1 }} display={'flex'} justifyContent={'center'}>
         <Grid container spacing={2} maxWidth={600} py={5}>
@@ -129,6 +136,38 @@ const AddCoupon = () => {
               onChange={handleChange}
               fullWidth
               autoComplete="name"
+              variant="outlined"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Input
+              type='number'
+              required
+              placeholder="Minimum Value"
+              id="minValue"
+              name="minValue"
+              label="Minimum Value"
+              value={data?.minValue || ''}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="minValue"
+              variant="outlined"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Input
+              type='number'
+              required
+              placeholder="Maximum Value"
+              id="maxValue"
+              name="maxValue"
+              label="Maximum Value"
+              value={data?.maxValue || ''}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="maxValue"
               variant="outlined"
             />
           </Grid>

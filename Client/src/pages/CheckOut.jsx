@@ -182,6 +182,8 @@ function CheckOut() {
     }
   };
 
+  const discoutAmount = discountCode?.maxValue < ((subtotal * discount) / 100) ? discountCode?.maxValue : ((subtotal * discount) / 100) ;
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddress({ ...address, [name]: value });
@@ -287,7 +289,6 @@ function CheckOut() {
     const percentageOff = (discount / originalPrice) * 100;
     return Math.round(percentageOff);
   };
-
   return (
     <>
       <HeaderContainer expand="lg">
@@ -507,7 +508,7 @@ function CheckOut() {
             );
           })}
   
-          <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails}/>
+          <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} />
   
           <div className="mt-4">
             <h5 className="mb-3">Order Details</h5>
@@ -517,17 +518,17 @@ function CheckOut() {
             </div>
             <div className="d-flex justify-content-between mb-2 text-success">
               <span>Discount</span>
-              <span>-₹{((subtotal * discount) / 100).toFixed(2)}</span>
+              <span>-₹{discoutAmount.toFixed(2)}</span>
             </div>
             <div className="d-flex justify-content-between mb-3">
               <span>Shipping</span>
-              <span>{subtotal - ((subtotal * discount) / 100) < 299 ? '₹79.00' : 'Free'}</span>
+              <span>{subtotal - discoutAmount < 299 ? '₹79.00' : 'Free'}</span>
             </div>
             <div className="d-flex justify-content-between border-top pt-3">
               <h5>Total</h5>
-              <h5 className="text-dark fw-bold">₹{(subtotal - ((subtotal * discount) / 100) < 299 ? 
-                subtotal - ((subtotal * discount) / 100) + 79 : 
-                subtotal - ((subtotal * discount) / 100)).toFixed(2)}
+              <h5 className="text-dark fw-bold">₹{(subtotal - discoutAmount < 299 ? 
+                subtotal - discoutAmount + 79 : 
+                subtotal - discoutAmount).toFixed(2)}
               </h5>
             </div>
           </div>

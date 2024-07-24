@@ -4,78 +4,87 @@ const User = require('../models/user')
 const fs = require('fs');
 
 const getCoupons = async (req, res) => {
+  // try {
+  //   const { page = 1, limit = 6, sortField, sortOrder, search, category,
+  //     priceGreaterThan, priceLessThan, priceMin, priceMax, sortDiscount, sortDiscountGreaterThan } = req.query;
+
+
+  //   const pageNumber = parseInt(page, 10) || 1;
+  //   const limitNumber = parseInt(limit, 10) || 10;
+
+  //   const query = {};
+
+
+  //   if (search) {
+  //     const searchRegex = new RegExp(search, 'i');
+  //     query.$or = [
+  //       { name: searchRegex },
+  //       { brand: searchRegex }
+
+  //     ];
+  //   }
+
+
+  //   if (category) {
+  //     query.category = category;
+  //   }
+
+  //   // Sorting
+  //   const sortOptions = {};
+  //   if (sortField && sortOrder) {
+  //     sortOptions[sortField] = sortOrder === 'asc' ? 1 : -1;
+  //   }
+
+  //   // Price greater than functionality
+  //   if (priceGreaterThan) {
+  //     query.sale_rate = { $gt: parseInt(priceGreaterThan) };
+  //   }
+
+  //   // Price less than functionality
+  //   if (priceLessThan) {
+  //     query.sale_rate = { $lt: parseInt(priceLessThan) };
+  //   }
+
+  //   // Price range functionality
+  //   if (priceMin && priceMax) {
+  //     query.sale_rate = { $gte: parseInt(priceMin), $lte: parseInt(priceMax) };
+  //   }
+
+  //   if (sortDiscount) {
+  //     query.discount = parseInt(sortDiscount);
+  //   }
+
+  //   // Sort by discount greater than functionality
+  //   if (sortDiscountGreaterThan) {
+  //     query.discount = { $gt: parseInt(sortDiscountGreaterThan) };
+  //   }
+
+  //   // Find Coupons based on the constructed query
+  //   const totalCoupons = await Coupon.countDocuments(query);
+  //   const coupons = await Coupon.find(query)
+  //     .collation({ locale: 'en' }) // Enable case-insensitive search
+  //     .sort(sortOptions)
+  //     .skip((pageNumber - 1) * limitNumber)
+  //     .limit(limitNumber);
+  //   res.status(200).json({ data: coupons })
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(400).json({ message: error?.message ?? "Something went wrong !" });
+  // }
+
+
   try {
-    const { page = 1, limit = 6, sortField, sortOrder, search, category,
-      priceGreaterThan, priceLessThan, priceMin, priceMax, sortDiscount, sortDiscountGreaterThan } = req.query;
-
-
-    const pageNumber = parseInt(page, 10) || 1;
-    const limitNumber = parseInt(limit, 10) || 10;
-
-    const query = {};
-
-
-    if (search) {
-      const searchRegex = new RegExp(search, 'i');
-      query.$or = [
-        { name: searchRegex },
-        { brand: searchRegex }
-
-      ];
-    }
-
-
-    if (category) {
-      query.category = category;
-    }
-
-    // Sorting
-    const sortOptions = {};
-    if (sortField && sortOrder) {
-      sortOptions[sortField] = sortOrder === 'asc' ? 1 : -1;
-    }
-
-    // Price greater than functionality
-    if (priceGreaterThan) {
-      query.sale_rate = { $gt: parseInt(priceGreaterThan) };
-    }
-
-    // Price less than functionality
-    if (priceLessThan) {
-      query.sale_rate = { $lt: parseInt(priceLessThan) };
-    }
-
-    // Price range functionality
-    if (priceMin && priceMax) {
-      query.sale_rate = { $gte: parseInt(priceMin), $lte: parseInt(priceMax) };
-    }
-
-    if (sortDiscount) {
-      query.discount = parseInt(sortDiscount);
-    }
-
-    // Sort by discount greater than functionality
-    if (sortDiscountGreaterThan) {
-      query.discount = { $gt: parseInt(sortDiscountGreaterThan) };
-    }
-
-    // Find Coupons based on the constructed query
-    const totalCoupons = await Coupon.countDocuments(query);
-    const coupons = await Coupon.find(query)
-      .collation({ locale: 'en' }) // Enable case-insensitive search
-      .sort(sortOptions)
-      .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber);
+    const today = new Date();
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
     res.status(200).json({ data: coupons })
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error?.message ?? "Something went wrong !" });
-  }
+    }
 };
 
 const addCoupon = async (req, res) => {
   try {
-    const { name, description, validity, discount, code } = req.body;
+    const { name, description, validity, discount, code ,minValue, maxValue} = req.body;
 
 
     const image = req?.file?.filename
@@ -93,6 +102,8 @@ const addCoupon = async (req, res) => {
         validity: new Date(validity),
         discount,
         code,
+        minValue, 
+        maxValue,
         image: image
       });
 
@@ -114,7 +125,7 @@ const addCoupon = async (req, res) => {
 
 
 const updateCoupon = async (req, res) => {
-  const { _id, name, description, validity, discount } = req.body;
+  const { _id, name, description, validity, discount,minValue,maxValue } = req.body;
 
   console.log(req.body)
 
@@ -134,7 +145,7 @@ const updateCoupon = async (req, res) => {
       });
     }
     await Coupon.updateOne({ _id }, {
-      $set: { name, description, validity: new Date(validity), discount, ...(image && { image }) }
+      $set: { name, description, validity: new Date(validity), discount,minValue,maxValue, ...(image && { image }) }
     })
     res.status(200).json({ data, message: 'Coupon updated successfully' });
   } catch (error) {
@@ -218,16 +229,21 @@ const getClientCoupons = async (req, res) => {
 //     res.status(500).json({ message: error.message });
 //   }
 // }
-const validateCoupon = async (req, res) => {
-  const { couponId, userId } = req.body;
-  const id=userId._id
+const validateCoupon = async (req, res) => {    
+  const { couponId, userId ,subtotal} = req.body;
+  const id=userId?._id
   const coupon = await Coupon.findOne({ _id: couponId, status: true });
   try {
     const user = await User.findById(userId);
     if (user.coupons.includes(couponId)) {
       res.json({ valid: false,  message: 'This coupon alredy used' });
     } else {
-      res.json({ valid: true,discount: coupon.discount});
+      if (subtotal < coupon.minValue) {   
+        res.json({valid: false, message: `Coupon can be applied only to orders between ${coupon.minValue}` });
+      }else{
+
+        res.json({ valid: true,discount: coupon.discount});
+      }
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

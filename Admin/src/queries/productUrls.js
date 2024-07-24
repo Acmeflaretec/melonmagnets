@@ -7,6 +7,7 @@ const deleteProduct = async (data) => request(`/products/${data?._id}`, 'DELETE'
 const getCategory = async (data) => request(`/category?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const getCoupon = async (data) => request(`/coupons?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const addCoupon = async (data) => request(`/coupons`, 'POST', data)
+const deletecoupons = async (data) => request(`/coupons/${data?._id}`, 'DELETE', data)
 
 const getProducts = async (data) => request(`/products?page=${data?.pageNo}&perpageitems=${data?.pageCount}`, 'GET', data)
 const getProductById = async (data) => request(`/products/${data?.id}`, 'GET', data)
@@ -31,7 +32,7 @@ export {
   couponStatus,
   updateCoupon,
   getCouponById,
-
+  deletecoupons,
   getReview,
 
 };

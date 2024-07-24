@@ -121,7 +121,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const Coupon = ({ setDiscount, setDiscountCode, userId }) => {
+const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
+    console.log('subtotal2',subtotal);
     const [coupons, setCoupons] = useState([]);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -157,7 +158,7 @@ const Coupon = ({ setDiscount, setDiscountCode, userId }) => {
     const handleApplyCoupon = async (coupon) => {
         setLoading(true);
         try {
-            const result = await validateCouponApi(coupon._id, userId);
+            const result = await validateCouponApi(coupon._id, userId,subtotal);
             if (result.status === 200 && result.data.valid) {
                 setDiscount(coupon.discount);
                 setDiscountCode(coupon);

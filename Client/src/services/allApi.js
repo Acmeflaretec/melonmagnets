@@ -49,12 +49,12 @@ export const getCouponsApi = async () => {
   }
 };
 
-export const validateCouponApi = async (couponId,userId) => {
+export const validateCouponApi = async (couponId,userId,subtotal) => {
   try {
-    const response = await axios.post(`${ServerURL}/api/v1/coupons/validate-coupon`, { couponId,userId });
+    const response = await axios.post(`${ServerURL}/api/v1/coupons/validate-coupon`, { couponId,userId,subtotal });
     return response;
   } catch (error) {
     console.error('Error validating coupon:', error);
-    return { status: 500, data: { valid: false, message: 'Error validating coupon.' } };
+    return { status: 400, data: { valid: false, message: 'Error validating coupon.' } };
   }
 };
