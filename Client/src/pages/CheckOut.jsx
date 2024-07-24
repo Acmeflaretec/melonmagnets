@@ -289,8 +289,6 @@ function CheckOut() {
     const percentageOff = (discount / originalPrice) * 100;
     return Math.round(percentageOff);
   };
-console.log('discoutAmount',discoutAmount);
-console.log('discount',discount);
   return (
     <>
       <HeaderContainer expand="lg">
