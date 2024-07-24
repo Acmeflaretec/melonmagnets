@@ -97,7 +97,7 @@ const Register = () => {
       }
     } catch (error) {
       console.error('Error during registration: ', error);
-      alert('Registration failed. Please try again.');
+      alert(error?.response?.data?.message ?? 'Registration failed. Please try again.');
     }
   };
 
