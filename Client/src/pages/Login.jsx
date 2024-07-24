@@ -245,7 +245,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error during login: ', error);
-      alert('Please check your email and password');
+      alert(error?.response?.data?.message ?? 'Please check your email and password');
     }
   };
 
