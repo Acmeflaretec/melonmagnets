@@ -5,11 +5,14 @@ import { createBulkOrderApi } from "../services/allApi";
 import Swal from "sweetalert2";
 import styled from "styled-components";
 import { FaBox, FaEnvelope, FaPhone, FaUser, FaCommentAlt } from "react-icons/fa";
+import '../App.css'
+
 const StyledCard = styled(Card)`
   border-radius: 15px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border: none;
+  position: relative;
 `;
 
 const Banner = styled.div`
@@ -56,6 +59,13 @@ const StyledButton = styled(Button)`
     background-color: #0056b3;
     border-color: #0056b3;
   }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
 `;
 
 const FormLabel = styled(Form.Label)`
@@ -82,6 +92,7 @@ function BulkOrder() {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isSubmitted) {
@@ -124,6 +135,7 @@ function BulkOrder() {
     const errors = validateForm();
 
     if (Object.keys(errors).length === 0) {
+      setIsLoading(true);
       try {
         const result = await createBulkOrderApi({ ...formData });
         Swal.fire({
@@ -148,6 +160,8 @@ function BulkOrder() {
           icon: "error",
           confirmButtonColor: "#007bff",
         });
+      } finally {
+        setIsLoading(false);
       }
     } else {
       setFormErrors(errors);
@@ -279,12 +293,37 @@ function BulkOrder() {
                 <Form.Control.Feedback type="invalid">{formErrors.message}</Form.Control.Feedback>
               </Form.Group>
               <div className="text-center">
-                <StyledButton type="submit">
-                  Submit Bulk Order Request
+                <StyledButton type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Submitting...
+                    </>
+                  ) : (
+                    "Submit Bulk Order Request"
+                  )}
                 </StyledButton>
               </div>
             </Form>
           </Card.Body>
+          {isLoading && (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1000,
+              }}
+            >
+             <div className='loader'></div>
+            </div>
+          )}
         </StyledCard>
       </Container>
     </>
