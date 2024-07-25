@@ -126,12 +126,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 
-function Coupon({ image, name, desc }) {
+function Coupon({ name, desc }) {
   return (
     <Box display="flex" alignItems="center" px={1} py={0.5}>
-      <Box mr={2}>
-        <Avatar src={image} alt={name} size="sm" variant="rounded" />
-      </Box>
+      
       <Box display="flex" flexDirection="column">
         <Typography variant="button" fontWeight="medium">
           {name}
@@ -179,29 +177,21 @@ const TableData = () => {
 
   const columns = [
     { name: "coupon", align: "left" },
-    { name: "code", align: "center" },
     { name: "status", align: "center" },
     { name: "createdon", align: "center" },
     { name: "validity", align: "center" },
     { name: "discount", align: "center" },
     { name: "min", align: "center" },
     { name: "max", align: "center" },
-    { name: "description", align: "center" },
     { name: "action", align: "center" },
   ];
 
   const rows = coupons.map(item => ({
     coupon: (
       <Coupon
-        image={`${process.env.REACT_APP_API_URL}/uploads/${item?.image}`}
         name={item?.name}
         desc={item?.description}
       />
-    ),
-    code: (
-      <Typography variant="caption" color="secondary" fontWeight="medium">
-        {item?.code}
-      </Typography>
     ),
     status: (
       <Button
@@ -235,11 +225,6 @@ const TableData = () => {
     max: (
       <Typography variant="caption" color="secondary" fontWeight="medium">
         {item?.maxValue}
-      </Typography>
-    ),
-    description: (
-      <Typography variant="caption" color="secondary" fontWeight="medium">
-        {item?.description}
       </Typography>
     ),
     action: (

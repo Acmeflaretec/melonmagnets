@@ -6,14 +6,6 @@ const couponSchema = new Schema({
     type: String,
     required: true
   },
-  code: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
   validity: {
     type: Date,
     required: true
@@ -29,10 +21,6 @@ const couponSchema = new Schema({
   maxValue: {
     type: Number,
     required: true
-  },
-  image: {
-    type: String,
-   
   },
   status:{
     type:Boolean,
