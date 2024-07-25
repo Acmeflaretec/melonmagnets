@@ -111,7 +111,8 @@ const NavBar = () => {
           <Navbar.Collapse id="navbar-nav">
             <Nav className="ms-auto">
               <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')}>Fridge Magnets</Link>
-              <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')}>Pin Badges</Link>
+              <Link to={'/products/pinbadges'} className={getLinkClass('/products/pinbadges')}>Pin Badges</Link>
+              <Link to={'/products/souvneir'} className={getLinkClass('/products/souvneir')}>Souvneir</Link>
               <Link to={'/savethedate'} className={getLinkClass('/savethedate')}>Save The Date</Link>
               <div
                 className="dropdown"
@@ -124,7 +125,8 @@ const NavBar = () => {
                 {showDropdown && (
                   <div className="dropdown-menu show">
                     <Link to={'/fridgemagnets'} className="dropdown-item">Fridge Magnets</Link>
-                    <Link to={'/pinbagesmain'} className="dropdown-item">Pin Badges</Link>
+                    <Link to={'/products/pinbadges'} className="dropdown-item">Pin Badges</Link>
+                    <Link to={'/products/souvneir'} className="dropdown-item">Souvneir</Link>
                     <Link to={'/savethedate'} className="dropdown-item">Save The Date</Link>
                     <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link>
                   </div>
@@ -215,7 +217,8 @@ const NavBar = () => {
             <Offcanvas.Body className="offcanvas-nav">
               <Nav className="flex-column">
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
-                <Link to={'/pinbagesmain'} className={getLinkClass('/pinbagesmain')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
+                <Link to={'/products/pinbadges'} className={getLinkClass('/products/pinbadges')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
+                <Link to={'/products/souvneir'} className={getLinkClass('/products/souvneir')} onClick={handleCloseOffcanvas}>Souvneir</Link>
                 <Link to={'/savethedate'} className={getLinkClass('/savethedate')} onClick={handleCloseOffcanvas}>Save The Date</Link>
                 <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link>
                 <Link to={'/allproducts'} className={getLinkClass('/allproducts')} onClick={handleCloseOffcanvas}>Shop All</Link>

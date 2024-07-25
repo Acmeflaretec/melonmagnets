@@ -39,6 +39,15 @@ const StyledInput = styled(Form.Control)`
   }
 `;
 
+const StyledNumberInput = styled(StyledInput)`
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+`;
+
 const StyledTextArea = styled(StyledInput)`
   width: 100%;
   min-height: 120px;
@@ -108,12 +117,6 @@ function BulkOrder() {
       setFormData((prevState) => ({
         ...prevState,
         product: checked ? id : "",
-      }));
-    } else if (id === "quantity") {
-      const newValue = Math.max(10, parseInt(value) || 10);
-      setFormData((prevState) => ({
-        ...prevState,
-        [id]: newValue.toString(),
       }));
     } else {
       setFormData((prevState) => ({
@@ -241,12 +244,11 @@ function BulkOrder() {
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-4">
-                    <FormLabel><IconWrapper><FaBox /></IconWrapper>Quantity (minimum 10)</FormLabel>
-                    <StyledInput
+                    <FormLabel><IconWrapper><FaBox /></IconWrapper>Quantity</FormLabel>
+                    <StyledNumberInput
                       type="number"
                       id="quantity"
-                      min="10"
-                      placeholder="Enter quantity"
+                      placeholder="Enter quantity (minimum 10)"
                       value={formData.quantity}
                       onChange={handleChange}
                       isInvalid={!!formErrors.quantity}

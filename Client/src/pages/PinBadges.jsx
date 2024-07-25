@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../App.css';
 import { getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
@@ -7,30 +7,39 @@ import './PinBadges.css';
 import { Col, Row } from 'react-bootstrap';
 
 function PinBadges() {
+  const { id } = useParams();
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState('bestselling');
-  const [hoveredBadge, setHoveredBadge] = useState(null); // State to manage hovered badge
+  const [hoveredBadge, setHoveredBadge] = useState(null);
+  const [categoryName, setCategoryName] = useState('');
 
-  // Function to fetch all badges from API
+  const idMapping = {
+    pinbadges: 'pin badges',
+    souvneir: 'souvneir',
+  };
+
   const getAllCategory = async () => {
     try {
       const category = await getAllCategoryApi();
+      const backendCategoryName = idMapping[id.toLowerCase()];
       const categoryData = category?.data?.data?.find(
-        (item) => item.name === "Pin Badges"
+        (item) => item.name.toLowerCase() === backendCategoryName?.toLowerCase()
       );
+
       if (categoryData) {
         setBadges(categoryData.products);
+        setCategoryName(categoryData.name);
         setLoading(false);
       }
     } catch (error) {
-      console.error('Error fetching badges:', error);
+      console.error('Error fetching category data:', error);
     }
   };
 
   useEffect(() => {
     getAllCategory();
-  }, []);
+  }, [id]);
 
   // Function to sort badges based on sortOrder
   const sortedBadges = useMemo(() => {
@@ -56,7 +65,7 @@ function PinBadges() {
         </div>
       ) : (
         <div className="container mb-5 mt-2">
-          <h2 className='fw-bold'>Pin Badges</h2>
+          <h2 className='fw-bold'>{categoryName}</h2>
           <div className="row mb-4">
             <div className="col-md-4">
               <label htmlFor="sortOrder" className="me-2">Sort by:</label>
@@ -69,7 +78,7 @@ function PinBadges() {
           <Row>
             {sortedBadges.map((badge) => (
               <Col key={badge._id} xs={6} md={4} lg={4} className='mb-3'>
-                <Link to={`/pinbadges/${badge._id}`} className='text-decoration-none'>
+                <Link to={`/productdetails/${badge._id}`} className='text-decoration-none'>
                   <div
                     className="card h-100 shadow"
                     onMouseEnter={() => setHoveredBadge(badge._id)}
@@ -80,7 +89,6 @@ function PinBadges() {
                         src={`${ServerURL}/uploads/${hoveredBadge === badge._id && badge.image[1] ? badge.image[1] : badge.image[0]}`}
                         className="card-img-top rounded"
                         alt={badge.name}
-                        // style={{width:'100%', height:'300px',objectFit:'cover'}}
                       />
                     </div>
                     <div className="card-body d-flex flex-column">

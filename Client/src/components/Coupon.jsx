@@ -1,93 +1,10 @@
-// import React, { useState, useEffect } from 'react';
-// import { getCouponsApi, validateCouponApi } from '../services/allApi';
-// import Swal from 'sweetalert2';
-
-// const Coupon = ({ setDiscount, setDiscountCode }) => {
-//     const [coupons, setCoupons] = useState([]);
-//     const [selectedCoupon, setSelectedCoupon] = useState('');
-//     const [discount, setDiscountAmount] = useState(0);
-
-//     useEffect(() => {
-//         const fetchCoupons = async () => {
-//             const result = await getCouponsApi();
-//             if (result.status === 200) {
-//                 setCoupons(result.data.filter(coupon => coupon.status));
-//             }
-//         };
-
-//         fetchCoupons();
-//     }, []);
-
-//     const handleApplyCoupon = async () => {
-//         if (!selectedCoupon) {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Validation Error',
-//                 text: 'Please select a coupon.',
-//             });
-//             return;
-//         }
-
-//         const result = await validateCouponApi(selectedCoupon);
-//         if (result.status === 200 && result.data.valid) {
-//             setDiscount(result.data.discount);
-//             setDiscountCode(selectedCoupon);
-//             setDiscountAmount(result.data.discount);
-//             Swal.fire({
-//                 icon: 'success',
-//                 title: 'Coupon Applied',
-//                 text: `Coupon applied successfully! You got a discount of ₹${result.data.discount}.`,
-//             });
-//         } else {
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Invalid Coupon',
-//                 text: result.data.message || 'The coupon is invalid or expired.',
-//             });
-//         }
-//     };
-
-//     return (
-//         <div className="mb-4">
-//             <label htmlFor="discountCode" className="form-label">
-//                 Discount code
-//             </label>
-//             <div className="input-group">
-//                 <select
-//                     className="form-select"
-//                     id="discountCode"
-//                     value={selectedCoupon}
-//                     onChange={(e) => setSelectedCoupon(e.target.value)}
-//                 >
-//                     <option value="">Select a coupon</option>
-//                     {coupons.map((coupon) => (
-//                         <option key={coupon._id} value={coupon.code}>
-//                             <div>
-//                                 <div style={{ display: 'flex', justifyContent: 'space-between  ' }}>
-//                                     <span>{coupon.name}</span> <span>{coupon.discount}%</span>
-//                                 </div>
-//                                 <div>{coupon.code}</div>
-//                             </div>
-//                         </option>
-//                     ))}
-//                 </select>
-//                 <button className="btn btn-warning" type="button" onClick={handleApplyCoupon}>
-//                     Apply
-//                 </button>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Coupon;
-
 import React, { useState, useEffect } from 'react';
 import { getCouponsApi, validateCouponApi } from '../services/allApi';
 import { 
   Button, Typography, Box, Card, CardContent, 
   Dialog, DialogTitle, DialogContent, DialogActions,
   List, ListItem, ListItemText, Divider, Snackbar, IconButton,
-  Grid, Avatar, CircularProgress
+  Grid, Avatar, CircularProgress, useMediaQuery, useTheme
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MuiAlert from '@mui/material/Alert';
@@ -98,36 +15,38 @@ const StyledCard = styled(Card)(({ theme }) => ({
   cursor: 'pointer',
   transition: 'all 0.3s ease-in-out',
   '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[8],
+    transform: 'translateY(-2px)',
+    boxShadow: theme.shadows[4],
   },
-  backgroundColor: theme.palette.background.default,
-  borderRadius: theme.shape.borderRadius * 2,
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
   border: `1px solid ${theme.palette.divider}`,
+  padding: theme.spacing(2),
 }));
 
 const CouponImage = styled(Avatar)(({ theme }) => ({
-  width: 80,
-  height: 80,
+  width: 60,
+  height: 60,
   marginRight: theme.spacing(2),
-  boxShadow: theme.shadows[3],
+  boxShadow: theme.shadows[2],
 }));
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  marginBottom: theme.spacing(1),
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
+  padding: theme.spacing(2),
 }));
 
-const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
-    console.log('subtotal2',subtotal);
+const Coupon = ({ setDiscount, setDiscountCode, userId, subtotal }) => {
     const [coupons, setCoupons] = useState([]);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [loading, setLoading] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         fetchCoupons();
@@ -158,7 +77,7 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
     const handleApplyCoupon = async (coupon) => {
         setLoading(true);
         try {
-            const result = await validateCouponApi(coupon._id, userId,subtotal);
+            const result = await validateCouponApi(coupon._id, userId, subtotal);
             if (result.status === 200 && result.data.valid) {
                 setDiscount(coupon.discount);
                 setDiscountCode(coupon);
@@ -172,7 +91,8 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
         setLoading(false);
     };
 
-    const handleRemoveCoupon = () => {
+    const handleRemoveCoupon = (e) => {
+        e.stopPropagation();
         setSelectedCoupon(null);
         setDiscount(0);
         setDiscountCode(null);
@@ -190,37 +110,25 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
 
     return (
         <>
-            <StyledCard 
-                onClick={handleOpenDialog}
-                elevation={selectedCoupon ? 4 : 1}
-            >
-                <CardContent>
+            <StyledCard onClick={handleOpenDialog} elevation={selectedCoupon ? 4 : 1}>
+                <CardContent style={{ padding: 0 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between">
                         <Box display="flex" alignItems="center">
                             <FaTag size={24} color="#FFB22C" style={{ marginRight: 16 }} />
-                            <Typography variant="h6" component="div">
-                                {selectedCoupon ? (
-                                    <>
-                                        <div className="fw-bold">{selectedCoupon.name}</div>
-                                        <div style={{ fontSize: '0.875rem', color: 'green' }}>
-                                            {`save ${selectedCoupon.discount}% on this order`}
-                                        </div>
-                                    </>
-                                ) : (
-                                    'Apply coupon'
+                            <Box>
+                                <Typography variant="subtitle1" component="div" fontWeight="bold">
+                                    {selectedCoupon ? selectedCoupon.name : 'Apply coupon'}
+                                </Typography>
+                                {selectedCoupon && (
+                                    <Typography variant="body2" color="success.main">
+                                        Save {selectedCoupon.discount}% on this order
+                                    </Typography>
                                 )}
-                            </Typography>
-
-
-
-
+                            </Box>
                         </Box>
                         {selectedCoupon && (
                             <IconButton 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemoveCoupon();
-                                }}
+                                onClick={handleRemoveCoupon}
                                 size="small"
                                 color="error"
                             >
@@ -233,17 +141,17 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
 
             <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
                 <DialogTitle>
-                    <Typography variant="h5" component="div" fontWeight="bold">
+                    <Typography variant="h6" component="div" fontWeight="bold">
                         Select a Coupon
                     </Typography>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers>
                     {loading ? (
                         <Box display="flex" justifyContent="center" my={4}>
                             <CircularProgress />
                         </Box>
                     ) : (
-                        <List>
+                        <List disablePadding>
                             {coupons.map((coupon, index) => (
                                 <React.Fragment key={coupon._id}>
                                     <StyledListItem 
@@ -252,15 +160,15 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
                                         disabled={loading}
                                     >
                                         <Grid container alignItems="center" spacing={2}>
-                                            {/* <Grid item>
-                                                <CouponImage src={`${ServerURL}/uploads/${coupon.image}` || 'default-coupon-image.jpg'} alt={coupon.name}>
+                                            <Grid item>
+                                                {/* <CouponImage style={{backgroundColor: '#FFB22C'}}>
                                                     <FaPercent />
-                                                </CouponImage>
-                                            </Grid> */}
+                                                </CouponImage> */}
+                                            </Grid>
                                             <Grid item xs>
                                                 <ListItemText
                                                     primary={
-                                                        <Typography variant="h6" style={{color:'#FFB22C'}} fontWeight="bold">
+                                                        <Typography variant="h6" color="primary" fontWeight="bold">
                                                             {coupon.discount}% OFF
                                                         </Typography>
                                                     }
@@ -269,28 +177,28 @@ const Coupon = ({ setDiscount, setDiscountCode, userId ,subtotal }) => {
                                                             <Typography variant="body1" color="textPrimary">
                                                                 {coupon.name}
                                                             </Typography>
-                                                            <Typography variant="body2" color="textSecondary">
+                                                            {/* <Typography variant="body2" color="textSecondary">
                                                                 Code: {coupon.code}
-                                                            </Typography>
+                                                            </Typography> */}
                                                         </>
                                                     }
                                                 />
                                             </Grid>
                                             <Grid item>
-                                                <IconButton style={{color:'#FFB22C'}}>
+                                                <IconButton color="primary">
                                                     <FaCheckCircle />
                                                 </IconButton>
                                             </Grid>
                                         </Grid>
                                     </StyledListItem>
-                                    {index < coupons.length - 1 && <Divider variant="fullWidth" component="li" />}
+                                    {index < coupons.length - 1 && <Divider />}
                                 </React.Fragment>
                             ))}
                         </List>
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog} style={{color:'red'}} variant="outlined">
+                    <Button onClick={handleCloseDialog} color="error" variant="outlined">
                         Cancel
                     </Button>
                 </DialogActions>

@@ -53,7 +53,9 @@ function AllProducts() {
 
   const nameToRouteMapping = {
     'fridge magnets': '/fridgemagnets',
-    'save the date': '/savethedate'
+    'save the date': '/savethedate',
+    "/products/pinbadges" :'pinbadges',
+    '/products/souvneir':'souvenir' 
   };
 
   const handleRedirect = (name, id) => {
@@ -65,7 +67,7 @@ function AllProducts() {
     if (route) {
       navigate(nameToRouteMapping[route]);
     } else {
-      navigate(`/pinbadges/${id}`);
+      navigate(`/productdetails/${id}`);
     }
   };
 
@@ -74,7 +76,7 @@ function AllProducts() {
     return name.slice(0, maxLength) + '...';
   };
 
-  console.log(products);
+  // console.log(products);
 
 
   return (

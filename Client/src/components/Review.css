@@ -1,47 +1,75 @@
-/* Review.css */
 .review-section {
   background-color: #f8f9fa;
 }
 
 .rating-summary-card {
   background-color: #ffffff;
+  border: none;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
-.star-rating {
-  font-size: 1.2rem;
-  white-space: nowrap;
+.rating-summary-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.rating-average {
-  line-height: 1;
+.star-rating .fa-star {
+  font-size: 1rem;
+  margin-right: 2px;
 }
 
-.rating-average .display-4 {
-  font-size: 3rem;
+.cursor-pointer {
+  cursor: pointer;
 }
 
-.progress-bar-custom {
-  height: 8px;
-}
-
-.review-images img {
+.review-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
   transition: transform 0.2s ease-in-out;
 }
 
-.review-images img:hover {
+.review-image:hover {
   transform: scale(1.05);
 }
 
-.modal-body .fa-star {
-  transition: color 0.2s ease-in-out;
+.review-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-.modal-body .fa-star:hover {
-  color: #ffc107 !important;
+.review-preview-modal .modal-content {
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .rating-summary-card {
-    margin-bottom: 2rem;
+.preview-image-container {
+  background-color: #f1f3f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.preview-image {
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.preview-review-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.preview-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .preview-image-container {
+    min-height: 300px;
   }
 }

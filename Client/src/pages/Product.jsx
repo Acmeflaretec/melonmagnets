@@ -1,19 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, CloseButton, Col, Container, Image, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import uploadimg from '../assets/img/upload.png';
 import { addToCartApi, getAllCategoryApi } from '../services/allApi';
 import { ServerURL } from '../services/baseUrl';
 // import Review from './Review';
-import Review from '../components/Review';
-import Swal from 'sweetalert2';
-import '../App.css';
-import { cartResponseContext } from '../context/ContextShare';
-import { useSwipeable } from 'react-swipeable';
 import { useSelector } from 'react-redux';
-import { Link} from 'react-router-dom';
-import RenderImage from './RenderImage';
+import { Link } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
+import '../App.css';
 import video from '../assets/img/video.png';
+import Review from '../components/Review';
+import { cartResponseContext } from '../context/ContextShare';
+import RenderImage from './RenderImage';
 
 const Product = () => {
   const userDetails = useSelector((state) => state.userDetails);
@@ -33,6 +32,8 @@ const Product = () => {
   const [cartLoading, setCartLoading] = useState(false)
   const fileInputRef = React.useRef(null);
   const visibleThumbnailCount = 5;
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -159,6 +160,7 @@ const Product = () => {
   const idMapping = {
     fridgemagnets: 'fridge magnets',
     pinbadges: 'pin badges',
+    souvneir: ' souvneir',
     savethedate: 'save the date'
   };
 
@@ -417,6 +419,19 @@ const Product = () => {
                 {productDetails.description}
               </p>
             </Col>
+          { isHomePage&&
+           <Col md={12}>
+            <iframe
+              width="100%"
+              height="400px"
+              src={`${import.meta.env.VITE_APP_Video_URL}?autoplay=1&mute=1`}
+              title="Rick Astley - Never Gonna Give You Up (Official Music Video)"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </Col>}
           </Row>
           <Row>
             <Review productId={productDetails._id}/>
@@ -428,6 +443,7 @@ const Product = () => {
 };
 
 export default Product;
+
 
 
 

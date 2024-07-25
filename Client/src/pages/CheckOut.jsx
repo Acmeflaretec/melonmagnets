@@ -234,12 +234,17 @@ function CheckOut() {
       handler: function (response) {
         handlePaymentSuccess();
       },
+      modal: {
+        ondismiss: function() {
+          setIsLoading(false);
+        }
+      },
       theme: {
         color: '#f9e7d2',
       },
       image: 'apple-touch-icon.png',
     };
-
+  
     const rzp = new window.Razorpay(options);
     rzp.open();
   };

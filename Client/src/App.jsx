@@ -56,7 +56,7 @@
 
 
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './App.css';
 import Footer from './components/Footer';
@@ -80,8 +80,15 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import LoginRegisterLayout from './components/LoginRegisterLayout';
 import store from './redux/store';
+import { useEffect } from 'react';
 
 function App() {
+  const { pathname } = useLocation();
+
+  // Automatically scrolls to top whenever pathname changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return (
     <>
       <Provider store={store}>
@@ -90,8 +97,8 @@ function App() {
           <Route path='/register' element={<LoginRegisterLayout><Register /></LoginRegisterLayout>} />
           <Route path='/' element={<><Topnav /><NavBar /><Product /><WhatsAppButton /><Footer /></>} />
           <Route path='/:id' element={<><Topnav /><NavBar /><Product /><WhatsAppButton /><Footer /></>} />
-          <Route path='/pinbagesmain' element={<><Topnav /><NavBar /><PinBadges /><WhatsAppButton /><Footer /></>} />
-          <Route path='/pinbadges/:id' element={<><Topnav /><NavBar /><PinBadgeSingle /><WhatsAppButton /><Footer /></>} />
+          <Route path='/products/:id' element={<><Topnav /><NavBar /><PinBadges /><WhatsAppButton /><Footer /></>} />
+          <Route path='/productdetails/:id' element={<><Topnav /><NavBar /><PinBadgeSingle /><WhatsAppButton /><Footer /></>} />
           <Route path='/bulkorder' element={<><Topnav /><NavBar /><BulkOrder /><WhatsAppButton /><Footer /></>} />
           <Route path='/checkout' element={<><CheckOut /></>} />
           <Route path='/aboutus' element={<><Topnav /><NavBar /><AboutUs /><WhatsAppButton /><Footer /></>} />
