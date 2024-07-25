@@ -84,13 +84,12 @@ const getCoupons = async (req, res) => {
 
 const addCoupon = async (req, res) => {
   try {
-    const { name, description, validity, discount, code ,minValue, maxValue} = req.body;
+    const { name,  validity, discount,minValue, maxValue} = req.body;
 
 
-    const image = req?.file?.filename
+    
 
-    const isExisting = await Coupon.findOne({ code: code });
-    console.log('is exi', isExisting)
+    const isExisting = await Coupon.findOne({ name: name });
     if (isExisting) {
 
       res.status(400).json({ message: "coupon already Exist" });
@@ -98,13 +97,10 @@ const addCoupon = async (req, res) => {
     } else {
       const newCoupon = new Coupon({
         name,
-        description,
         validity: new Date(validity),
         discount,
-        code,
         minValue, 
         maxValue,
-        image: image
       });
 
       const savedCoupon = await newCoupon.save();
@@ -125,27 +121,16 @@ const addCoupon = async (req, res) => {
 
 
 const updateCoupon = async (req, res) => {
-  const { _id, name, description, validity, discount,minValue,maxValue } = req.body;
+  const { _id, name, validity, discount,minValue,maxValue } = req.body;
 
-  console.log(req.body)
-
-  const image = req?.file?.filename;
   try {
     const data = await Coupon.findById(_id);
     if (!data) {
       return res.status(404).json({ message: 'Coupon not found' });
     }
-    if (image) {
-      fs.unlink(`public/uploads/${data?.image}`, (err) => {
-        if (err) {
-          console.error('Error deleting image:', err);
-          return;
-        }
-        console.log('Image deleted successfully.');
-      });
-    }
+    
     await Coupon.updateOne({ _id }, {
-      $set: { name, description, validity: new Date(validity), discount,minValue,maxValue, ...(image && { image }) }
+      $set: { name, validity: new Date(validity), discount,minValue,maxValue}
     })
     res.status(200).json({ data, message: 'Coupon updated successfully' });
   } catch (error) {
@@ -161,13 +146,7 @@ const deleteCoupon = async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Coupon not found' });
     }
-    fs.unlink(`public/uploads/${data?.image}`, (err) => {
-      if (err) {
-        console.error('Error deleting image:', err);
-        return;
-      }
-      console.log('Image deleted successfully.');
-    });
+    
     res.status(200).json({ message: 'Coupon deleted successfully' });
   } catch (error) {
     console.log(error);
