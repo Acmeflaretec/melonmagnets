@@ -218,7 +218,7 @@ const validateCoupon = async (req, res) => {
       res.json({ valid: false,  message: 'This coupon alredy used' });
     } else {
       if (subtotal < coupon.minValue) {   
-        res.json({valid: false, message: `Coupon can be applied only to orders between ${coupon.minValue}` });
+        res.json({valid: false, message: `Coupon can be applied only to orders above ${coupon.minValue}` });
       }else{
 
         res.json({ valid: true,discount: coupon.discount});
