@@ -312,9 +312,13 @@ const Login = () => {
 
   const handleSendOtp = async () => {
     try {
+      if(userDetails.number.length === 10){
       await axiosInstance.post('/api/v1/auth/send-otp', { number: userDetails.number });
       setShowOtpField(true);
-      setResendTimer(60); // 60 seconds timer
+      setResendTimer(60); 
+      }else{
+        alert('Phone Number Must Be 10 Digits')
+      }
     } catch (error) {
       console.error('Error sending OTP: ', error);
       alert('Failed to send OTP. Please try again.');

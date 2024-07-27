@@ -137,15 +137,20 @@ const NavBar = () => {
               {/* <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
                 <FontAwesomeIcon icon={faInstagram} />
               </Link> */}
-              {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+              {/* {userDetails ?( */}
+                <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
                 {cartItems?.length > 0 && (
                   <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
                     {cartItems?.length}
                   </Badge>
                 )}
-              </button>) : (<Link to={'/login'}>
-              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
+              </button>
+              {/* ): 
+               (<Link to={'/login'}>
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick} ><FontAwesomeIcon icon={faShoppingCart} /></button>
+               </Link>)
+               } */}
               
               {userDetails ? (
   <button 

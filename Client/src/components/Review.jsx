@@ -339,6 +339,7 @@ function Review({ productId }) {
     const checkCanWriteReview = async () => {
       try {
         const response = await axiosInstance.get(`/api/v1/cart/user/${userDetails._id}/product/${productId}`);
+        console.log("rewiew response",response.data);
         setCanWriteReview(response.data.canWriteReview);
       } catch (error) {
         console.error('Error checking if user can write review:', error);
@@ -347,6 +348,7 @@ function Review({ productId }) {
 
     fetchReviews();
     if (userDetails) {
+      console.log('userDetails existing');
       checkCanWriteReview();
     }
   }, [productId, userDetails]);

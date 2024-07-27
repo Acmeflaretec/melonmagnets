@@ -14,19 +14,16 @@ exports.getCartItems = async (req, res) => {
 // Add a new item to the cart
 exports.addToCart = async (req, res) => {
   // console.log('addToCart');
-  const {userId,productId, quantity, price ,salePrice} = req.body;
-  console.log('userId,productId, quantity, price',userId,productId, quantity, price ,salePrice);
+  const {productId, quantity, price ,salePrice} = req.body;
   const image =  req?.files?.map((x) => x.filename)??[]
   try {
     const cartItem = new CartItem({
-      userId,
       productId,
       quantity,
       price,
       salePrice,
       image
     });
-    console.log('cartItem',cartItem);
     await cartItem.save();
     res.status(201).json(cartItem);
   } catch (error) {
@@ -65,10 +62,10 @@ exports.removeFromCart = async (req, res) => {
 exports.getReviewOrders = async (req, res) => {
   try {
     const { userId, productId } = req.params;
-    // console.log(' userId, productId', userId, productId);
+    console.log(' userId, productId', userId, productId);
 
     const orders = await CartItem.find({ userId, productId,is_order:true});
-    // console.log('orders',orders);
+    console.log('orders',orders);
 
     res.status(200).json({ canWriteReview: orders.length > 0 });
   } catch (error) {

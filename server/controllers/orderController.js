@@ -113,7 +113,7 @@ const createOrder = async (req, res) => {
 
     await CartItem.updateMany(
       { _id: { $in: products } },
-      { $set: { is_order: true } }
+      { $set: { is_order: true,userId } }
     );
 
     const productDetails = await CartItem.find({ _id: { $in: products } }).populate('productId');

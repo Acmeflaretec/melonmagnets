@@ -10,7 +10,7 @@ const app = express();
 // app.use(cors());
 const corsOptions = {   
   origin: [process.env.ADMIN_PORT_LOCAL,process.env.CLIENT_PORT_LOCAL],
-  credentials: true,
+  credentials: true,    
 };
 
 app.use(cors(corsOptions));
