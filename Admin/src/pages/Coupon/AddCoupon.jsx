@@ -106,7 +106,7 @@ const AddCoupon = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <Input
             type='date'
               required
@@ -128,7 +128,7 @@ const AddCoupon = () => {
             <Input
               type='number'
               required
-              placeholder="Minimum Value"
+              placeholder="Minimum Purchase Value"
               id="minValue"
               name="minValue"
               label="Minimum Value"
@@ -144,7 +144,7 @@ const AddCoupon = () => {
             <Input
               type='number'
               required
-              placeholder="Maximum Value"
+              placeholder="Maximum Discount"
               id="maxValue"
               name="maxValue"
               label="Maximum Value"

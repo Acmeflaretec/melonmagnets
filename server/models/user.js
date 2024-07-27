@@ -3,21 +3,35 @@ const Product = require('./product')
 
 const userSchema = mongoose.Schema({
 
-    username:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    phone:{
-        type:String
-    },
-    password:{
-        type:String,
-        required:true
-    },
+    // username:{
+    //     type:String,
+    //     required:true
+    // },
+    // email:{
+    //     type:String,
+    //     required:true
+    // },
+    // phone:{
+    //     type:String
+    // },
+    // password:{
+    //     type:String,
+    //     required:true
+    // },
+    mobile: {
+        type: String,
+        required: true,
+        unique: true
+      },
+    //   otp: {
+    //     type: String,
+    //     required: false
+    //   },
+    //   createdAt: {
+    //     type: Date,
+    //     default: Date.now,
+    //     expires: '5m' // OTP expires in 5 minutes
+    //   },
     is_admin:{
         type:Boolean,
         default:false,
