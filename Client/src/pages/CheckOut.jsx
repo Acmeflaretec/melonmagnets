@@ -182,7 +182,7 @@ function CheckOut() {
     }
   };
 
-  const discoutAmount = discountCode?.maxValue < ((subtotal * discount) / 100) ? discountCode?.maxValue : ((subtotal * discount) / 100) ;
+  const discoutAmount = discountCode?.maxValue < ((subtotal * discount) / 100) ? discountCode?.maxValue : ((subtotal * discount) / 100);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -227,7 +227,7 @@ function CheckOut() {
   const handlePayment = () => {
     const options = {
       key: import.meta.env.VITE_APP_Razorpay_Api,
-      amount: parseInt(subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) ) * 100, 
+      amount: parseInt(subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100)) * 100,
       currency: 'INR',
       name: 'MELON MAGNETS',
       description: 'Purchase course',
@@ -235,7 +235,7 @@ function CheckOut() {
         handlePaymentSuccess();
       },
       modal: {
-        ondismiss: function() {
+        ondismiss: function () {
           setIsLoading(false);
         }
       },
@@ -244,7 +244,7 @@ function CheckOut() {
       },
       image: 'apple-touch-icon.png',
     };
-  
+
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
@@ -252,7 +252,7 @@ function CheckOut() {
   const handlePaymentSuccess = async () => {
     try {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
-      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal*discount)/100)  < 299 ? subtotal - ((subtotal*discount)/100)  + 79 : subtotal - ((subtotal*discount)/100) , userId: userDetails._id, couponId: discountCode._id });
+      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100), userId: userDetails._id, couponId: discountCode._id });
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         setRemoveCart(prev => !prev);
@@ -334,13 +334,13 @@ function CheckOut() {
                     <label htmlFor="email" className="form-label">
                       Email
                     </label>
-                    <input 
-                      type="email" 
-                      className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
-                      id="email" 
+                    <input
+                      type="email"
+                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                      id="email"
                       name="email"
-                      value={address.email} 
-                      onChange={handleInputChange} 
+                      value={address.email}
+                      onChange={handleInputChange}
                       onBlur={handleInputChange}
                     />
                     {errors.email && <div className="invalid-feedback">{errors.email}</div>}
@@ -349,12 +349,12 @@ function CheckOut() {
                     <label htmlFor="mobile" className="form-label">
                       Phone
                     </label>
-                    <input 
-                      type="tel" 
-                      className={`form-control ${errors.mobile ? 'is-invalid' : ''}`} 
-                      id="mobile" 
+                    <input
+                      type="tel"
+                      className={`form-control ${errors.mobile ? 'is-invalid' : ''}`}
+                      id="mobile"
                       name="mobile"
-                      value={address.mobile} 
+                      value={address.mobile}
                       onChange={handleInputChange}
                       onBlur={handleInputChange}
                     />
@@ -363,7 +363,7 @@ function CheckOut() {
                 </form>
               </div>
             </div>
-    
+
             <div className="card mb-4">
               <div className="card-body">
                 <h4 className="mb-3">Delivery</h4>
@@ -373,12 +373,12 @@ function CheckOut() {
                       <label htmlFor="firstname" className="form-label">
                         First name
                       </label>
-                      <input 
-                        type="text" 
-                        className={`form-control ${errors.firstname ? 'is-invalid' : ''}`} 
-                        id="firstname" 
+                      <input
+                        type="text"
+                        className={`form-control ${errors.firstname ? 'is-invalid' : ''}`}
+                        id="firstname"
                         name="firstname"
-                        value={address.firstname} 
+                        value={address.firstname}
                         onChange={handleInputChange}
                         onBlur={handleInputChange}
                       />
@@ -388,12 +388,12 @@ function CheckOut() {
                       <label htmlFor="lastname" className="form-label">
                         Last name
                       </label>
-                      <input 
-                        type="text" 
-                        className={`form-control ${errors.lastname ? 'is-invalid' : ''}`} 
-                        id="lastname" 
+                      <input
+                        type="text"
+                        className={`form-control ${errors.lastname ? 'is-invalid' : ''}`}
+                        id="lastname"
                         name="lastname"
-                        value={address.lastname} 
+                        value={address.lastname}
                         onChange={handleInputChange}
                         onBlur={handleInputChange}
                       />
@@ -404,12 +404,12 @@ function CheckOut() {
                     <label htmlFor="address_line_1" className="form-label">
                       Address
                     </label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.address_line_1 ? 'is-invalid' : ''}`} 
-                      id="address_line_1" 
+                    <input
+                      type="text"
+                      className={`form-control ${errors.address_line_1 ? 'is-invalid' : ''}`}
+                      id="address_line_1"
                       name="address_line_1"
-                      value={address.address_line_1} 
+                      value={address.address_line_1}
                       onChange={handleInputChange}
                       onBlur={handleInputChange}
                     />
@@ -419,147 +419,156 @@ function CheckOut() {
                     <label htmlFor="address_line_2" className="form-label">
                       Apartment, suite, etc. (optional)
                     </label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      id="address_line_2" 
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="address_line_2"
                       name="address_line_2"
-                      value={address.address_line_2} 
+                      value={address.address_line_2}
                       onChange={handleInputChange}
                     />
                   </div>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="city" className="form-label">
-                      City
-                    </label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.city ? 'is-invalid' : ''}`} 
-                      id="city" 
-                      name="city"
-                      value={address.city} 
-                      onChange={handleInputChange}
-                      onBlur={handleInputChange}
-                    />
-                    {errors.city && <div className="invalid-feedback">{errors.city}</div>}
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label htmlFor="city" className="form-label">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        className={`form-control ${errors.city ? 'is-invalid' : ''}`}
+                        id="city"
+                        name="city"
+                        value={address.city}
+                        onChange={handleInputChange}
+                        onBlur={handleInputChange}
+                      />
+                      {errors.city && <div className="invalid-feedback">{errors.city}</div>}
+                    </div>
+                    <div className="col-md-3 mb-3">
+                      <label htmlFor="state" className="form-label">
+                        State
+                      </label>
+                      <input
+                        type="text"
+                        className={`form-control ${errors.state ? 'is-invalid' : ''}`}
+                        id="state"
+                        name="state"
+                        value={address.state}
+                        onChange={handleInputChange}
+                        onBlur={handleInputChange}
+                      />
+                      {errors.state && <div className="invalid-feedback">{errors.state}</div>}
+                    </div>
+                    <div className="col-md-3 mb-3">
+                      <label htmlFor="zip" className="form-label">
+                        PIN code
+                      </label>
+                      <input
+                        type="text"
+                        className={`form-control ${errors.zip ? 'is-invalid' : ''}`}
+                        id="zip"
+                        name="zip"
+                        value={address.zip}
+                        onChange={handleInputChange}
+                        onBlur={handleInputChange}
+                      />
+                      {errors.zip && <div className="invalid-feedback">{errors.zip}</div>}
+                    </div>
                   </div>
-                  <div className="col-md-3 mb-3">
-                    <label htmlFor="state" className="form-label">
-                      State
-                    </label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.state ? 'is-invalid' : ''}`} 
-                      id="state" 
-                      name="state"
-                      value={address.state} 
-                      onChange={handleInputChange}
-                      onBlur={handleInputChange}
-                    />
-                    {errors.state && <div className="invalid-feedback">{errors.state}</div>}
-                  </div>
-                  <div className="col-md-3 mb-3">
-                    <label htmlFor="zip" className="form-label">
-                      PIN code
-                    </label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.zip ? 'is-invalid' : ''}`} 
-                      id="zip" 
-                      name="zip"
-                      value={address.zip} 
-                      onChange={handleInputChange}
-                      onBlur={handleInputChange}
-                    />
-                    {errors.zip && <div className="invalid-feedback">{errors.zip}</div>}
-                  </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-  
-        <div className="col-lg-5">
-    <div className="sticky-top" style={{ top: '2rem' }}>
-      <div className="card shadow-sm border-0 mb-4">
-        <div className="card-body">
-          <h3 className="mb-4 text-center">Order Summary</h3>
-          
-          {cartItems.map((item, index) => {
-            const originalPrice = item.price;
-            const salePrice = item.salePrice;
-            const percentageOff = calculatePercentageOff(originalPrice, salePrice);
-            return (
-              <div key={index} className="d-flex align-items-center mb-3 pb-3 border-bottom">
-                <img
-                  src={item?.productId?.image && item?.productId?.image.length > 0 ? `${ServerURL}/uploads/${item?.productId?.image[0]}` : 'placeholder.jpg'}
-                  className="img-fluid rounded me-3"
-                  alt={item?.productId?.name}
-                  style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                />
-                <div className="flex-grow-1">
-                  <h6 className="mb-0">{item?.productId?.name}</h6>
-                  <div className="d-flex justify-content-between align-items-center mt-1">
-                    <div>
-                      <span className="fw-bold text-dark fw-bold">₹{salePrice}</span>
-                      <span className="ms-2 text-muted text-decoration-line-through small">₹{originalPrice}</span>
-                      <span className="ms-2 badge bg-success">{percentageOff}% off</span>
+
+          <div className="col-lg-5">
+            <div className="sticky-top" style={{ top: '2rem' }}>
+              <div className="card shadow-sm border-0 mb-4">
+                <div className="card-body">
+                  <h3 className="mb-4 text-center">Order Summary</h3>
+
+                  {cartItems.map((item, index) => {
+                    const originalPrice = item.price;
+                    const salePrice = item.salePrice;
+                    const percentageOff = calculatePercentageOff(originalPrice, salePrice);
+                    return (
+                      <div key={index} className="d-flex align-items-center mb-3 pb-3 border-bottom">
+                        <img
+                          src={item?.productId?.image && item?.productId?.image.length > 0 ? `${ServerURL}/uploads/${item?.productId?.image[0]}` : 'placeholder.jpg'}
+                          className="img-fluid rounded me-3"
+                          alt={item?.productId?.name}
+                          style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                        />
+                        <div className="flex-grow-1">
+                          <h6 className="mb-0">{item?.productId?.name}</h6>
+                          <div className="d-flex justify-content-between align-items-center mt-1">
+                            <div>
+                              <span className="fw-bold text-dark fw-bold">₹{salePrice}</span>
+                              <span className="ms-2 text-muted text-decoration-line-through small">₹{originalPrice}</span>
+                              <span className="ms-2 badge bg-success">{percentageOff}% off</span>
+                            </div>
+                            <span className="text-muted">Qty: {item?.quantity}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+{userDetails ? <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} /> : <Link to={'/login'}><Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} /></Link>}
+
+                  <div className="mt-4">
+                    <h5 className="mb-3">Order Details</h5>
+                    <div className="d-flex justify-content-between mb-2">
+                      <span>Subtotal</span>
+                      <span className="fw-bold">₹{subtotal.toFixed(2)}</span>
                     </div>
-                    <span className="text-muted">Qty: {item?.quantity}</span>
+                    <div className="d-flex justify-content-between mb-2 text-success">
+                      <span>Discount</span>
+                      <span>-₹{discoutAmount.toFixed(2)}</span>
+                    </div>
+                    <div className="d-flex justify-content-between mb-3">
+                      <span>Shipping</span>
+                      <span>{subtotal - discoutAmount < 299 ? '₹79.00' : 'Free'}</span>
+                    </div>
+                    <div className="d-flex justify-content-between border-top pt-3">
+                      <h5>Total</h5>
+                      <h5 className="text-dark fw-bold">₹{(subtotal - discoutAmount < 299 ?
+                        subtotal - discoutAmount + 79 :
+                        subtotal - discoutAmount).toFixed(2)}
+                      </h5>
+                    </div>
                   </div>
+                  {userDetails ?
+                    <button
+                      type="button"
+                      className="btn btn-warning btn-lg w-100 mt-4"
+                      onClick={handleClick}
+                      disabled={isLoading || isCartLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        'Proceed to Payment'
+                      )}
+                    </button> :
+                    <Link to={'/login'}>
+                      <Button
+                        type="button"
+                        className="btn btn-warning btn-lg w-100 mt-4"
+                      >
+                        Proceed to Payment
+                      </Button>
+                    </Link>
+                  }
                 </div>
               </div>
-            );
-          })}
-  
-          <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} />
-  
-          <div className="mt-4">
-            <h5 className="mb-3">Order Details</h5>
-            <div className="d-flex justify-content-between mb-2">
-              <span>Subtotal</span>
-              <span className="fw-bold">₹{subtotal.toFixed(2)}</span>
-            </div>
-            <div className="d-flex justify-content-between mb-2 text-success">
-              <span>Discount</span>
-              <span>-₹{discoutAmount.toFixed(2)}</span>
-            </div>
-            <div className="d-flex justify-content-between mb-3">
-              <span>Shipping</span>
-              <span>{subtotal - discoutAmount < 299 ? '₹79.00' : 'Free'}</span>
-            </div>
-            <div className="d-flex justify-content-between border-top pt-3">
-              <h5>Total</h5>
-              <h5 className="text-dark fw-bold">₹{(subtotal - discoutAmount < 299 ? 
-                subtotal - discoutAmount + 79 : 
-                subtotal - discoutAmount).toFixed(2)}
-              </h5>
             </div>
           </div>
-          
-          <button 
-                  type="button" 
-                  className="btn btn-warning btn-lg w-100 mt-4" 
-                  onClick={handleClick}
-                  disabled={isLoading || isCartLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
-                      Processing...
-                    </>
-                  ) : (
-                    'Proceed to Payment'
-                  )}
-                </button>
         </div>
       </div>
-    </div>
-  </div>
-        </div>
-      </div>
- </>
+    </>
   );
 }
 

@@ -65,7 +65,7 @@ const PinBadgesSingle = () => {
   const handleAddToCart = async () => {
     const reqBody = new FormData();
     reqBody.append('productId', productDetails._id);
-    reqBody.append('userId', userDetails._id);
+    // reqBody.append('userId', userDetails._id);
     reqBody.append('quantity', 1);
     reqBody.append('price', productDetails.price);
     reqBody.append('salePrice', productDetails.sale_rate);
@@ -220,7 +220,8 @@ const PinBadgesSingle = () => {
     >
       Out of Stock
     </Button>
-  ) : userDetails ? (
+  ) : 
+  // userDetails ? (
     <Button
       variant="warning"
       className="w-100 rounded-pill mt-4"
@@ -228,16 +229,17 @@ const PinBadgesSingle = () => {
     >
       Add To Cart
     </Button>
-  ) : (
-    <Link to={'/login'}>
-      <Button 
-        variant="warning"
-        className="w-100 rounded-pill"
-      >
-        Add To Cart
-      </Button>
-    </Link>
-  )}
+  // ) : (
+  //   <Link to={'/login'}>
+  //     <Button 
+  //       variant="warning"
+  //       className="w-100 rounded-pill"
+  //     >
+  //       Add To Cart
+  //     </Button>
+  //   </Link>
+  // )
+  }
 </Col>
           </Row>
           <Row>
