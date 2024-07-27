@@ -420,13 +420,11 @@ const Product = () => {
               </p>
             </Col>
           { isHomePage&&
-           <Col md={12}>
+           <Col md={12} className='mt-4'>
             <iframe
               width="100%"
               height="400px"
               src={`${import.meta.env.VITE_APP_Video_URL}?autoplay=1&mute=1`}
-              title="Rick Astley - Never Gonna Give You Up (Official Music Video)"
-              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen

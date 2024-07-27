@@ -65,7 +65,7 @@ function PinBadges() {
         </div>
       ) : (
         <div className="container mb-5 mt-2">
-          <h2 className='fw-bold'>{categoryName}</h2>
+          <h2 className='fw-bold text-capitalize'>{categoryName}</h2>
           <div className="row mb-4">
             <div className="col-md-4">
               <label htmlFor="sortOrder" className="me-2">Sort by:</label>
