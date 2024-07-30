@@ -585,50 +585,61 @@ function Review({ productId }) {
   centered
   className="review-preview-modal"
 >
-  <Modal.Body className="p-0 position-relative">
-    <button 
-      className="btn-close position-absolute top-0 end-0 m-3 z-3"
-      onClick={() => setPreviewReview(null)}
-      aria-label="Close"
-    />
-    {previewReview && (
-      <Row className="g-0">
-        <Col md={8} className="preview-image-container">
+  <Modal.Body className="p-0">
+    <Row className="g-0">
+      <Col md={7} className="preview-image-container">
+        <div className="position-relative h-100">
           <img 
-            src={previewReview.currentImage} 
+            src={previewReview?.currentImage} 
             alt="Preview" 
-            className="img-fluid preview-image w-100 h-100 object-fit-cover" 
+            className="img-fluid w-100 h-100"
+            style={{objectFit: 'contain', maxHeight: '80vh'}}
           />
-        </Col>
-        <Col md={4} className="p-4 d-flex flex-column">
-          <div className="mb-auto">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <div className="star-rating p-3">
+          
+        </div>
+      </Col>
+      <Col md={5} className="bg-light">
+      <Button 
+            variant="light"
+            className="position-absolute top-0 end-0 m-2"
+            onClick={() => setPreviewReview(null)}
+            aria-label="Close"
+          >
+            <i className="fas fa-times"></i>
+          </Button>
+        <div className="p-4 d-flex flex-column h-100">
+          <div className="mb-4">
+            <h4 className="fw-bold text-primary mb-1">{previewReview?.name}</h4>
+            <p className="text-muted small mb-2">
+              {previewReview && new Date(previewReview.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            <div className="d-flex align-items-center mb-3">
+              <div className="star-rating me-2">
                 {[...Array(5)].map((_, index) => (
                   <i
                     key={index}
-                    className={`fas fa-star ${index < previewReview.rating ? 'text-warning' : 'text-secondary'}`}
+                    className={`fas fa-star ${index < (previewReview?.rating || 0) ? 'text-warning' : 'text-secondary'}`}
                   />
                 ))}
               </div>
-              <span className="text-secondary fw-bold fs-5">{previewReview.rating.toFixed(1)}</span>
+              <span className="text-muted fw-bold">{previewReview?.rating.toFixed(1)}</span>
             </div>
-            <h4 className="mb-2 fw-bold text-primary">{previewReview.name}</h4>
-            <p className="text-muted small mb-3">
-              {new Date(previewReview.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-            <p className="preview-review-text text-justify">{previewReview.review}</p>
           </div>
-          {previewReview.image && previewReview.image.length > 1 && (
-            <div className="mt-4">
-              <h6 className="mb-3 fw-bold text-secondary">All Images</h6>
-              <div className="d-flex flex-wrap gap-2 justify-content-center">
+          <div className="mb-4 flex-grow-1 overflow-auto">
+            <h5 className="fw-bold mb-3">Review</h5>
+            <p className="text-muted">{previewReview?.review}</p>
+          </div>
+          {previewReview?.image && previewReview.image.length > 1 && (
+            <div>
+              <h5 className="fw-bold mb-3">Images</h5>
+              <div className="d-flex flex-wrap gap-2 justify-content-start">
                 {previewReview.image.map((img, index) => (
                   <div key={index} className="position-relative thumbnail-wrapper">
                     <img
                       src={`${ServerURL}/uploads/${img}`}
                       alt={`Review ${index + 1}`}
                       className={`img-thumbnail cursor-pointer preview-thumbnail ${previewReview.currentImage === `${ServerURL}/uploads/${img}` ? 'active' : ''}`}
+                      style={{width: '60px', height: '60px', objectFit: 'cover'}}
                       onClick={() => setPreviewReview({...previewReview, currentImage: `${ServerURL}/uploads/${img}`})}
                     />
                     {previewReview.currentImage === `${ServerURL}/uploads/${img}` && (
@@ -639,9 +650,9 @@ function Review({ productId }) {
               </div>
             </div>
           )}
-        </Col>
-      </Row>
-    )}
+        </div>
+      </Col>
+    </Row>
   </Modal.Body>
 </Modal>
   

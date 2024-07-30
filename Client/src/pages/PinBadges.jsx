@@ -68,8 +68,8 @@ function PinBadges() {
           <h2 className='fw-bold text-capitalize'>{categoryName}</h2>
           <div className="row mb-4">
             <div className="col-md-4">
-              <label htmlFor="sortOrder" className="me-2">Sort by:</label>
-              <select id="sortOrder" value={sortOrder} onChange={handleSortChange} className="form-select w-50">
+              <label htmlFor="sortOrder" className="me-2 mb-2">Sort by:</label>
+              <select id="sortOrder" value={sortOrder} onChange={handleSortChange} className="form-select w-75">
                 <option value="bestselling">Best Selling</option>
                 <option value="priceasc">Price (Low to High)</option>
               </select>

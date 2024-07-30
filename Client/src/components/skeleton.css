@@ -1,0 +1,33 @@
+@keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .skeleton-image,
+  .skeleton-text,
+  .skeleton-button,
+  .skeleton-thumbnail {
+    background: linear-gradient(to right, #f0f0f0 8%, #e0e0e0 18%, #f0f0f0 33%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+  
+  .skeleton-image {
+    border-radius: 8px;
+  }
+  
+  .skeleton-text {
+    border-radius: 4px;
+  }
+  
+  .skeleton-button {
+    border-radius: 20px;
+  }
+  
+  .skeleton-thumbnail {
+    border-radius: 8px;
+  }

@@ -13,6 +13,7 @@ import video from '../assets/img/video.png';
 import Review from '../components/Review';
 import { cartResponseContext } from '../context/ContextShare';
 import RenderImage from './RenderImage';
+import ProductSkeleton from '../components/ProductSkeleton';
 
 const Product = () => {
   const userDetails = useSelector((state) => state.userDetails);
@@ -259,9 +260,7 @@ const Product = () => {
   return (
     <>
       {loading ? (
-        <div className='d-flex justify-content-center align-items-center' style={{ height: '60vh' }}>
-          <div className='loader'></div>
-        </div>
+       <ProductSkeleton />
       ) : (
         <Container className="mt-4 mb-5">
           <Row>
@@ -421,14 +420,15 @@ const Product = () => {
             </Col>
           { isHomePage&&
            <Col md={12} className='mt-4'>
-            <iframe
-              width="100%"
-              height="400px"
-              src={`${import.meta.env.VITE_APP_Video_URL}?autoplay=1&mute=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            ></iframe>
+          {/* <iframe
+          width="100%"
+          height="400px"
+          src={`${import.meta.env.VITE_APP_Video_URL}?autoplay=1&mute=1&rel=0&controls=0`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe> */}
+        <video src="https://youtu.be/Ro-eGvarxFY?si=4-t1-ZKtFYE4UVNs"></video>
           </Col>}
           </Row>
           <Row>
