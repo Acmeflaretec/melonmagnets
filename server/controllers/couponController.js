@@ -79,15 +79,15 @@ const getCoupons = async (req, res) => {
     res.status(200).json({ data: coupons })
   } catch (error) {
     res.status(400).json({ message: error?.message ?? "Something went wrong !" });
-    }
+  }
 };
 
 const addCoupon = async (req, res) => {
   try {
-    const { name,  validity, discount,minValue, maxValue} = req.body;
+    const { name, validity, discount, minValue, maxValue } = req.body;
 
 
-    
+
 
     const isExisting = await Coupon.findOne({ name: name });
     if (isExisting) {
@@ -99,7 +99,7 @@ const addCoupon = async (req, res) => {
         name,
         validity: new Date(validity),
         discount,
-        minValue, 
+        minValue,
         maxValue,
       });
 
@@ -121,16 +121,16 @@ const addCoupon = async (req, res) => {
 
 
 const updateCoupon = async (req, res) => {
-  const { _id, name, validity, discount,minValue,maxValue } = req.body;
+  const { _id, name, validity, discount, minValue, maxValue } = req.body;
 
   try {
     const data = await Coupon.findById(_id);
     if (!data) {
       return res.status(404).json({ message: 'Coupon not found' });
     }
-    
+
     await Coupon.updateOne({ _id }, {
-      $set: { name, validity: new Date(validity), discount,minValue,maxValue}
+      $set: { name, validity: new Date(validity), discount, minValue, maxValue }
     })
     res.status(200).json({ data, message: 'Coupon updated successfully' });
   } catch (error) {
@@ -146,7 +146,7 @@ const deleteCoupon = async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: 'Coupon not found' });
     }
-    
+
     res.status(200).json({ message: 'Coupon deleted successfully' });
   } catch (error) {
     console.log(error);
@@ -208,20 +208,32 @@ const getClientCoupons = async (req, res) => {
 //     res.status(500).json({ message: error.message });
 //   }
 // }
-const validateCoupon = async (req, res) => {    
-  const { couponId, userId ,subtotal} = req.body;
-  const id=userId?._id
+const validateCoupon = async (req, res) => {
+  const { couponId, userId, subtotal } = req.body;
+  console.log('couponId, userId, subtotal',couponId, userId, subtotal);  
+  const id=userId?._id 
   const coupon = await Coupon.findOne({ _id: couponId, status: true });
   try {
-    const user = await User.findById(userId);
-    if (user.coupons.includes(couponId)) {
-      res.json({ valid: false,  message: 'This coupon alredy used' });
-    } else {
-      if (subtotal < coupon.minValue) {   
-        res.json({valid: false, message: `Coupon can be applied only to orders above ${coupon.minValue}` });
-      }else{
+    if (userId) {
+      console.log('userid und');
+      const user = await User.findById({_id:id});
+      console.log("user undonn nokkunnu-",user);
+      if (user.coupons.includes(couponId)) {  
+        res.json({ valid: false, message: 'This coupon alredy used' });   
+      } else {
+        if (subtotal < coupon.minValue) {
+          res.json({ valid: false, message: `Coupon can be applied only to orders above ${coupon.minValue}` });
+        } else {
 
-        res.json({ valid: true,discount: coupon.discount});
+          res.json({ valid: true, discount: coupon.discount });
+        }
+      }
+    } else {
+      if (subtotal < coupon.minValue) {
+        res.json({ valid: false, message: `Coupon can be applied only to orders above ${coupon.minValue}` });
+      } else {
+
+        res.json({ valid: true, discount: coupon.discount });
       }
     }
   } catch (error) {

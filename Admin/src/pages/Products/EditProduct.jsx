@@ -12,12 +12,17 @@ import { useUpdateProduct, useDeleteProduct } from 'queries/ProductQuery'
 const EditProduct = () => {
    const { id } = useParams()
    const [details, setDetails] = useState({})
+   const [priceChecking,setPriceChecking] = useState(false)
    const { data, isLoading } = useGetProductById({ id });
    const { mutateAsync: deleteProduct, isLoading: deleting } = useDeleteProduct()
    const navigate = useNavigate()
 
    useEffect(() => {
       setDetails(data?.data)
+      if(data?.data.price){
+         setPriceChecking(true)
+      }
+      
    }, [data])
    const { mutateAsync: updateProduct, isLoading: loading } = useUpdateProduct()
    const handleChange = (e) => {
@@ -144,7 +149,8 @@ const EditProduct = () => {
                         onChange={handleChange}
                      />
                   </Grid>
-                  {details?.price ? (
+                  {/* {details?.price ? ( */}
+                  {priceChecking ? (
                      <>
                         <Grid item xs={12} sm={4}>
                            <Input

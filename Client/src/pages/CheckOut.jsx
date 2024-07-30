@@ -513,7 +513,7 @@ function CheckOut() {
                     );
                   })}
 
-{userDetails ? <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} /> : <Link to={'/login'}><Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} /></Link>}
+                  <Coupon setDiscount={setDiscount} setDiscountCode={setDiscountCode} userId={userDetails} subtotal={subtotal} />
 
                   <div className="mt-4">
                     <h5 className="mb-3">Order Details</h5>
