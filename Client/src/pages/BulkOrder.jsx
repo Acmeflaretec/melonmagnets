@@ -141,6 +141,7 @@ function BulkOrder() {
       setIsLoading(true);
       try {
         const result = await createBulkOrderApi({ ...formData });
+        console.log(result);
         Swal.fire({
           title: "Order Received!",
           text: `Thank you, ${result.data.data.name}! We appreciate your bulk order request for ${result.data.data.quantity} ${result.data.data.product}. We will reach out to you within 24 hours to finalize the details and provide you with a quote.`,
