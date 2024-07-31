@@ -30,7 +30,7 @@ const ProductSkeleton = () => {
           </div>
           <div className="skeleton-text mb-3" style={{ height: '24px', width: '50%' }}></div>
           <Row className="mb-3">
-            {[...Array(8)].map((_, index) => (
+            {[...Array(4)].map((_, index) => (
               <Col xs={4} sm={3} md={4} lg={3} className="mb-2" key={index}>
                 <div className="skeleton-image" style={{ width: '90px', height: '90px' }}></div>
               </Col>

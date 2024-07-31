@@ -196,7 +196,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Form, Button, Card, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Navbar, Spinner } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { FaEye, FaEyeSlash, FaGoogle, FaLock } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -295,6 +295,7 @@ const Login = () => {
   const [showOtpField, setShowOtpField] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -312,16 +313,19 @@ const Login = () => {
 
   const handleSendOtp = async () => {
     try {
-      if(userDetails.number.length === 10){
-      await axiosInstance.post('/api/v1/auth/send-otp', { number: userDetails.number });
-      setShowOtpField(true);
-      setResendTimer(60); 
-      }else{
-        alert('Phone Number Must Be 10 Digits')
+      if (userDetails.number.length === 10) {
+        setLoading(true);
+        await axiosInstance.post('/api/v1/auth/send-otp', { number: userDetails.number });
+        setShowOtpField(true);
+        setResendTimer(60);
+      } else {
+        alert('Phone Number Must Be 10 Digits');
       }
     } catch (error) {
       console.error('Error sending OTP: ', error);
       alert('Failed to send OTP. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -334,6 +338,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await axiosInstance.post('/api/v1/auth/verify-otp', { number: userDetails.number, otp: userDetails.otp });
       localStorage.setItem(
         "Tokens",
@@ -341,14 +346,13 @@ const Login = () => {
       );
 
       if (response.data) {
-        
-          navigate(-1)
-        
-        
+        navigate(-1);
       }
     } catch (error) {
       console.error('Error during login: ', error);
       alert(error?.response?.data?.message ?? 'Invalid OTP. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -403,31 +407,22 @@ const Login = () => {
                             value={userDetails.otp}
                             onChange={handleChange}
                           />
-                          {/* <span
-                            className="position-absolute translate-middle-y me-5"
-                            onClick={() => setShowPassword(!showPassword)}
-                            style={{ cursor: 'pointer',top:'200px',right:'10px' }}
-                          >
+                          <EyeIcon onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
-                          </span> */}
-                          <EyeIcon
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
                           </EyeIcon>
                         </Form.Group>
                         <Button variant="link" onClick={handleResendOtp} disabled={resendTimer > 0}>
                           {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
                         </Button>
-                        <StyledButton variant="primary" type="submit" className="w-100 mb-3">
-                          Verify OTP
+                        <StyledButton variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
+                          {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Verify OTP'}
                         </StyledButton>
-                        
                       </>
                     )}
                   </Form>
                   {!showOtpField && (
-                    <StyledButton variant="primary" onClick={handleSendOtp} className="w-100 mb-3">
-                      Send OTP
+                    <StyledButton variant="primary" onClick={handleSendOtp} className="w-100 mb-3" disabled={loading}>
+                      {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Send OTP'}
                     </StyledButton>
                   )}
                   <div className="text-center mb-3">
