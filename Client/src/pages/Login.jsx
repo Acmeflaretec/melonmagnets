@@ -341,7 +341,10 @@ const Login = () => {
       );
 
       if (response.data) {
-        navigate('/');
+        
+          navigate(-1)
+        
+        
       }
     } catch (error) {
       console.error('Error during login: ', error);

@@ -218,11 +218,10 @@ module.exports.sendOtp = async (req, res) => {
 
  
   const options = {   
-    authorization: process.env.FAST2SMS_API_KEY,
-    message: `Your OTP is ${otp}`,
+    authorization: process.env.FAST2SMS_API_KEY,   
+    message: `Your OTP is: ${otp}`,
     numbers: [number]
   };
-console.log('options',options);
   try {
     await fast2sms.sendMessage(options);
     res.status(200).json({ message: 'OTP sent successfully' });
@@ -232,6 +231,7 @@ console.log('options',options);
 };
 
 module.exports.verifyOtp = async (req, res) => {    
+  console.log('verifyOtp called');
   const { number, otp } = req.body;
 
   if (otpStore[number] !== otp) {
@@ -239,11 +239,16 @@ module.exports.verifyOtp = async (req, res) => {
   }
 
   let user = await User.findOne({ mobile:number });
+  console.log('user12-',user);
+  
 
   if (!user) {
+    console.log('no user');
     user = new User({ mobile:number });
     await user.save();   
-  }      
+  }   else{
+    console.log('userCoupons-',user.coupons);
+  }   
 
   const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, {
     expiresIn: process.env.JWT_ACCESS_EXPIRY,
