@@ -85,6 +85,7 @@ const SecureText = styled.span`
 `;
 
 function CheckOut() {
+  
   const userDetails = useSelector((state) => state.userDetails);
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -108,6 +109,8 @@ function CheckOut() {
     state: '',
     zip: '',
   });
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -252,7 +255,7 @@ function CheckOut() {
   const handlePaymentSuccess = async () => {
     try {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
-      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100), userId: userDetails._id, couponId: discountCode._id });
+      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100), userId: userDetails?._id, couponId: discountCode._id });
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         setRemoveCart(prev => !prev);
@@ -294,6 +297,12 @@ function CheckOut() {
     const percentageOff = (discount / originalPrice) * 100;
     return Math.round(percentageOff);
   };
+
+  // if(!userDetails){
+  //   useEffect(()=>{
+  //     window.location.reload();
+  //   },[])
+  // }
   return (
     <>
       <HeaderContainer expand="lg">

@@ -6,14 +6,19 @@ import { HashRouter } from 'react-router-dom';
 import App from './App.jsx';
 import ContextShare from './context/ContextShare.jsx';
 import './index.css';
+import store from './redux/store';
+import { Provider } from 'react-redux';
+
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ContextShare>
+      <Provider store={store}>
       <HashRouter>
       <App />
       </HashRouter>
+      </Provider>
     </ContextShare>
   </React.StrictMode>,
 )
