@@ -400,16 +400,16 @@ const Login = () => {
                       <>
                         <Form.Group className="mb-4">
                           <StyledInput
-                            type={showPassword ? 'text' : 'password'}
+                            type='text'
                             placeholder="Enter OTP"
                             name="otp"
                             required
                             value={userDetails.otp}
                             onChange={handleChange}
                           />
-                          <EyeIcon onClick={() => setShowPassword(!showPassword)}>
+                          {/* <EyeIcon onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
-                          </EyeIcon>
+                          </EyeIcon> */}
                         </Form.Group>
                         <Button variant="link" onClick={handleResendOtp} disabled={resendTimer > 0}>
                           {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
