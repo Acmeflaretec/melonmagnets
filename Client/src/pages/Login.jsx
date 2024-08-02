@@ -200,6 +200,7 @@ import { Container, Row, Col, Form, Button, Card, Navbar, Spinner } from 'react-
 import { motion } from 'framer-motion';
 import { FaEye, FaEyeSlash, FaGoogle, FaLock } from 'react-icons/fa';
 import styled from 'styled-components';
+import GoogleLoginComponent from './GoogleLoginComponent';
 
 const StyledCard = styled(Card)`
   border-radius: 15px;
@@ -428,9 +429,10 @@ const Login = () => {
                   <div className="text-center mb-3">
                     <span>or</span>
                   </div>
-                  <GoogleButton variant="light" className="w-100 mb-3">
+                  {/* <GoogleButton variant="light" className="w-100 mb-3">
                     <FaGoogle className="me-2" /> Log in with Google
-                  </GoogleButton>
+                  </GoogleButton> */}
+                  <GoogleLoginComponent />
                 </motion.div>
               </FormContainer>
             </Col>

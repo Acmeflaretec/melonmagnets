@@ -9,8 +9,8 @@ const fast2sms = require('fast-two-sms');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // const otpClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);  
 
 // module.exports.signup = async (req, res) => {
@@ -101,24 +101,23 @@ module.exports.getCurrentUser = async (req, res) => {
 
 module.exports.googleLogin = async (req, res) => {
   const { tokenId } = req.body;
-
+  
   try {
     const ticket = await client.verifyIdToken({
       idToken: tokenId,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     
-    const { email, name } = ticket.getPayload();
+    const { email} = ticket.getPayload();
 
     let user = await User.findOne({ email });
     // console.log('user',user);
     if (!user) {
-      const encryptedPassword = await bcrypt.hash(email + process.env.JWT_ACCESS_SECRET, 10);
-      console.log('encryptedPassword',encryptedPassword);
+      // const encryptedPassword = await bcrypt.hash(email + process.env.JWT_ACCESS_SECRET, 10);
+      // console.log('encryptedPassword',encryptedPassword);
       user = await User.create({
-        username: name,
-        email,
-        password: encryptedPassword,
+        email
+        // password: encryptedPassword,
       });
     }
 
@@ -136,6 +135,7 @@ module.exports.googleLogin = async (req, res) => {
       user
     });
   } catch (error) {
+    console.log( error?.message);
     return res.status(500).json({ message: error?.message ?? "Something went wrong" });
   }
 };
