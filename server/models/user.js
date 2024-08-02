@@ -7,10 +7,10 @@ const userSchema = mongoose.Schema({
     //     type:String,
     //     required:true
     // },
-    // email:{
-    //     type:String,
-    //     required:true
-    // },
+    email:{
+        type:String,
+        // required:true
+    },
     // phone:{
     //     type:String
     // },
@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
     // },
     mobile: {
         type: String,
-        required: true,
+        // required: true,  
         unique: true
       },
     //   otp: {
