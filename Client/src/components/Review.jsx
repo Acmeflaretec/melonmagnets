@@ -310,6 +310,9 @@ import './Review.css';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../axios';
 import { ServerURL } from '../services/baseUrl';
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+
 
 function Review({ productId }) {
   const userDetails = useSelector((state) => state.userDetails);
@@ -405,7 +408,8 @@ function Review({ productId }) {
   });
 
   const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-  const averageRating = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : '0';
+  const averageRatings = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : '0';
+  const averageRating = (averageRatings % 1 === 0) ? Math.round(averageRatings) : averageRatings;
 
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
@@ -413,6 +417,9 @@ function Review({ productId }) {
     e.preventDefault();
   };
 
+  const handleRatingChange = (event, newValue) => {
+    setNewReview({ ...newReview, rating: newValue });
+  };
   return (
     <Container fluid className="review-section py-5 mt-3">
       <h2 className="text-center mb-4 fw-bold">Customer Reviews</h2>
@@ -424,7 +431,8 @@ function Review({ productId }) {
               <Row className="align-items-center mb-4">
                 <Col xs={5} className="text-center">
                   <div className="rating-summary">
-                    <h2 className="display-4 fw-bold mb-0">{Math.round(averageRating)}</h2>
+                    {/* <h2 className="display-4 fw-bold mb-0">{Math.round(averageRating)}</h2> */}
+                    <h2 className="display-4 fw-bold mb-0">{averageRating}</h2>
                     <div className="star-rating mb-2">
                       {[...Array(5)].map((_, index) => (
                         <i
@@ -538,7 +546,7 @@ function Review({ productId }) {
                 placeholder="Enter your name"
               />
             </Form.Group>
-            <Form.Group controlId="formRating" className="mb-3">
+            {/* <Form.Group controlId="formRating" className="mb-3">
               <Form.Label>Rating</Form.Label>
               <Form.Control
                 type="number"
@@ -552,6 +560,16 @@ function Review({ productId }) {
                 onKeyPress={preventManualInput}
                 onPaste={preventManualInput}
               />
+            </Form.Group> */}
+            <Form.Group controlId="formRating" className="mb-3">
+              <Form.Label>Rating</Form.Label>
+              <Box component="fieldset" mb={3} borderColor="transparent">
+                <Rating
+                  name="simple-controlled"
+                  value={newReview.rating}
+                  onChange={handleRatingChange}
+                />
+              </Box>
             </Form.Group>
             <Form.Group controlId="formReview" className="mb-3">
               <Form.Label>Review</Form.Label>
