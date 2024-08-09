@@ -33,7 +33,7 @@ const PinBadgesSingle = () => {
 
   const idMapping = {
     pinbadges: 'pin badges',
-    souvneir: 'souvneir',
+    souvenir: 'souvenir',
   };
 
   const handleThumbnailClick = (index) => {

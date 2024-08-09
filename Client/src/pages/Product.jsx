@@ -161,7 +161,7 @@ const Product = () => {
   const idMapping = {
     fridgemagnets: 'fridge magnets',
     pinbadges: 'pin badges',
-    souvneir: ' souvneir',
+    Souvenir: ' Souvenir',
     savethedate: 'save the date'
   };
 
