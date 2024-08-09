@@ -112,7 +112,7 @@ const NavBar = () => {
             <Nav className="ms-auto">
               <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')}>Fridge Magnets</Link>
               <Link to={'/products/pinbadges'} className={getLinkClass('/products/pinbadges')}>Pin Badges</Link>
-              <Link to={'/products/souvneir'} className={getLinkClass('/products/souvneir')}>Souvneir</Link>
+              <Link to={'/products/souvenir'} className={getLinkClass('/products/souvenir')}>Souvenir</Link>
               <Link to={'/savethedate'} className={getLinkClass('/savethedate')}>Save The Date</Link>
               <div
                 className="dropdown"
@@ -126,7 +126,7 @@ const NavBar = () => {
                   <div className="dropdown-menu show">
                     <Link to={'/fridgemagnets'} className="dropdown-item">Fridge Magnets</Link>
                     <Link to={'/products/pinbadges'} className="dropdown-item">Pin Badges</Link>
-                    <Link to={'/products/souvneir'} className="dropdown-item">Souvneir</Link>
+                    <Link to={'/products/souvenir'} className="dropdown-item">Souvenir</Link>
                     <Link to={'/savethedate'} className="dropdown-item">Save The Date</Link>
                     <Link to={'/bulkorder'} className="dropdown-item">Bulk order</Link>
                   </div>
@@ -134,11 +134,11 @@ const NavBar = () => {
               </div>
             </Nav>
             <Nav className="ms-auto">
-              {/* <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
+              <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
                 <FontAwesomeIcon icon={faInstagram} />
-              </Link> */}
+              </Link>
               {/* {userDetails ?( */}
-                <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
                 {cartItems?.length > 0 && (
                   <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
@@ -151,25 +151,25 @@ const NavBar = () => {
               <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick} ><FontAwesomeIcon icon={faShoppingCart} /></button>
                </Link>)
                } */}
-              
-              {userDetails ? (
-  <button 
-    className='btn btn-warning' 
-    onClick={logoutUser} 
-    title="Logout"
-  >
-    Logout
-  </button>
-) : (
-  <Link to={'/login'}>
-    <button 
-      className='btn btn-warning'
-      title="Login"
-    >
-      Login
-    </button>
-  </Link>
-)}
+
+              {/* {userDetails ? (
+                <button
+                  className='btn btn-warning'
+                  onClick={logoutUser}
+                  title="Logout"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link to={'/login'}>
+                  <button
+                    className='btn btn-warning'
+                    title="Login"
+                  >
+                    Login
+                  </button>
+                </Link>
+              )} */}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -193,22 +193,22 @@ const NavBar = () => {
             </Link>
           </Navbar.Brand>
           <div className="d-flex align-items-center">
-          {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
-                <FontAwesomeIcon icon={faShoppingCart} />
-                {cartItems?.length > 0 && (
-                  <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
-                    {cartItems?.length}
-                  </Badge>
-                )}
-              </button>) : (<Link to={'/login'}>
-              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>) }
-              
-              {userDetails ? (<button className='btn btn-warning' title="Logout" onClick={logoutUser} >
-                Logout
-              </button>
-              ) : (
+            {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+              <FontAwesomeIcon icon={faShoppingCart} />
+              {cartItems?.length > 0 && (
+                <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                  {cartItems?.length}
+                </Badge>
+              )}
+            </button>) : (<Link to={'/login'}>
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>)}
+
+            {userDetails ? (<button className='btn btn-warning' title="Logout" onClick={logoutUser} >
+              Logout
+            </button>
+            ) : (
               <Link to={'/login'}> <button className='btn btn-warning' title="Login">Login</button></Link>
-               )}
+            )}
             <Navbar.Toggle aria-controls="navbar-offcanvas" onClick={handleShowOffcanvas} />
           </div>
           <Navbar.Offcanvas
@@ -225,7 +225,7 @@ const NavBar = () => {
               <Nav className="flex-column">
                 <Link to={'/fridgemagnets'} className={getLinkClass('/fridgemagnets')} onClick={handleCloseOffcanvas}>Fridge Magnets</Link>
                 <Link to={'/products/pinbadges'} className={getLinkClass('/products/pinbadges')} onClick={handleCloseOffcanvas}>Pin Badges</Link>
-                <Link to={'/products/souvneir'} className={getLinkClass('/products/souvneir')} onClick={handleCloseOffcanvas}>Souvneir</Link>
+                <Link to={'/products/souvenir'} className={getLinkClass('/products/souvenir')} onClick={handleCloseOffcanvas}>Souvenir</Link>
                 <Link to={'/savethedate'} className={getLinkClass('/savethedate')} onClick={handleCloseOffcanvas}>Save The Date</Link>
                 <Link to={'/bulkorder'} className={getLinkClass('/bulkorder')} onClick={handleCloseOffcanvas}>Bulk order</Link>
                 <Link to={'/allproducts'} className={getLinkClass('/allproducts')} onClick={handleCloseOffcanvas}>Shop All</Link>

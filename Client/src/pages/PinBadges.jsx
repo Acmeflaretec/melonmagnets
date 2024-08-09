@@ -16,7 +16,7 @@ function PinBadges() {
 
   const idMapping = {
     pinbadges: 'pin badges',
-    souvneir: 'souvneir',
+    souvenir: 'souvenir',
   };
 
   const getAllCategory = async () => {

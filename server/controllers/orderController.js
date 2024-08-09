@@ -122,7 +122,7 @@ const createOrder = async (req, res) => {
     const orderTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
     const adminEmail = process.env.EMAIL_ADMIN;
 
-    const emailSubject = `Order received no: ${orderNumber}`;
+    const emailSubject = `Your MelonMagnets Order ID is:${orderNumber}`;
 
     const productItems = productDetails.map(item => `
       <tr>
