@@ -138,20 +138,25 @@ const NavBar = () => {
                 <FontAwesomeIcon icon={faInstagram} />
               </Link>
               {/* {userDetails ?( */}
-              {cartItems?.length < 0  || userDetails ?(
-              <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
-                <FontAwesomeIcon icon={faShoppingCart} />
-                {cartItems?.length > 0 && (
-                  <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
-                    {cartItems?.length}
-                  </Badge>
-                )}
-              </button>):
-              (<Link to={'/login'}>
-                <button className="nav-link text-decoration-none text-dark position-relative me-3" >
-                <FontAwesomeIcon icon={faShoppingCart} />
-              </button>
-                 </Link>)}
+              {cartItems?.length > 0 || userDetails ? (
+                <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                  {cartItems?.length > 0 && (
+                    <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                      {cartItems?.length}
+                    </Badge>
+                  )}
+                </button>) :
+                (<Link to={'/login'}>
+                  <button className="nav-link text-decoration-none text-dark position-relative me-3" >
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                    {cartItems?.length > 0 && (
+                    <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                      {cartItems?.length}
+                    </Badge>
+                  )}
+                  </button>
+                </Link>)}
               {/* ): 
                (<Link to={'/login'}>
               <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick} ><FontAwesomeIcon icon={faShoppingCart} /></button>
@@ -199,7 +204,32 @@ const NavBar = () => {
             </Link>
           </Navbar.Brand>
           <div className="d-flex align-items-center">
-            {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+            <Link to={'https://www.instagram.com/melonmagnets'} className="nav-link text-decoration-none  text-dark">
+              <FontAwesomeIcon icon={faInstagram} />
+            </Link>
+
+            {cartItems?.length > 0 || userDetails ? (
+                <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                  {cartItems?.length > 0 && (
+                    <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                      {cartItems?.length}
+                    </Badge>
+                  )}
+                </button>) :
+                (<Link to={'/login'}>
+                  <button className="nav-link text-decoration-none text-dark position-relative me-3" >
+                    <FontAwesomeIcon icon={faShoppingCart} />
+                    {cartItems?.length > 0 && (
+                    <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                      {cartItems?.length}
+                    </Badge>
+                  )}
+                  </button>
+                </Link>)}
+
+
+            {/* {userDetails ? (<button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
               <FontAwesomeIcon icon={faShoppingCart} />
               {cartItems?.length > 0 && (
                 <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
@@ -207,14 +237,17 @@ const NavBar = () => {
                 </Badge>
               )}
             </button>) : (<Link to={'/login'}>
-              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>)}
+              <button className="nav-link text-decoration-none text-dark position-relative me-3" ><FontAwesomeIcon icon={faShoppingCart} /></button></Link>)} */}
 
-            {userDetails ? (<button className='btn btn-warning' title="Logout" onClick={logoutUser} >
+
+
+
+            {/* {userDetails ? (<button className='btn btn-warning' title="Logout" onClick={logoutUser} >
               Logout
             </button>
             ) : (
               <Link to={'/login'}> <button className='btn btn-warning' title="Login">Login</button></Link>
-            )}
+            )} */}
             <Navbar.Toggle aria-controls="navbar-offcanvas" onClick={handleShowOffcanvas} />
           </div>
           <Navbar.Offcanvas
