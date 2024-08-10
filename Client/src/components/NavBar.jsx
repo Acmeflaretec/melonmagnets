@@ -138,6 +138,7 @@ const NavBar = () => {
                 <FontAwesomeIcon icon={faInstagram} />
               </Link>
               {/* {userDetails ?( */}
+              {cartItems?.length < 0  || userDetails ?(
               <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick}>
                 <FontAwesomeIcon icon={faShoppingCart} />
                 {cartItems?.length > 0 && (
@@ -145,7 +146,12 @@ const NavBar = () => {
                     {cartItems?.length}
                   </Badge>
                 )}
+              </button>):
+              (<Link to={'/login'}>
+                <button className="nav-link text-decoration-none text-dark position-relative me-3" >
+                <FontAwesomeIcon icon={faShoppingCart} />
               </button>
+                 </Link>)}
               {/* ): 
                (<Link to={'/login'}>
               <button className="nav-link text-decoration-none text-dark position-relative me-3" onClick={handleCartClick} ><FontAwesomeIcon icon={faShoppingCart} /></button>
