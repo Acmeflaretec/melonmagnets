@@ -304,7 +304,7 @@
 
 // Review.jsx
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Col, Form, Modal, ProgressBar, Row, Container } from 'react-bootstrap';
+import { Button, Card, Col, Form, Modal, ProgressBar, Row, Container, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Review.css';
 import { useSelector } from 'react-redux';
@@ -327,6 +327,8 @@ function Review({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [canWriteReview, setCanWriteReview] = useState(false);
   const [previewReview, setPreviewReview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -369,6 +371,7 @@ function Review({ productId }) {
   };
 
   const handleSubmitReview = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append('productId', productId);
     formData.append('userId', userDetails._id);
@@ -388,8 +391,11 @@ function Review({ productId }) {
       setReviews([response.data.data, ...reviews]);
       setNewReview({ name: '', rating: 0, review: '', images: [] });
       handleCloseReviewModal();
+      alert('your review is added')
     } catch (error) {
       console.error('Error submitting review:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -597,8 +603,13 @@ function Review({ productId }) {
           <Button variant="secondary" onClick={handleCloseReviewModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSubmitReview}>
+          <Button variant="primary" disabled={isLoading} onClick={handleSubmitReview}>
             Submit Review
+            {isLoading ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : (
+                    'Submit Review'
+                  )}
           </Button>
         </Modal.Footer>
       </Modal>
