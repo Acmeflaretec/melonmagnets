@@ -85,7 +85,7 @@ const SecureText = styled.span`
 `;
 
 function CheckOut() {
-  
+
   const userDetails = useSelector((state) => state.userDetails);
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -110,6 +110,15 @@ function CheckOut() {
     zip: '',
   });
 
+  useEffect(()=>{
+    const addr = JSON.parse(localStorage?.getItem('address'));
+    console.log('address12',addr);
+    
+    if(addr){
+      setAddress(addr)
+    }
+  },[])
+
 
 
   useEffect(() => {
@@ -126,22 +135,22 @@ function CheckOut() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      setAddress((prevAddress) => ({
-        ...prevAddress,
-        email: user.email,
-        mobile: user.phone,
-        firstname: '',
-        lastname: '',
-        address_line_1: '',
-        address_line_2: '',
-        city: '',
-        state: '',
-        zip: '',
-      }));
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setAddress((prevAddress) => ({
+  //       ...prevAddress,
+  //       email: user.email,
+  //       mobile: user.phone,
+  //       firstname: '',
+  //       lastname: '',
+  //       address_line_1: '',
+  //       address_line_2: '',
+  //       city: '',
+  //       state: '',
+  //       zip: '',
+  //     }));
+  //   }
+  // }, [user]);
 
   const getCartItems = async () => {
     setIsCartLoading(true);
@@ -230,10 +239,10 @@ function CheckOut() {
   const handlePayment = () => {
     const options = {
       key: import.meta.env.VITE_APP_Razorpay_Api,
-      amount: parseInt(subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100)) * 100,
+      amount: parseInt(subtotal - discoutAmount < 299 ? subtotal - discoutAmount + 79 : subtotal - discoutAmount) * 100,
       currency: 'INR',
       name: 'MELON MAGNETS',
-      description: 'Purchase course',
+      description: 'Purchase course',           
       handler: function (response) {
         handlePaymentSuccess();
       },
@@ -255,7 +264,7 @@ function CheckOut() {
   const handlePaymentSuccess = async () => {
     try {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
-      const result = await addOrderApi({ ...address, products, amount: subtotal - ((subtotal * discount) / 100) < 299 ? subtotal - ((subtotal * discount) / 100) + 79 : subtotal - ((subtotal * discount) / 100), userId: userDetails?._id, couponId: discountCode._id });
+      const result = await addOrderApi({ ...address, products, amount: subtotal - discoutAmount < 299 ? subtotal - discoutAmount + 79 : subtotal - discoutAmount, userId: userDetails?._id, couponId: discountCode._id });
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         setRemoveCart(prev => !prev);
@@ -266,6 +275,7 @@ function CheckOut() {
           timer: 1500,
         });
         navigate('/');
+        localStorage.removeItem('address');
       }
     } catch (error) {
       console.error('Error processing payment:', error);
@@ -298,11 +308,11 @@ function CheckOut() {
     return Math.round(percentageOff);
   };
 
-  // if(!userDetails){
-  //   useEffect(()=>{
-  //     window.location.reload();
-  //   },[])
-  // }
+  const addressStoring = () =>{
+    localStorage.setItem('address', JSON.stringify(address));
+  }
+  console.log('address',address);
+  
   return (
     <>
       <HeaderContainer expand="lg">
@@ -530,13 +540,14 @@ function CheckOut() {
                       <span>Subtotal</span>
                       <span className="fw-bold">₹{subtotal.toFixed(2)}</span>
                     </div>
-                    <div className="d-flex justify-content-between mb-2 text-success">
-                      <span>Discount</span>
-                      <span>-₹{discoutAmount.toFixed(2)}</span>
-                    </div>
+
                     <div className="d-flex justify-content-between mb-3">
                       <span>Shipping</span>
                       <span>{subtotal - discoutAmount < 299 ? '₹79.00' : 'Free'}</span>
+                    </div>
+                    <div className="d-flex justify-content-between mb-2 text-success">
+                      <span>Discount</span>
+                      <span>-₹{discoutAmount.toFixed(2)}</span>
                     </div>
                     <div className="d-flex justify-content-between border-top pt-3">
                       <h5>Total</h5>
@@ -566,6 +577,7 @@ function CheckOut() {
                       <Button
                         type="button"
                         className="btn btn-warning btn-lg w-100 mt-4"
+                        onClick={addressStoring}
                       >
                         Proceed to Payment
                       </Button>
