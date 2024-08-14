@@ -238,14 +238,16 @@ function CheckOut() {
 
   const handlePayment = () => {
     const options = {
-      key: import.meta.env.VITE_APP_Razorpay_Api,
+      key: 'rzp_test_wNhVz81BFxrIrL',
+      // key: import.meta.env.VITE_APP_Razorpay_Api,
       // amount: parseInt(subtotal - discoutAmount < 299 ? subtotal - discoutAmount + 79 : subtotal - discoutAmount) * 100,
       amount: 100,
       currency: 'INR',
       name: 'MELON MAGNETS',
-      description: 'Purchase course',           
+      description: 'Purchase Magnets',  
+      image: 'apple-touch-icon.png',         
       handler: function (response) {
-        handlePaymentSuccess();
+        handlePaymentSuccess(response);
       },
       modal: {
         ondismiss: function () {
@@ -255,17 +257,24 @@ function CheckOut() {
       theme: {
         color: '#f9e7d2',
       },
-      image: 'apple-touch-icon.png',
+      
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
+console.log('discountCode._id',discountCode._id);
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = async (response) => {
+    console.log('response12-',response);
+    
     try {
       const products = JSON.parse(localStorage.getItem('cartData')) || [];
+      console.log('sending intems',address, products, subtotal - discoutAmount < 299 ? subtotal - discoutAmount + 79 : subtotal - discoutAmount, userDetails?._id,discountCode._id);
+      
       const result = await addOrderApi({ ...address, products, amount: subtotal - discoutAmount < 299 ? subtotal - discoutAmount + 79 : subtotal - discoutAmount, userId: userDetails?._id, couponId: discountCode._id });
+      console.log('results vannath',result);
+      
       if (result.status === 201) {
         localStorage.setItem('cartData', JSON.stringify([]));
         setRemoveCart(prev => !prev);
