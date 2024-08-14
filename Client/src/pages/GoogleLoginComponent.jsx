@@ -83,12 +83,14 @@
 
 
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { gapi } from 'gapi-script';
 import { FaGoogle } from 'react-icons/fa';
 import styled from 'styled-components';
+import '../App.css'
+
 
 const GoogleButton = styled.button`
    background-color: #ffffff;
@@ -115,6 +117,7 @@ const GoogleButton = styled.button`
 `;
 
 const GoogleLoginComponent = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,26 +133,47 @@ const GoogleLoginComponent = () => {
   }, []);
 
   const handleLogin = () => {
+    setIsLoading(true)
     const auth2 = gapi.auth2.getAuthInstance();
     auth2.signIn().then(async (googleUser) => {
       const id_token = googleUser.getAuthResponse().id_token;
       try {
         const res = await axios.post(`${import.meta.env.VITE_APP_API_URL}/api/v1/auth/google-login`, { tokenId: id_token });
         localStorage.setItem('Tokens', JSON.stringify({ access: res.data.token.accessToken, refresh: res.data.token.refreshToken }));
+        setIsLoading(false)
         navigate(-1);
       } catch (error) {
         console.error('Error during Google login: ', error);
       }
     }).catch((error) => {
       alert('Google login failed');
+      setIsLoading(false)
       console.error('Google login failed: ', error);
     });
   };
 
   return (
+    <>
+     {isLoading && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999
+          }}>
+            <div className='loader'></div>
+          </div>
+        )}
     <GoogleButton onClick={handleLogin}>
       <FaGoogle className="me-2" /> Log in with Google
     </GoogleButton>
+    </>
   );
 };
 
