@@ -91,8 +91,8 @@ import { FaGoogle } from 'react-icons/fa';
 import styled from 'styled-components';
 
 const GoogleButton = styled.button`
-  background-color: #ffffff;
-  color: #757575;
+  background-color: #fff;
+  color: blue;
   border: 1px solid #e0e0e0;
   width: 100%;
   margin-bottom: 1rem;
@@ -148,7 +148,7 @@ const GoogleLoginComponent = () => {
 
   return (
     <GoogleButton onClick={handleLogin}>
-      <FaGoogle className="me-2" /> Log in with Google
+      <FaGoogle className="me-2"  /> Log in with Google
     </GoogleButton>
   );
 };

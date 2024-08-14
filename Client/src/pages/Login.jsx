@@ -297,6 +297,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [disab, setDisab] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -319,9 +320,11 @@ const Login = () => {
         await axiosInstance.post('/api/v1/auth/send-otp', { number: userDetails.number });
         setShowOtpField(true);
         setResendTimer(60);
+        setDisab(true)
       } else {
         alert('Phone Number Must Be 10 Digits');
       }
+
     } catch (error) {
       console.error('Error sending OTP: ', error);
       alert('Failed to send OTP. Please try again.');
@@ -395,6 +398,7 @@ const Login = () => {
                         value={userDetails.number}
                         required
                         onChange={handleChange}
+                        disabled={disab}
                       />
                     </Form.Group>
                     {showOtpField && (
