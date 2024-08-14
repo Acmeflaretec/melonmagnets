@@ -5,7 +5,7 @@ const CartItem = require('../models/cartItem')
 const User = require('../models/user')
 // const { sendMail } = require('../utils/mailer')
 const nodemailer = require('nodemailer');
-const moment = require('moment-timezone');     
+const moment = require('moment-timezone');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -93,41 +93,30 @@ const getOrderById = async (req, res) => {
 // }
 const createOrder = async (req, res) => {
   const { userId, email, mobile, amount, products, couponId, firstname, lastname, country, address_line_1, address_line_2, city, state, zip } = req?.body;
-  console.log("couponId", couponId);
-  console.log("createOrder body", userId, email, mobile, amount, products, couponId, firstname, lastname, country, address_line_1, address_line_2, city, state, zip);
   try {
     const address = await Address.create({
       firstname, lastname, country, address_line_1, address_line_2, city, state, zip, mobile,
     });
-    console.log('address stored');
-    
-    
+
+
     const order = await Order.create({ userId, email, mobile, amount, address: address._id, products });
-    console.log('order stored');
-    
+
     if (couponId) {
-      console.log('couponId checked');
       const user = await User.findById(userId);
-      console.log('user finded');
       if (user.coupons.includes(couponId)) {
-        console.log('user included coupen');
         return res.status(400).json({ message: "Coupon already used" });
-      }else{
+      } else {
         user.coupons.push(couponId);
         await user.save();
-        console.log('user save coupen');
       }
-      
-      
+
+
     }
-    
 
     await CartItem.updateMany(
       { _id: { $in: products } },
-      { $set: { is_order: true,userId } }
+      { $set: { is_order: true, userId } }
     );
-    console.log('Cart item updated');
-    
 
     const productDetails = await CartItem.find({ _id: { $in: products } }).populate('productId');
 
@@ -194,15 +183,14 @@ const createOrder = async (req, res) => {
       </div>
     `;
 
-    console.log('user and admin mail created');
-    
+
     await transporter.sendMail({
       from: process.env.EMAIL_AUTH_USER,
       to: email,
       subject: emailSubject,
       html: customerEmailHtml,
     });
-    console.log('user mail send');
+
 
     await transporter.sendMail({
       from: process.env.EMAIL_AUTH_USER,
@@ -210,7 +198,6 @@ const createOrder = async (req, res) => {
       subject: emailSubject,
       html: internalEmailHtml,
     });
-    console.log('client mail send mail send');
 
     return res.status(201).json({ data: order, message: 'Order placed successfully' });
   } catch (err) {
