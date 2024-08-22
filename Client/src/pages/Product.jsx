@@ -428,7 +428,7 @@ const Product = () => {
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         ></iframe> */}
-        <video src="https://youtu.be/Ro-eGvarxFY?si=4-t1-ZKtFYE4UVNs"></video>
+        {/* <video src="https://youtu.be/Ro-eGvarxFY?si=4-t1-ZKtFYE4UVNs"></video> */}
           </Col>}
           </Row>
           <Row>
